@@ -1,96 +1,99 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useProdutos } from '../context/ProdutosContext';
+import { useTheme } from '../context/ThemeContext';
 
 function Home({ user, setUser }) {
   const navigate = useNavigate();
+  const { produtos } = useProdutos();
+  const { theme, isDark, toggleTheme } = useTheme();
 
   const handleLogout = () => {
     setUser(null);
     navigate('/login');
   };
 
-  const produtos = [
-    {
-      id: 1,
-      nome: 'Carrinho de Bebê',
-      categoria: 'Bebê',
-      descricao: 'Carrinho em ótimo estado, usado por 6 meses',
-      doador: 'Maria Silva',
-      contato: '(11) 99999-9999'
-    },
-    {
-      id: 2,
-      nome: 'Roupas de Gestante - Tamanho M',
-      categoria: 'Gestante',
-      descricao: 'Lote com 10 peças variadas',
-      doador: 'Ana Santos',
-      contato: '(11) 88888-8888'
-    },
-    {
-      id: 3,
-      nome: 'Berço Portátil',
-      categoria: 'Bebê',
-      descricao: 'Berço desmontável, fácil de transportar',
-      doador: 'João Oliveira',
-      contato: '(11) 77777-7777'
-    },
-    {
-      id: 4,
-      nome: 'Kit Amamentação',
-      categoria: 'Gestante',
-      descricao: 'Bomba tira-leite e acessórios',
-      doador: 'Carla Lima',
-      contato: '(11) 66666-6666'
-    },
-    {
-      id: 5,
-      nome: 'Roupas de Bebê 0-6 meses',
-      categoria: 'Bebê',
-      descricao: 'Lote com 20 peças variadas',
-      doador: 'Patricia Costa',
-      contato: '(11) 55555-5555'
-    },
-    {
-      id: 6,
-      nome: 'Cadeirinha para Carro',
-      categoria: 'Bebê',
-      descricao: 'Cadeirinha grupo 0+, até 13kg',
-      doador: 'Roberto Alves',
-      contato: '(11) 44444-4444'
-    }
-  ];
-
-  const handleContact = (contato) => {
-    alert(`Entre em contato: ${contato}`);
+  const handleContact = (produtoId) => {
+    navigate(`/produto/${produtoId}`);
   };
 
   return (
-    <div>
-      <header className="header">
-        <div className="nav">
-          <h1>Além do Positivo</h1>
-          <div>
-            <span>Olá, {user.nome}!</span>
-            <button className="logout-btn" onClick={handleLogout}>Sair</button>
+    <div style={{ minHeight: '100vh', backgroundColor: theme.background }}>
+      <header style={{ backgroundColor: theme.cardBackground, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', maxWidth: '1200px', margin: '0 auto' }}>
+          <h1 style={{ color: theme.primary, margin: 0 }}>Além do Positivo</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <button 
+              onClick={toggleTheme}
+              style={{
+                padding: '8px',
+                backgroundColor: theme.background,
+                color: theme.text,
+                border: `1px solid ${theme.border}`,
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              {isDark ? '☀️' : '🌙'}
+            </button>
+            <span style={{ color: theme.text }}>Olá, {user.nome}!</span>
+            <button 
+              onClick={handleLogout}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: theme.danger,
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
+            >
+              Sair
+            </button>
           </div>
+        </div>
+        <div style={{ textAlign: 'center', padding: '15px', backgroundColor: theme.background, borderTop: `1px solid ${theme.border}` }}>
+          <Link to="/doacao" style={{ margin: '0 15px', color: theme.primary, textDecoration: 'none', fontWeight: 'bold' }}>Doar Produto</Link>
+          {user.isAdmin && (
+            <Link to="/admin" style={{ margin: '0 15px', color: theme.primary, textDecoration: 'none', fontWeight: 'bold' }}>Administração</Link>
+          )}
         </div>
       </header>
 
-      <div className="products-grid">
-        {produtos.map(produto => (
-          <div key={produto.id} className="product-card">
-            <h3>{produto.nome}</h3>
-            <p><strong>Categoria:</strong> {produto.categoria}</p>
-            <p><strong>Descrição:</strong> {produto.descricao}</p>
-            <p><strong>Doador:</strong> {produto.doador}</p>
-            <button 
-              className="contact-btn"
-              onClick={() => handleContact(produto.contato)}
-            >
-              Entrar em Contato
-            </button>
-          </div>
-        ))}
+      <div style={{ padding: '30px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+          {produtos.map(produto => (
+            <div key={produto.id} style={{
+              backgroundColor: theme.cardBackground,
+              padding: '20px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              border: `1px solid ${theme.border}`,
+              color: theme.text
+            }}>
+              <h3 style={{ color: theme.primary, marginBottom: '15px' }}>{produto.nome}</h3>
+              <p style={{ marginBottom: '8px', color: theme.text }}><strong>Categoria:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.categoria}</span></p>
+              <p style={{ marginBottom: '8px', color: theme.text }}><strong>Estado:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.estado}</span></p>
+              <p style={{ marginBottom: '8px', color: theme.textSecondary, lineHeight: '1.4' }}><strong>Descrição:</strong> {produto.descricao}</p>
+              <p style={{ marginBottom: '15px', color: theme.text }}><strong>Doador:</strong> {produto.doador}</p>
+              <button 
+                onClick={() => handleContact(produto.id)}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  backgroundColor: theme.primary,
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
+              >
+                Entrar em Contato
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
