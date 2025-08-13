@@ -209,8 +209,7 @@ function Doacao() {
           >
             Cadastrar Doação
           </button>
-        </div>
-      </div>
+        
       </form>
 
       <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
@@ -220,6 +219,8 @@ function Doacao() {
         <p>3. Seu produto será destinado a famílias necessitadas</p>
       </div>
     </div>
+  </div>
+</div>
   );
 }
 

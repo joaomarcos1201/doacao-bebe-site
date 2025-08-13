@@ -18,14 +18,14 @@ export const ThemeProvider = ({ children }) => {
   };
 
   const theme = {
-    background: isDark ? '#1a1a1a' : '#f8f9fa',
-    cardBackground: isDark ? '#2d2d2d' : '#ffffff',
-    text: isDark ? '#ffffff' : '#333333',
-    textSecondary: isDark ? '#cccccc' : '#666666',
-    border: isDark ? '#404040' : '#dddddd',
-    primary: '#ff69b4',
-    success: '#28a745',
-    danger: '#dc3545',
+    background: isDark ? '#454B60' : '#F7B6BA',
+    cardBackground: isDark ? '#69484B' : '#ffffff',
+    text: isDark ? '#F2A1A8' : '#454B60',
+    textSecondary: isDark ? '#B3787D' : '#69484B',
+    border: isDark ? '#AD7378' : '#B3747A',
+    primary: '#AD7378',
+    success: '#B3787D',
+    danger: '#B3747A',
     whatsapp: '#25D366'
   };
 

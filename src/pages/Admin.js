@@ -58,60 +58,62 @@ function Admin() {
           <div style={{ marginBottom: '30px' }}>
             <h3 style={{ color: theme.text, marginBottom: '20px' }}>Controle de Usuários</h3>
             <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: theme.background, borderRadius: '8px', overflow: 'hidden' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f5f5f5' }}>
-              <th style={{ padding: '10px', border: '1px solid #ddd' }}>Nome</th>
-              <th style={{ padding: '10px', border: '1px solid #ddd' }}>Email</th>
-              <th style={{ padding: '10px', border: '1px solid #ddd' }}>Status</th>
-              <th style={{ padding: '10px', border: '1px solid #ddd' }}>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usuarios.map(usuario => (
-              <tr key={usuario.id}>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{usuario.nome}</td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>{usuario.email}</td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  <span style={{ 
-                    color: usuario.status === 'ativo' ? 'green' : 'red',
-                    fontWeight: 'bold'
-                  }}>
-                    {usuario.status}
-                  </span>
-                </td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  <button 
-                    onClick={() => toggleStatus(usuario.id)}
-                    style={{ 
-                      marginRight: '10px', 
-                      padding: '5px 10px',
-                      backgroundColor: '#ff69b4',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '3px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {usuario.status === 'ativo' ? 'Desativar' : 'Ativar'}
-                  </button>
-                  <button 
-                    onClick={() => removerUsuario(usuario.id)}
-                    style={{ 
-                      padding: '5px 10px',
-                      backgroundColor: '#dc3545',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '3px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    Remover
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              <thead>
+                <tr style={{ backgroundColor: theme.border }}>
+                  <th style={{ padding: '10px', border: `1px solid ${theme.border}`, color: theme.text }}>Nome</th>
+                  <th style={{ padding: '10px', border: `1px solid ${theme.border}`, color: theme.text }}>Email</th>
+                  <th style={{ padding: '10px', border: `1px solid ${theme.border}`, color: theme.text }}>Status</th>
+                  <th style={{ padding: '10px', border: `1px solid ${theme.border}`, color: theme.text }}>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {usuarios.map(usuario => (
+                  <tr key={usuario.id}>
+                    <td style={{ padding: '10px', border: `1px solid ${theme.border}`, color: theme.text }}>{usuario.nome}</td>
+                    <td style={{ padding: '10px', border: `1px solid ${theme.border}`, color: theme.text }}>{usuario.email}</td>
+                    <td style={{ padding: '10px', border: `1px solid ${theme.border}` }}>
+                      <span style={{ 
+                        color: usuario.status === 'ativo' ? theme.success : theme.danger,
+                        fontWeight: 'bold'
+                      }}>
+                        {usuario.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: '10px', border: `1px solid ${theme.border}` }}>
+                      <button 
+                        onClick={() => toggleStatus(usuario.id)}
+                        style={{ 
+                          marginRight: '10px', 
+                          padding: '5px 10px',
+                          backgroundColor: theme.primary,
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '3px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {usuario.status === 'ativo' ? 'Desativar' : 'Ativar'}
+                      </button>
+                      <button 
+                        onClick={() => removerUsuario(usuario.id)}
+                        style={{ 
+                          padding: '5px 10px',
+                          backgroundColor: theme.danger,
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '3px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Remover
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

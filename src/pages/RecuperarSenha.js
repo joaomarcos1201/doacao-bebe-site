@@ -1,0 +1,368 @@
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
+
+function RecuperarSenha() {
+  const { theme, isDark, toggleTheme } = useTheme();
+  const [tipoRecuperacao, setTipoRecuperacao] = useState('email');
+  const [contato, setContato] = useState('');
+  const [enviado, setEnviado] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [etapa, setEtapa] = useState('enviar'); // 'enviar', 'verificar', 'redefinir'
+  const [codigo, setCodigo] = useState('');
+  const [codigoEnviado, setCodigoEnviado] = useState('');
+  const [novaSenha, setNovaSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
+
+  const handleEnviarCodigo = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // Gerar código aleatório de 6 dígitos
+    const codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
+    setCodigoEnviado(codigoGerado);
+
+    // Simular envio (em produção, usar APIs reais)
+    setTimeout(() => {
+      alert(`Código enviado: ${codigoGerado} (Para demonstração)`);
+      setEtapa('verificar');
+      setLoading(false);
+    }, 2000);
+  };
+
+  const handleVerificarCodigo = (e) => {
+    e.preventDefault();
+    if (codigo === codigoEnviado) {
+      setEtapa('redefinir');
+    } else {
+      alert('Código incorreto! Tente novamente.');
+    }
+  };
+
+  const handleRedefinirSenha = (e) => {
+    e.preventDefault();
+    if (novaSenha !== confirmarSenha) {
+      alert('As senhas não coincidem!');
+      return;
+    }
+    if (novaSenha.length < 6) {
+      alert('A senha deve ter pelo menos 6 caracteres!');
+      return;
+    }
+
+    alert('Senha redefinida com sucesso!');
+    // Redirecionar para login
+    window.location.href = '/login';
+  };
+
+  if (etapa === 'redefinir') {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        padding: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.85)',
+          backdropFilter: 'blur(10px)',
+          padding: '40px',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+          width: '100%',
+          maxWidth: '450px',
+          color: theme.text,
+          border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(179, 116, 122, 0.3)'}`
+        }}>
+          <h2 style={{ textAlign: 'center', marginBottom: '30px', color: theme.primary }}>
+            Nova Senha
+          </h2>
+
+          <form onSubmit={handleRedefinirSenha}>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', color: theme.text }}>Nova Senha:</label>
+              <input
+                type="password"
+                value={novaSenha}
+                onChange={(e) => setNovaSenha(e.target.value)}
+                placeholder="Digite sua nova senha"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: `1px solid ${theme.border}`,
+                  borderRadius: '5px',
+                  backgroundColor: isDark ? 'rgba(69, 75, 96, 0.8)' : 'rgba(247, 182, 186, 0.3)',
+                  color: theme.text
+                }}
+                required
+              />
+            </div>
+
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', color: theme.text }}>Confirmar Senha:</label>
+              <input
+                type="password"
+                value={confirmarSenha}
+                onChange={(e) => setConfirmarSenha(e.target.value)}
+                placeholder="Confirme sua nova senha"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: `1px solid ${theme.border}`,
+                  borderRadius: '5px',
+                  backgroundColor: isDark ? 'rgba(69, 75, 96, 0.8)' : 'rgba(247, 182, 186, 0.3)',
+                  color: theme.text
+                }}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '12px',
+                backgroundColor: theme.primary,
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                fontSize: '16px',
+                cursor: 'pointer'
+              }}
+            >
+              Redefinir Senha
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  if (etapa === 'verificar') {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        padding: '20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.85)',
+          backdropFilter: 'blur(10px)',
+          padding: '40px',
+          borderRadius: '12px',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+          width: '100%',
+          maxWidth: '450px',
+          color: theme.text,
+          border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(179, 116, 122, 0.3)'}`
+        }}>
+          <h2 style={{ textAlign: 'center', marginBottom: '30px', color: theme.primary }}>
+            Verificar Código
+          </h2>
+
+          <p style={{ textAlign: 'center', marginBottom: '25px', color: theme.textSecondary }}>
+            Digite o código de 6 dígitos enviado para {contato}
+          </p>
+
+          <form onSubmit={handleVerificarCodigo}>
+            <div style={{ marginBottom: '20px' }}>
+              <input
+                type="text"
+                value={codigo}
+                onChange={(e) => setCodigo(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                placeholder="000000"
+                style={{
+                  width: '100%',
+                  padding: '15px',
+                  border: `2px solid ${theme.border}`,
+                  borderRadius: '8px',
+                  backgroundColor: isDark ? 'rgba(69, 75, 96, 0.8)' : 'rgba(247, 182, 186, 0.3)',
+                  color: theme.text,
+                  fontSize: '24px',
+                  textAlign: 'center',
+                  letterSpacing: '8px'
+                }}
+                maxLength="6"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '12px',
+                backgroundColor: theme.primary,
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                fontSize: '16px',
+                cursor: 'pointer',
+                marginBottom: '15px'
+              }}
+            >
+              Verificar Código
+            </button>
+          </form>
+
+          <div style={{ textAlign: 'center' }}>
+            <button
+              onClick={() => setEtapa('enviar')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: theme.primary,
+                cursor: 'pointer',
+                textDecoration: 'underline'
+              }}
+            >
+              Reenviar código
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // O return abaixo é o ÚNICO fora dos ifs
+  return (
+    <div style={{
+      minHeight: '100vh',
+      backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      padding: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+        <button
+          onClick={toggleTheme}
+          style={{
+            padding: '10px',
+            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+            color: theme.text,
+            border: `1px solid ${theme.border}`,
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          {isDark ? '☀️' : '🌙'}
+        </button>
+      </div>
+
+      <div style={{
+        backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.85)',
+        backdropFilter: 'blur(10px)',
+        padding: '40px',
+        borderRadius: '12px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+        width: '100%',
+        maxWidth: '450px',
+        color: theme.text,
+        border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(179, 116, 122, 0.3)'}`
+      }}>
+        <div style={{ marginBottom: '20px' }}>
+          <Link to="/login" style={{ color: theme.primary, textDecoration: 'none' }}>← Voltar ao Login</Link>
+        </div>
+
+        <h2 style={{ textAlign: 'center', marginBottom: '30px', color: theme.primary }}>
+          Recuperar Senha
+        </h2>
+
+        <div style={{ marginBottom: '25px', textAlign: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: theme.text }}>
+              <input
+                type="radio"
+                value="email"
+                checked={tipoRecuperacao === 'email'}
+                onChange={(e) => setTipoRecuperacao(e.target.value)}
+                style={{ marginRight: '8px' }}
+              />
+              Email
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: theme.text }}>
+              <input
+                type="radio"
+                value="celular"
+                checked={tipoRecuperacao === 'celular'}
+                onChange={(e) => setTipoRecuperacao(e.target.value)}
+                style={{ marginRight: '8px' }}
+              />
+              Celular
+            </label>
+          </div>
+        </div>
+
+        <form onSubmit={handleEnviarCodigo}>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', color: theme.text }}>
+              {tipoRecuperacao === 'email' ? 'Email:' : 'Número do Celular:'}
+            </label>
+            <input
+              type={tipoRecuperacao === 'email' ? 'email' : 'tel'}
+              value={contato}
+              onChange={(e) => setContato(e.target.value)}
+              placeholder={tipoRecuperacao === 'email' ? 'seu@email.com' : '+55 (11) 99999-9999'}
+              style={{
+                width: '100%',
+                padding: '12px',
+                border: `1px solid ${theme.border}`,
+                borderRadius: '5px',
+                backgroundColor: isDark ? 'rgba(69, 75, 96, 0.8)' : 'rgba(247, 182, 186, 0.3)',
+                color: theme.text
+              }}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: '100%',
+              padding: '12px',
+              backgroundColor: loading ? theme.textSecondary : theme.primary,
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              fontSize: '16px',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              marginBottom: '15px'
+            }}
+          >
+            {loading ? 'Enviando...' : 'Enviar Código'}
+          </button>
+        </form>
+
+        <div style={{
+          marginTop: '20px',
+          padding: '15px',
+          backgroundColor: isDark ? 'rgba(69, 75, 96, 0.5)' : 'rgba(247, 182, 186, 0.3)',
+          borderRadius: '8px',
+          fontSize: '14px',
+          color: theme.textSecondary
+        }}>
+          <strong>Como funciona:</strong><br />
+          Enviaremos um código de 6 dígitos para {tipoRecuperacao === 'email' ? 'seu email' : 'seu celular'}. Digite o código na próxima tela para redefinir sua senha.
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default RecuperarSenha;

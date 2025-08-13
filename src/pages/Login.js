@@ -28,7 +28,17 @@ function Login({ setUser }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: theme.background, padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      padding: '20px', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'center' 
+    }}>
       <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
         <button 
           onClick={toggleTheme}
@@ -46,13 +56,15 @@ function Login({ setUser }) {
       </div>
       
       <div style={{ 
-        backgroundColor: theme.cardBackground, 
+        backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.85)', 
+        backdropFilter: 'blur(10px)',
         padding: '40px', 
         borderRadius: '12px', 
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
         width: '100%',
         maxWidth: '400px',
-        color: theme.text
+        color: theme.text,
+        border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(179, 116, 122, 0.3)'}`
       }}>
         <h2 style={{ textAlign: 'center', marginBottom: '30px', color: theme.primary }}>
           Login - Além do Positivo
@@ -143,23 +155,16 @@ function Login({ setUser }) {
             <Link to="/cadastro" style={{ color: theme.primary, textDecoration: 'none', marginBottom: '10px', display: 'block' }}>
               Não tem conta? Cadastre-se
             </Link>
-            <button 
-              onClick={() => setShowEsqueciSenha(!showEsqueciSenha)}
+            <Link 
+              to="/recuperar-senha"
               style={{
-                background: 'none',
-                border: 'none',
                 color: theme.primary,
-                cursor: 'pointer',
-                textDecoration: 'underline'
+                textDecoration: 'underline',
+                fontSize: '14px'
               }}
             >
               Esqueci minha senha
-            </button>
-            {showEsqueciSenha && (
-              <div style={{ marginTop: '15px', padding: '15px', backgroundColor: theme.background, borderRadius: '5px', fontSize: '14px', color: theme.textSecondary }}>
-                Entre em contato conosco pelo email: suporte@alemdopositivo.com
-              </div>
-            )}
+            </Link>
           </div>
         )}
       </div>
