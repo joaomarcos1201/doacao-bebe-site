@@ -53,8 +53,12 @@ export const ProdutosProvider = ({ children }) => {
     setProdutos(prev => [produto, ...prev]);
   };
 
+  const removerProduto = (produtoId) => {
+    setProdutos(prev => prev.filter(produto => produto.id !== produtoId));
+  };
+
   return (
-    <ProdutosContext.Provider value={{ produtos, adicionarProduto }}>
+    <ProdutosContext.Provider value={{ produtos, adicionarProduto, removerProduto }}>
       {children}
     </ProdutosContext.Provider>
   );

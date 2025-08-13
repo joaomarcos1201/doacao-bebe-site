@@ -6,7 +6,7 @@ import { useCarrinho } from '../context/CarrinhoContext';
 
 function Home({ user, setUser }) {
   const navigate = useNavigate();
-  const { produtos } = useProdutos();
+  const { produtos, removerProduto } = useProdutos();
   const { theme, isDark, toggleTheme } = useTheme();
   const { totalItens, adicionarAoCarrinho } = useCarrinho();
   const [pesquisa, setPesquisa] = useState('');
@@ -22,6 +22,12 @@ function Home({ user, setUser }) {
     navigate(`/produto/${produtoId}`);
   };
 
+  const handleRemoverProduto = (produtoId, nomeProduto) => {
+    if (window.confirm(`Tem certeza que deseja excluir o produto "${nomeProduto}"?`)) {
+      removerProduto(produtoId);
+    }
+  };
+
   const produtosFiltrados = produtos.filter(produto => {
     const matchPesquisa = produto.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
                          produto.descricao.toLowerCase().includes(pesquisa.toLowerCase());
@@ -32,7 +38,7 @@ function Home({ user, setUser }) {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
+      backgroundImage: 'url(https://www.unimedfortaleza.com.br/portaluploads/uploads/2024/03/mulher-gravida-mostrando-barriga.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat'
@@ -110,141 +116,6 @@ function Home({ user, setUser }) {
               >
                 ☰
               </button>
-              
-              {menuAberto && (
-                <div style={{
-                  position: 'fixed',
-                  top: '0',
-                  right: '0',
-                  height: '100vh',
-                  width: '280px',
-                  backgroundColor: isDark ? 'rgba(105, 72, 75, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-                  backdropFilter: 'blur(15px)',
-                  boxShadow: '-4px 0 20px rgba(0,0,0,0.3)',
-                  zIndex: 99999,
-                  transform: menuAberto ? 'translateX(0)' : 'translateX(100%)',
-                  transition: 'transform 0.3s ease-in-out',
-                  paddingTop: '80px',
-                  overflowY: 'auto'
-                }}>
-                  <div 
-                    onClick={() => { navigate('/doacao'); setMenuAberto(false); }}
-                    style={{
-                      padding: '20px 25px',
-                      color: theme.text,
-                      borderBottom: `1px solid ${theme.border}`,
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '15px',
-                      transition: 'background-color 0.2s ease',
-                      ':hover': {
-                        backgroundColor: isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'
-                      }
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                  >
-                    <span style={{ fontSize: '20px' }}>🎁</span>
-                    <span>Doar Produto</span>
-                  </div>
-                  <div 
-                    onClick={() => { navigate('/perfil'); setMenuAberto(false); }}
-                    style={{
-                      padding: '20px 25px',
-                      color: theme.text,
-                      borderBottom: `1px solid ${theme.border}`,
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '15px',
-                      transition: 'background-color 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                  >
-                    <span style={{ fontSize: '20px' }}>👤</span>
-                    <span>Meu Perfil</span>
-                  </div>
-                  <div 
-                    onClick={() => { navigate('/carrinho'); setMenuAberto(false); }}
-                    style={{
-                      padding: '20px 25px',
-                      color: theme.text,
-                      borderBottom: `1px solid ${theme.border}`,
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '15px',
-                      justifyContent: 'space-between',
-                      transition: 'background-color 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                      <span style={{ fontSize: '20px' }}>🛍️</span>
-                      <span>Carrinho</span>
-                    </div>
-                    {totalItens > 0 && (
-                      <span style={{
-                        backgroundColor: theme.primary,
-                        color: 'white',
-                        borderRadius: '12px',
-                        padding: '4px 8px',
-                        fontSize: '12px',
-                        fontWeight: 'bold',
-                        minWidth: '20px',
-                        textAlign: 'center'
-                      }}>
-                        {totalItens}
-                      </span>
-                    )}
-                  </div>
-                  <div 
-                    onClick={() => { navigate('/sobre-nos'); setMenuAberto(false); }}
-                    style={{
-                      padding: '20px 25px',
-                      color: theme.text,
-                      borderBottom: user.isAdmin ? `1px solid ${theme.border}` : 'none',
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '15px',
-                      transition: 'background-color 0.2s ease'
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                  >
-                    <span style={{ fontSize: '20px' }}>📜</span>
-                    <span>Sobre Nós</span>
-                  </div>
-                  {user.isAdmin && (
-                    <div 
-                      onClick={() => { navigate('/admin'); setMenuAberto(false); }}
-                      style={{
-                        padding: '20px 25px',
-                        color: theme.text,
-                        cursor: 'pointer',
-                        fontSize: '16px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '15px',
-                        transition: 'background-color 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                    >
-                      <span style={{ fontSize: '20px' }}>⚙️</span>
-                      <span>Administração</span>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
             
             <button 
@@ -268,7 +139,6 @@ function Home({ user, setUser }) {
           backdropFilter: 'blur(5px)',
           borderTop: `1px solid ${theme.border}` 
         }}>
-          
           <div style={{ display: 'flex', gap: '15px', maxWidth: '800px', margin: '0 auto', flexWrap: 'wrap' }}>
             <input
               type="text"
@@ -286,7 +156,6 @@ function Home({ user, setUser }) {
                 fontSize: '16px'
               }}
             />
-            
             <select
               value={categoriaFiltro}
               onChange={(e) => setCategoriaFiltro(e.target.value)}
@@ -312,22 +181,172 @@ function Home({ user, setUser }) {
         </div>
       </header>
       
-      {/* Overlay para fechar menu ao clicar fora */}
+      {/* Menu hambúrguer e overlay */}
       {menuAberto && (
-        <div 
-          style={{
+        <>
+          <div 
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 99998,
+              opacity: menuAberto ? 1 : 0,
+              transition: 'opacity 0.3s ease-in-out'
+            }}
+            onClick={() => setMenuAberto(false)}
+          />
+          <div style={{
             position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 99998,
-            opacity: menuAberto ? 1 : 0,
-            transition: 'opacity 0.3s ease-in-out'
-          }}
-          onClick={() => setMenuAberto(false)}
-        />
+            top: '0',
+            right: '0',
+            height: '100vh',
+            width: '280px',
+            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(15px)',
+            boxShadow: '-4px 0 20px rgba(0,0,0,0.3)',
+            zIndex: 99999,
+            transform: menuAberto ? 'translateX(0)' : 'translateX(100%)',
+            transition: 'transform 0.3s ease-in-out',
+            paddingTop: '80px',
+            overflowY: 'auto'
+          }}>
+            <div 
+              onClick={() => { navigate('/doacao'); setMenuAberto(false); }}
+              style={{
+                padding: '20px 25px',
+                color: theme.text,
+                borderBottom: `1px solid ${theme.border}`,
+                cursor: 'pointer',
+                fontSize: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <span style={{ fontSize: '20px' }}>🎁</span>
+              <span>Doar Produto</span>
+            </div>
+            <div 
+              onClick={() => { navigate('/perfil'); setMenuAberto(false); }}
+              style={{
+                padding: '20px 25px',
+                color: theme.text,
+                borderBottom: `1px solid ${theme.border}`,
+                cursor: 'pointer',
+                fontSize: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <span style={{ fontSize: '20px' }}>👤</span>
+              <span>Meu Perfil</span>
+            </div>
+            <div 
+              onClick={() => { navigate('/carrinho'); setMenuAberto(false); }}
+              style={{
+                padding: '20px 25px',
+                color: theme.text,
+                borderBottom: `1px solid ${theme.border}`,
+                cursor: 'pointer',
+                fontSize: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                justifyContent: 'space-between',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <span style={{ fontSize: '20px' }}>🛍️</span>
+                <span>Carrinho</span>
+              </div>
+              {totalItens > 0 && (
+                <span style={{
+                  backgroundColor: theme.primary,
+                  color: 'white',
+                  borderRadius: '12px',
+                  padding: '4px 8px',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  minWidth: '20px',
+                  textAlign: 'center'
+                }}>
+                  {totalItens}
+                </span>
+              )}
+            </div>
+            <div 
+              onClick={() => { navigate('/sobre-nos'); setMenuAberto(false); }}
+              style={{
+                padding: '20px 25px',
+                color: theme.text,
+                borderBottom: `1px solid ${theme.border}`,
+                cursor: 'pointer',
+                fontSize: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <span style={{ fontSize: '20px' }}>📜</span>
+              <span>Sobre Nós</span>
+            </div>
+            <div 
+              onClick={() => { navigate('/fale-conosco'); setMenuAberto(false); }}
+              style={{
+                padding: '20px 25px',
+                color: theme.text,
+                borderBottom: user.isAdmin ? `1px solid ${theme.border}` : 'none',
+                cursor: 'pointer',
+                fontSize: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <span style={{ fontSize: '20px' }}>📞</span>
+              <span>Fale Conosco</span>
+            </div>
+            {user.isAdmin && (
+              <div 
+                onClick={() => { navigate('/admin'); setMenuAberto(false); }}
+                style={{
+                  padding: '20px 25px',
+                  color: theme.text,
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '15px',
+                  transition: 'background-color 0.2s ease'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
+                <span style={{ fontSize: '20px' }}>⚙️</span>
+                <span>Administração</span>
+              </div>
+            )}
+          </div>
+        </>
       )}
 
       <div style={{ padding: '30px', maxWidth: '1200px', margin: '0 auto' }}>
@@ -363,11 +382,12 @@ function Home({ user, setUser }) {
               <p style={{ marginBottom: '8px', color: theme.text }}><strong>Estado:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.estado}</span></p>
               <p style={{ marginBottom: '8px', color: theme.textSecondary, lineHeight: '1.4' }}><strong>Descrição:</strong> {produto.descricao}</p>
               <p style={{ marginBottom: '15px', color: theme.text }}><strong>Doador:</strong> {produto.doador}</p>
-              <div style={{ display: 'flex', gap: '10px' }}>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                 <button 
                   onClick={() => handleContact(produto.id)}
                   style={{
                     flex: 1,
+                    minWidth: '120px',
                     padding: '12px',
                     backgroundColor: theme.primary,
                     color: 'white',
@@ -393,6 +413,22 @@ function Home({ user, setUser }) {
                 >
                   🛍️
                 </button>
+                {user.isAdmin && (
+                  <button 
+                    onClick={() => handleRemoverProduto(produto.id, produto.nome)}
+                    style={{
+                      padding: '12px',
+                      backgroundColor: theme.danger,
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontSize: '18px'
+                    }}
+                  >
+                    🗑️
+                  </button>
+                )}
               </div>
             </div>
             ))}
