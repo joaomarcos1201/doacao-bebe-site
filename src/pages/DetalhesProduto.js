@@ -12,27 +12,27 @@ function DetalhesProduto() {
 
   if (!produto) {
     return (
-      <div style={{ minHeight: '100vh', backgroundColor: theme.background, padding: '20px', color: theme.text }}>
-        <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
-          <button 
-            onClick={toggleTheme}
-            style={{
-              padding: '10px',
-              backgroundColor: theme.cardBackground,
-              color: theme.text,
-              border: `1px solid ${theme.border}`,
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
-          >
-            {isDark ? '☀️' : '🌙'}
-          </button>
-        </div>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', paddingTop: '60px' }}>
+      <div style={{
+        minHeight: '100vh',
+        backgroundImage: 'url(https://www.unimedfortaleza.com.br/portaluploads/uploads/2024/03/mulher-gravida-mostrando-barriga.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          backgroundColor: isDark ? 'rgba(105, 72, 75, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(15px)',
+          padding: '40px',
+          borderRadius: '15px',
+          textAlign: 'center',
+          maxWidth: '500px'
+        }}>
           <div style={{ marginBottom: '20px' }}>
-            <Link to="/home" style={{ color: theme.primary, textDecoration: 'none' }}>← Voltar ao Início</Link>
+            <Link to="/home" style={{ color: theme.primary, textDecoration: 'none', fontSize: '18px' }}>← Voltar ao Início</Link>
           </div>
-          <h2 style={{ textAlign: 'center', color: theme.primary }}>Produto não encontrado</h2>
+          <h2 style={{ color: theme.primary }}>Produto não encontrado</h2>
         </div>
       </div>
     );
@@ -45,114 +45,162 @@ function DetalhesProduto() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: theme.background, padding: '20px' }}>
-      <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+    <div style={{ 
+      minHeight: '100vh',
+      backgroundImage: 'url(https://www.unimedfortaleza.com.br/portaluploads/uploads/2024/03/mulher-gravida-mostrando-barriga.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat'
+    }}>
+      <div style={{ 
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        zIndex: 1000
+      }}>
         <button 
           onClick={toggleTheme}
           style={{
             padding: '10px',
-            backgroundColor: theme.cardBackground,
+            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
             color: theme.text,
             border: `1px solid ${theme.border}`,
             borderRadius: '5px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            backdropFilter: 'blur(10px)'
           }}
         >
           {isDark ? '☀️' : '🌙'}
         </button>
       </div>
       
-      <div style={{ maxWidth: '1200px', margin: '0 auto', paddingTop: '60px' }}>
-        <div style={{ marginBottom: '20px' }}>
-          <Link to="/home" style={{ color: theme.primary, textDecoration: 'none', fontSize: '16px' }}>← Voltar ao Início</Link>
-        </div>
-        
+      <div style={{ 
+        minHeight: '100vh',
+        backgroundColor: isDark ? 'rgba(105, 72, 75, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(15px)',
+        padding: '20px'
+      }}>
         <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'minmax(300px, 1fr) 1fr', 
-          gap: '40px',
-          backgroundColor: theme.cardBackground,
-          padding: '30px',
-          borderRadius: '12px',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-          border: `1px solid ${theme.border}`
+          maxWidth: '100%',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          paddingTop: '60px'
         }}>
-          <div>
-            {produto.imagem ? (
-              <img 
-                src={produto.imagem} 
-                alt={produto.nome}
-                style={{ 
-                  width: '100%', 
-                  height: '400px', 
-                  objectFit: 'cover', 
-                  borderRadius: '8px',
-                  border: `1px solid ${theme.border}`
-                }}
-                onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/400x400?text=Sem+Imagem';
-                }}
-              />
-            ) : (
-              <div style={{
-                width: '100%',
-                height: '400px',
-                backgroundColor: theme.background,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: '8px',
-                border: `1px solid ${theme.border}`,
-                color: theme.textSecondary
-              }}>
-                Sem imagem disponível
-              </div>
-            )}
+          <div style={{ marginBottom: '20px' }}>
+            <Link to="/home" style={{ 
+              color: theme.primary, 
+              textDecoration: 'none', 
+              fontSize: '18px',
+              fontWeight: 'bold'
+            }}>← Voltar ao Início</Link>
           </div>
           
-          <div>
-            <h1 style={{ color: theme.primary, marginBottom: '30px', fontSize: '2.5rem' }}>{produto.nome}</h1>
-            
-            <div style={{ marginBottom: '20px', fontSize: '18px', color: theme.text }}>
-              <strong>Categoria:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.categoria}</span>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: '1fr 1fr', 
+            gap: '40px',
+            flex: 1,
+            minHeight: 'calc(100vh - 140px)'
+          }}>
+            <div style={{ 
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%'
+            }}>
+              {produto.imagem ? (
+                <img 
+                  src={produto.imagem} 
+                  alt={produto.nome}
+                  style={{ 
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain',
+                    borderRadius: '12px',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+                  }}
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/600x400?text=Sem+Imagem';
+                  }}
+                />
+              ) : (
+                <div style={{
+                  width: '80%',
+                  height: '60%',
+                  backgroundColor: isDark ? 'rgba(69, 75, 96, 0.8)' : 'rgba(247, 182, 186, 0.8)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '12px',
+                  color: theme.textSecondary,
+                  fontSize: '18px',
+                  backdropFilter: 'blur(10px)'
+                }}>
+                  Sem imagem disponível
+                </div>
+              )}
             </div>
+          
+            <div style={{ 
+              padding: '40px',
+              backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(15px)',
+              borderRadius: '12px',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center'
+            }}>
+              <h1 style={{ 
+                color: theme.primary, 
+                marginBottom: '40px', 
+                fontSize: '3rem',
+                textAlign: 'center'
+              }}>{produto.nome}</h1>
             
-            <div style={{ marginBottom: '20px', fontSize: '18px', color: theme.text }}>
-              <strong>Estado:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.estado}</span>
+              <div style={{ marginBottom: '25px', fontSize: '20px', color: theme.text }}>
+                <strong>Categoria:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.categoria}</span>
+              </div>
+              
+              <div style={{ marginBottom: '25px', fontSize: '20px', color: theme.text }}>
+                <strong>Estado:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.estado}</span>
+              </div>
+              
+              <div style={{ marginBottom: '30px' }}>
+                <strong style={{ fontSize: '20px', color: theme.text }}>Descrição:</strong>
+                <p style={{ marginTop: '15px', lineHeight: '1.6', fontSize: '18px', color: theme.textSecondary }}>{produto.descricao}</p>
+              </div>
+              
+              <div style={{ marginBottom: '25px', fontSize: '20px', color: theme.text }}>
+                <strong>Doador:</strong> {produto.doador}
+              </div>
+              
+              <div style={{ marginBottom: '30px', fontSize: '20px', color: theme.text }}>
+                <strong>Contato:</strong> {produto.contato}
+              </div>
+            
+              <button 
+                onClick={handleWhatsApp}
+                style={{ 
+                  width: '100%',
+                  padding: '20px',
+                  backgroundColor: '#25D366',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '12px',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  marginTop: '20px',
+                  boxShadow: '0 4px 15px rgba(37, 211, 102, 0.3)'
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#128C7E'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#25D366'}
+              >
+                💬 Entrar em Contato via WhatsApp
+              </button>
             </div>
-            
-            <div style={{ marginBottom: '25px' }}>
-              <strong style={{ fontSize: '18px', color: theme.text }}>Descrição:</strong>
-              <p style={{ marginTop: '10px', lineHeight: '1.6', fontSize: '16px', color: theme.textSecondary }}>{produto.descricao}</p>
-            </div>
-            
-            <div style={{ marginBottom: '20px', fontSize: '18px', color: theme.text }}>
-              <strong>Doador:</strong> {produto.doador}
-            </div>
-            
-            <div style={{ marginBottom: '30px', fontSize: '18px', color: theme.text }}>
-              <strong>Contato:</strong> {produto.contato}
-            </div>
-            
-            <button 
-              onClick={handleWhatsApp}
-              style={{ 
-                width: '100%',
-                padding: '15px',
-                backgroundColor: theme.whatsapp,
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '18px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                transition: 'background-color 0.3s'
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#128C7E'}
-              onMouseOut={(e) => e.target.style.backgroundColor = theme.whatsapp}
-            >
-              💬 Entrar em Contato via WhatsApp
-            </button>
           </div>
         </div>
       </div>
@@ -160,4 +208,4 @@ function DetalhesProduto() {
   );
 }
 
-export default DetalhesProduto;
+export default DetalhesProduto; 
