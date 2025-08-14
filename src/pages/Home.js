@@ -49,7 +49,24 @@ function Home({ user, setUser }) {
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', maxWidth: '1200px', margin: '0 auto' }}>
-          <h1 style={{ color: theme.primary, margin: 0 }}>Além do Positivo</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <img 
+              src="logo.JPEG"
+              alt="Logo Além do Positivo"
+              style={{
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                border: `2px solid ${theme.primary}`
+              }}
+              onError={(e) => {
+                e.target.style.display = 'none';
+              }}
+            />
+            <h1 style={{ color: theme.primary, margin: 0 }}>Além do Positivo</h1>
+          </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <button 
               onClick={toggleTheme}
