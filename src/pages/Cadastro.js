@@ -11,13 +11,30 @@ function Cadastro() {
   const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (nome && email && senha && telefone) {
-      setShowSuccess(true);
-      setTimeout(() => {
-        navigate('/login');
-      }, 3000);
+    if (nome && email && senha) {
+      try {
+        const response = await fetch('http://localhost:8888/api/auth/cadastro', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ nome, email, senha }),
+        });
+
+        if (response.ok) {
+          setShowSuccess(true);
+          setTimeout(() => {
+            navigate('/login');
+          }, 3000);
+        } else {
+          const errorData = await response.text();
+          alert(errorData || 'Erro no cadastro');
+        }
+      } catch (error) {
+        alert('Erro de conexão com o servidor');
+      }
     }
   };
 

@@ -1,0 +1,11 @@
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\CadastroRequest.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\LoginRequest.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\AuthResponse.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\DoacaoBebeApplication.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\service\UsuarioService.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\AuthController.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\UsuarioController.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\entity\Usuario.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\repository\UsuarioRepository.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\config\SecurityConfig.java
+c:\Users\joaom\Documents\tcc novo\doacao-bebe-site\backend\src\main\java\com\doacaobebe\service\JwtService.java

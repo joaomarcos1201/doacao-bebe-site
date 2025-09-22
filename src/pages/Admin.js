@@ -1,25 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 
 function Admin() {
   const { theme, isDark, toggleTheme } = useTheme();
-  const [usuarios, setUsuarios] = useState([
-    { id: 1, nome: 'João Silva', email: 'joao@email.com', status: 'ativo' },
-    { id: 2, nome: 'Maria Santos', email: 'maria@email.com', status: 'inativo' }
-  ]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const toggleStatus = (id) => {
-    setUsuarios(usuarios.map(user => 
-      user.id === id 
-        ? { ...user, status: user.status === 'ativo' ? 'inativo' : 'ativo' }
-        : user
-    ));
+  useEffect(() => {
+    carregarUsuarios();
+  }, []);
+
+  const carregarUsuarios = async () => {
+    try {
+      const response = await fetch('http://localhost:8888/api/usuarios');
+      if (response.ok) {
+        const data = await response.json();
+        setUsuarios(data);
+      } else {
+        alert('Erro ao carregar usuários');
+      }
+    } catch (error) {
+      alert('Erro de conexão com o servidor');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const removerUsuario = (id) => {
-    setUsuarios(usuarios.filter(user => user.id !== id));
+  const toggleStatus = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8888/api/usuarios/${id}/status`, {
+        method: 'PUT',
+      });
+      if (response.ok) {
+        carregarUsuarios();
+      } else {
+        alert('Erro ao alterar status do usuário');
+      }
+    } catch (error) {
+      alert('Erro de conexão com o servidor');
+    }
   };
+
+  const removerUsuario = async (id) => {
+    if (window.confirm('Tem certeza que deseja remover este usuário?')) {
+      try {
+        const response = await fetch(`http://localhost:8888/api/usuarios/${id}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          carregarUsuarios();
+        } else {
+          alert('Erro ao remover usuário');
+        }
+      } catch (error) {
+        alert('Erro de conexão com o servidor');
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: theme.background, padding: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: theme.text, fontSize: '18px' }}>Carregando usuários...</div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: theme.background, padding: '20px' }}>

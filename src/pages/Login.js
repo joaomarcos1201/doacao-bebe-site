@@ -10,7 +10,7 @@ function Login({ setUser }) {
   const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (email && senha) {
       if (tipoLogin === 'admin') {
@@ -21,8 +21,32 @@ function Login({ setUser }) {
           alert('Credenciais de administrador inválidas!');
         }
       } else {
-        setUser({ email, nome: email.split('@')[0], isAdmin: false });
-        navigate('/home');
+        try {
+          const response = await fetch('http://localhost:8888/api/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, senha }),
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem('token', data.token);
+            setUser({ 
+              id: data.id,
+              email: data.email, 
+              nome: data.nome, 
+              isAdmin: data.isAdmin 
+            });
+            navigate('/home');
+          } else {
+            const errorData = await response.text();
+            alert(errorData || 'Erro no login');
+          }
+        } catch (error) {
+          alert('Erro de conexão com o servidor');
+        }
       }
     }
   };
