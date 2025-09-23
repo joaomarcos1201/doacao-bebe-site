@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
-import { useCarrinho } from '../context/CarrinhoContext';
+
 
 function Home({ user, setUser }) {
   const navigate = useNavigate();
   const { produtos, removerProduto } = useProdutos();
   const { theme, isDark, toggleTheme } = useTheme();
-  const { totalItens, adicionarAoCarrinho } = useCarrinho();
+
   const [pesquisa, setPesquisa] = useState('');
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const [menuAberto, setMenuAberto] = useState(false);
@@ -83,40 +83,7 @@ function Home({ user, setUser }) {
             </button>
             <span style={{ color: theme.text }}>Olá, {user.nome}!</span>
             
-            <div 
-              onClick={() => navigate('/carrinho')}
-              style={{
-                position: 'relative',
-                padding: '8px',
-                backgroundColor: theme.background,
-                color: theme.text,
-                border: `1px solid ${theme.border}`,
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontSize: '18px'
-              }}
-            >
-              🛍️
-              {totalItens > 0 && (
-                <span style={{
-                  position: 'absolute',
-                  top: '-5px',
-                  right: '-5px',
-                  backgroundColor: theme.primary,
-                  color: 'white',
-                  borderRadius: '50%',
-                  width: '20px',
-                  height: '20px',
-                  fontSize: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 'bold'
-                }}>
-                  {totalItens}
-                </span>
-              )}
-            </div>
+
             
             <div style={{ position: 'relative' }}>
               <button 
@@ -268,42 +235,7 @@ function Home({ user, setUser }) {
               <span style={{ fontSize: '20px' }}>👤</span>
               <span>Meu Perfil</span>
             </div>
-            <div 
-              onClick={() => { navigate('/carrinho'); setMenuAberto(false); }}
-              style={{
-                padding: '20px 25px',
-                color: theme.text,
-                borderBottom: `1px solid ${theme.border}`,
-                cursor: 'pointer',
-                fontSize: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '15px',
-                justifyContent: 'space-between',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                <span style={{ fontSize: '20px' }}>🛍️</span>
-                <span>Carrinho</span>
-              </div>
-              {totalItens > 0 && (
-                <span style={{
-                  backgroundColor: theme.primary,
-                  color: 'white',
-                  borderRadius: '12px',
-                  padding: '4px 8px',
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  minWidth: '20px',
-                  textAlign: 'center'
-                }}>
-                  {totalItens}
-                </span>
-              )}
-            </div>
+
             <div 
               onClick={() => { navigate('/sobre-nos'); setMenuAberto(false); }}
               style={{
@@ -416,20 +348,7 @@ function Home({ user, setUser }) {
                 >
                   Ver Detalhes
                 </button>
-                <button 
-                  onClick={() => adicionarAoCarrinho(produto)}
-                  style={{
-                    padding: '12px',
-                    backgroundColor: theme.success,
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: 'pointer',
-                    fontSize: '18px'
-                  }}
-                >
-                  🛍️
-                </button>
+
                 {user.isAdmin && (
                   <button 
                     onClick={() => handleRemoverProduto(produto.id, produto.nome)}

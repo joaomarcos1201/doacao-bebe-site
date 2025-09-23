@@ -39,7 +39,8 @@ function RecuperarSenha() {
     }
   };
 
-  const handleRedefinirSenha = (e) => {
+  const handleRedefinirSenha = async (e) => {
+    alert('TESTE: Função handleRedefinirSenha foi chamada!');
     e.preventDefault();
     if (novaSenha !== confirmarSenha) {
       alert('As senhas não coincidem!');
@@ -50,9 +51,39 @@ function RecuperarSenha() {
       return;
     }
 
-    alert('Senha redefinida com sucesso!');
-    // Redirecionar para login
-    window.location.href = '/login';
+    alert('DEBUG: Iniciando redefinição para email: ' + contato);
+
+    try {
+      const requestData = { 
+        email: contato, 
+        novaSenha: novaSenha 
+      };
+      alert('DEBUG: Enviando dados para API...');
+
+      const response = await fetch('http://localhost:5000/api/auth/redefinir-senha', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      alert('DEBUG: Status da resposta: ' + response.status);
+
+      if (response.ok) {
+        const successData = await response.text();
+        alert('DEBUG: Sucesso - ' + successData);
+        alert('Senha redefinida com sucesso!');
+        window.location.href = '/login';
+      } else {
+        const errorData = await response.text();
+        alert('DEBUG: Erro da API - ' + errorData);
+        alert(errorData || 'Erro ao redefinir senha');
+      }
+    } catch (error) {
+      alert('DEBUG: Erro de conexão - ' + error.message);
+      alert('Erro de conexão com o servidor: ' + error.message);
+    }
   };
 
   if (etapa === 'redefinir') {

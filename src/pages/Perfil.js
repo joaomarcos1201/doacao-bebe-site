@@ -12,18 +12,55 @@ function Perfil({ user, setUser }) {
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (novaSenha && novaSenha !== confirmarSenha) {
       alert('As senhas não coincidem!');
       return;
     }
-    
-    setUser({ ...user, nome, email });
-    alert('Perfil atualizado com sucesso!');
-    setSenhaAtual('');
-    setNovaSenha('');
-    setConfirmarSenha('');
+
+    try {
+      // Atualizar dados básicos
+      const updateResponse = await fetch(`http://localhost:5000/api/usuarios/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nome, email }),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error('Erro ao atualizar dados');
+      }
+
+      // Alterar senha se fornecida
+      if (novaSenha) {
+        const senhaResponse = await fetch('http://localhost:5000/api/usuarios/alterar-senha', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            id: user.id,
+            senhaAtual: senhaAtual,
+            novaSenha: novaSenha 
+          }),
+        });
+
+        if (!senhaResponse.ok) {
+          const errorText = await senhaResponse.text();
+          throw new Error(errorText || 'Erro ao alterar senha');
+        }
+      }
+
+      setUser({ ...user, nome, email });
+      alert('Perfil atualizado com sucesso!');
+      setSenhaAtual('');
+      setNovaSenha('');
+      setConfirmarSenha('');
+    } catch (error) {
+      alert('Erro: ' + error.message);
+    }
   };
 
   return (
