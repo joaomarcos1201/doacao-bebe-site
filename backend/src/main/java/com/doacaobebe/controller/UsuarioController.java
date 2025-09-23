@@ -1,5 +1,6 @@
 package com.doacaobebe.controller;
 
+import com.doacaobebe.dto.AlterarSenhaRequest;
 import com.doacaobebe.entity.Usuario;
 import com.doacaobebe.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,32 @@ public class UsuarioController {
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao remover usuário: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/teste")
+    public ResponseEntity<?> teste() {
+        List<Usuario> usuarios = usuarioService.listarTodos();
+        return ResponseEntity.ok("Total de usuários no banco: " + usuarios.size());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
+        try {
+            Usuario usuario = usuarioService.atualizarDados(id, usuarioAtualizado);
+            return ResponseEntity.ok(usuario);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao atualizar usuário: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/alterar-senha")
+    public ResponseEntity<?> alterarSenha(@RequestBody AlterarSenhaRequest request) {
+        try {
+            usuarioService.alterarSenha(request.getId(), request.getSenhaAtual(), request.getNovaSenha());
+            return ResponseEntity.ok("Senha alterada com sucesso");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao alterar senha: " + e.getMessage());
         }
     }
 }

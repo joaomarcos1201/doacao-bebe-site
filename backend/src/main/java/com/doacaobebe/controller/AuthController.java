@@ -3,6 +3,7 @@ package com.doacaobebe.controller;
 import com.doacaobebe.dto.AuthResponse;
 import com.doacaobebe.dto.CadastroRequest;
 import com.doacaobebe.dto.LoginRequest;
+import com.doacaobebe.dto.RedefinirSenhaRequest;
 import com.doacaobebe.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,16 @@ public class AuthController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro no cadastro: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/redefinir-senha")
+    public ResponseEntity<?> redefinirSenha(@RequestBody RedefinirSenhaRequest request) {
+        try {
+            usuarioService.redefinirSenha(request.getEmail(), request.getNovaSenha());
+            return ResponseEntity.ok("Senha redefinida com sucesso");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao redefinir senha: " + e.getMessage());
         }
     }
 }

@@ -70,4 +70,40 @@ public class UsuarioService {
     public void remover(Long id) {
         usuarioRepository.deleteById(id);
     }
+
+    public void redefinirSenha(String email, String novaSenha) {
+        System.out.println("DEBUG: Redefinindo senha para email: " + email);
+        Usuario usuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        System.out.println("DEBUG: Usuário encontrado: " + usuario.getNome());
+        String senhaEncriptada = passwordEncoder.encode(novaSenha);
+        System.out.println("DEBUG: Nova senha encriptada: " + senhaEncriptada.substring(0, 10) + "...");
+        
+        usuario.setSenha(senhaEncriptada);
+        usuarioRepository.save(usuario);
+        System.out.println("DEBUG: Senha salva no banco com sucesso");
+    }
+
+    public Usuario atualizarDados(Long id, Usuario usuarioAtualizado) {
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        usuario.setNome(usuarioAtualizado.getNome());
+        usuario.setEmail(usuarioAtualizado.getEmail());
+        
+        return usuarioRepository.save(usuario);
+    }
+
+    public void alterarSenha(Long id, String senhaAtual, String novaSenha) {
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        if (!passwordEncoder.matches(senhaAtual, usuario.getSenha())) {
+            throw new RuntimeException("Senha atual incorreta");
+        }
+        
+        usuario.setSenha(passwordEncoder.encode(novaSenha));
+        usuarioRepository.save(usuario);
+    }
 }

@@ -8,12 +8,10 @@ import Doacao from './pages/Doacao';
 import DetalhesProduto from './pages/DetalhesProduto';
 import Perfil from './pages/Perfil';
 import RecuperarSenha from './pages/RecuperarSenha';
-import Carrinho from './pages/Carrinho';
 import SobreNos from './pages/SobreNos';
 import FaleConosco from './pages/FaleConosco';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ThemeProvider } from './context/ThemeContext';
-import { CarrinhoProvider } from './context/CarrinhoContext';
 import './App.css';
 
 function App() {
@@ -21,7 +19,6 @@ function App() {
 
   return (
     <ThemeProvider>
-      <CarrinhoProvider>
         <ProdutosProvider>
           <Router>
             <div className="App">
@@ -33,7 +30,7 @@ function App() {
                 <Route path="/doacao" element={user ? <Doacao /> : <Navigate to="/login" />} />
                 <Route path="/produto/:id" element={user ? <DetalhesProduto /> : <Navigate to="/login" />} />
                 <Route path="/perfil" element={user ? <Perfil user={user} setUser={setUser} /> : <Navigate to="/login" />} />
-                <Route path="/carrinho" element={user ? <Carrinho /> : <Navigate to="/login" />} />
+
                 <Route path="/sobre-nos" element={user ? <SobreNos /> : <Navigate to="/login" />} />
                 <Route path="/fale-conosco" element={user ? <FaleConosco /> : <Navigate to="/login" />} />
                 <Route path="/recuperar-senha" element={<RecuperarSenha />} />
@@ -42,7 +39,6 @@ function App() {
             </div>
           </Router>
         </ProdutosProvider>
-      </CarrinhoProvider>
     </ThemeProvider>
   );
 }

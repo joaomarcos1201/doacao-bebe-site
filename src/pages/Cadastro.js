@@ -15,7 +15,7 @@ function Cadastro() {
     e.preventDefault();
     if (nome && email && senha) {
       try {
-        const response = await fetch('http://localhost:8888/api/auth/cadastro', {
+        const response = await fetch('http://localhost:5000/api/auth/cadastro', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

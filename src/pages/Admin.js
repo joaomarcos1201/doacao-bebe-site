@@ -13,7 +13,7 @@ function Admin() {
 
   const carregarUsuarios = async () => {
     try {
-      const response = await fetch('http://localhost:8888/api/usuarios');
+      const response = await fetch('http://localhost:5000/api/usuarios');
       if (response.ok) {
         const data = await response.json();
         setUsuarios(data);
@@ -29,7 +29,7 @@ function Admin() {
 
   const toggleStatus = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8888/api/usuarios/${id}/status`, {
+      const response = await fetch(`http://localhost:5000/api/usuarios/${id}/status`, {
         method: 'PUT',
       });
       if (response.ok) {
@@ -45,7 +45,7 @@ function Admin() {
   const removerUsuario = async (id) => {
     if (window.confirm('Tem certeza que deseja remover este usuário?')) {
       try {
-        const response = await fetch(`http://localhost:8888/api/usuarios/${id}`, {
+        const response = await fetch(`http://localhost:5000/api/usuarios/${id}`, {
           method: 'DELETE',
         });
         if (response.ok) {
