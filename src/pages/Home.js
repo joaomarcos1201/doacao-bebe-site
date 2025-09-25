@@ -38,17 +38,14 @@ function Home({ user, setUser }) {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      backgroundImage: 'url(https://www.unimedfortaleza.com.br/portaluploads/uploads/2024/03/mulher-gravida-mostrando-barriga.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
     }}>
       <header style={{ 
         backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)', 
         backdropFilter: 'blur(10px)',
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <img 
               src="logo.JPEG"
@@ -316,34 +313,89 @@ function Home({ user, setUser }) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
             {produtosFiltrados.map(produto => (
             <div key={produto.id} style={{
-              backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(10px)',
-              padding: '20px',
-              borderRadius: '12px',
-              boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
-              border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(179, 116, 122, 0.3)'}`,
+              background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.95) 0%, rgba(173, 115, 120, 0.95) 100%)' : 'linear-gradient(135deg, white 0%, #ffc0cb 100%)',
+              backdropFilter: 'blur(15px)',
+              padding: '24px',
+              borderRadius: '16px',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.05)',
+              border: '1px solid #ffc0cb',
               color: theme.text,
               position: 'relative',
-              zIndex: 1
+              zIndex: 1,
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.15), 0 6px 18px rgba(0,0,0,0.08)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.05)';
             }}>
-              <h3 style={{ color: theme.primary, marginBottom: '15px' }}>{produto.nome}</h3>
-              <p style={{ marginBottom: '8px', color: theme.text }}><strong>Categoria:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.categoria}</span></p>
-              <p style={{ marginBottom: '8px', color: theme.text }}><strong>Estado:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.estado}</span></p>
-              <p style={{ marginBottom: '8px', color: theme.textSecondary, lineHeight: '1.4' }}><strong>Descrição:</strong> {produto.descricao}</p>
-              <p style={{ marginBottom: '15px', color: theme.text }}><strong>Doador:</strong> {produto.doador}</p>
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <h3 style={{ 
+                color: theme.primary, 
+                marginBottom: '16px', 
+                fontSize: '20px', 
+                fontWeight: '600',
+                letterSpacing: '-0.5px'
+              }}>{produto.nome}</h3>
+              <div style={{ marginBottom: '16px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <span style={{ 
+                  backgroundColor: isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.2)', 
+                  color: theme.text, 
+                  padding: '4px 12px', 
+                  borderRadius: '20px', 
+                  fontSize: '12px', 
+                  fontWeight: '500',
+                  textTransform: 'capitalize'
+                }}>{produto.categoria}</span>
+                <span style={{ 
+                  backgroundColor: isDark ? 'rgba(179, 115, 122, 0.3)' : 'rgba(34, 197, 94, 0.1)', 
+                  color: isDark ? theme.text : '#059669', 
+                  padding: '4px 12px', 
+                  borderRadius: '20px', 
+                  fontSize: '12px', 
+                  fontWeight: '500',
+                  textTransform: 'capitalize'
+                }}>{produto.estado}</span>
+              </div>
+              <p style={{ 
+                marginBottom: '12px', 
+                color: theme.textSecondary, 
+                lineHeight: '1.5', 
+                fontSize: '14px'
+              }}>{produto.descricao}</p>
+              <p style={{ 
+                marginBottom: '20px', 
+                color: theme.text, 
+                fontSize: '13px',
+                fontWeight: '500'
+              }}>Doador: {produto.doador}</p>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 <button 
                   onClick={() => handleContact(produto.id)}
                   style={{
                     flex: 1,
-                    minWidth: '120px',
-                    padding: '12px',
+                    minWidth: '140px',
+                    padding: '12px 20px',
                     backgroundColor: theme.primary,
                     color: 'white',
                     border: 'none',
-                    borderRadius: '8px',
+                    borderRadius: '10px',
                     cursor: 'pointer',
-                    fontWeight: 'bold'
+                    fontWeight: '600',
+                    fontSize: '14px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 2px 8px rgba(173, 115, 120, 0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = '#9a6b70';
+                    e.target.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = theme.primary;
+                    e.target.style.transform = 'translateY(0)';
                   }}
                 >
                   Ver Detalhes
@@ -354,12 +406,22 @@ function Home({ user, setUser }) {
                     onClick={() => handleRemoverProduto(produto.id, produto.nome)}
                     style={{
                       padding: '12px',
-                      backgroundColor: theme.danger,
+                      backgroundColor: '#ef4444',
                       color: 'white',
                       border: 'none',
-                      borderRadius: '8px',
+                      borderRadius: '10px',
                       cursor: 'pointer',
-                      fontSize: '18px'
+                      fontSize: '16px',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = '#dc2626';
+                      e.target.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = '#ef4444';
+                      e.target.style.transform = 'translateY(0)';
                     }}
                   >
                     🗑️

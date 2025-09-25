@@ -20,7 +20,7 @@ export const ProdutosProvider = ({ children }) => {
       estado: 'seminovo',
       doador: 'Maria Silva',
       contato: '(11) 99999-9999',
-      imagem: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400'
+      imagem: 'https://voyageinfantil.com.br/cdn/shop/files/z01bfqcxq37wx2ew807pjm2pa0mk.png?v=1739392467'
     },
     {
       id: 2,
@@ -34,13 +34,23 @@ export const ProdutosProvider = ({ children }) => {
     },
     {
       id: 3,
-      nome: 'Berço Portátil',
+      nome: 'Berço Portátil ',
       categoria: 'moveis',
-      descricao: 'Berço desmontável, fácil de transportar',
+      descricao: 'Berço portátil com estrutura reforçada, sistema de montagem rápida e colchão incluso. Ideal para viagens e uso doméstico.',
       estado: 'seminovo',
       doador: 'João Oliveira',
       contato: '(11) 77777-7777',
-      imagem: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400'
+      imagem: 'https://abramais.vteximg.com.br/arquivos/ids/220680/berco-portatil-hello-cinza-risca-diagonal.jpg?v=638436066808600000'
+    },
+    {
+      id: 4,
+      nome: 'Brinquedos',
+      categoria: 'brinquedos',
+      descricao: 'Kit com diversos brinquedos educativos e de entretenimento para bebês e crianças pequenas.',
+      estado: 'Novo',
+      doador: 'simone Menezes',
+      contato: '(11) 66666-6666',
+      imagem: 'https://a-static.mlcdn.com.br/1500x1500/kit-brinquedos-educativos-de-madeira-primeira-infancia-aramado-pedagogico-sensoriais-bebe-infantil-brinque-e-leia/brinqueeleia/13438465083/dd04c8fcc517710a96588637e2c7c4fe.jpeg'
     }
   ]);
 
