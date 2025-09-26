@@ -14,9 +14,7 @@ function DetalhesProduto() {
     return (
       <div style={{
         minHeight: '100vh',
-        backgroundImage: 'url(https://www.unimedfortaleza.com.br/portaluploads/uploads/2024/03/mulher-gravida-mostrando-barriga.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -47,10 +45,7 @@ function DetalhesProduto() {
   return (
     <div style={{ 
       minHeight: '100vh',
-      backgroundImage: 'url(https://www.unimedfortaleza.com.br/portaluploads/uploads/2024/03/mulher-gravida-mostrando-barriga.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
     }}>
       <div style={{ 
         position: 'fixed',

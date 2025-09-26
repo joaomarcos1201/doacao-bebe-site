@@ -15,6 +15,8 @@ function Home({ user, setUser }) {
 
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     navigate('/login');
   };
 
@@ -32,7 +34,8 @@ function Home({ user, setUser }) {
     const matchPesquisa = produto.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
                          produto.descricao.toLowerCase().includes(pesquisa.toLowerCase());
     const matchCategoria = categoriaFiltro === '' || produto.categoria === categoriaFiltro;
-    return matchPesquisa && matchCategoria;
+    const isAprovado = produto.status === 'aprovado';
+    return matchPesquisa && matchCategoria && isAprovado;
   });
 
   return (
@@ -530,6 +533,7 @@ function Home({ user, setUser }) {
                 lineHeight: '1.5', 
                 fontSize: '14px'
               }}>{produto.descricao}</p>
+<<<<<<< HEAD
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -583,6 +587,40 @@ function Home({ user, setUser }) {
                   </span>
                 </button>
               </div>
+=======
+              <p style={{ 
+                marginBottom: '20px', 
+                color: theme.text, 
+                fontSize: '13px',
+                fontWeight: '500'
+              }}>Doador: {produto.doador}</p>
+              <button 
+                onClick={() => handleContact(produto.id)}
+                style={{
+                  width: '100%',
+                  padding: '12px 20px',
+                  backgroundColor: theme.primary,
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(173, 115, 120, 0.3)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#9a6b70';
+                  e.target.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = theme.primary;
+                  e.target.style.transform = 'translateY(0)';
+                }}
+              >
+                Ver Detalhes
+              </button>
+>>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
             </div>
             ))}
           </div>

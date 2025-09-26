@@ -8,7 +8,11 @@ function SobreNos() {
   return (
     <div style={{ 
       minHeight: '100vh', 
+<<<<<<< HEAD
       background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
+=======
+      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
+>>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
       padding: '20px'
     }}>
       <div 

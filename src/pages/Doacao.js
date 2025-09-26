@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
+import { useNotification } from '../hooks/useNotification';
+import Notification from '../components/Notification';
 
 function Doacao() {
   const [produto, setProduto] = useState('');
@@ -14,6 +16,7 @@ function Doacao() {
   const { adicionarProduto } = useProdutos();
   const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
+  const { notifications, showSuccess, removeNotification } = useNotification();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,7 +29,7 @@ function Doacao() {
         contato,
         imagem
       });
-      alert('Doação cadastrada com sucesso!');
+      showSuccess('Produto enviado para aprovação! Será analisado pelo administrador antes de aparecer no site.');
       setProduto('');
       setCategoria('');
       setDescricao('');
@@ -39,12 +42,17 @@ function Doacao() {
   };
 
   return (
+<<<<<<< HEAD
     <div style={{ 
       minHeight: '100vh', 
       background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', 
       padding: '20px' 
     }}>
       <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10 }}>
+=======
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: '20px' }}>
+      <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+>>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
         <button 
           onClick={toggleTheme}
           style={{
@@ -345,6 +353,7 @@ function Doacao() {
             </button>
           </form>
 
+<<<<<<< HEAD
           <div style={{ 
             marginTop: '30px', 
             padding: '25px', 
@@ -411,7 +420,27 @@ function Doacao() {
               </div>
             </div>
           </div>
+=======
+      <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
+        <h4 style={{ color: '#ff69b4', marginBottom: '10px' }}>Como funciona?</h4>
+        <p>1. Preencha o formulário com os dados do produto</p>
+        <p>2. Aguarde a aprovação do administrador</p>
+        <p>3. Após aprovado, aparecerá no site para doação</p>
+        <p>4. Interessados entrarão em contato com você</p>
+      </div>
+>>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
     </div>
+
+    {/* Notificações */}
+    {notifications.map(notification => (
+      <Notification
+        key={notification.id}
+        message={notification.message}
+        type={notification.type}
+        duration={notification.duration}
+        onClose={() => removeNotification(notification.id)}
+      />
+    ))}
   </div>
 </div>
   );

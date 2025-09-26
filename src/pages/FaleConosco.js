@@ -25,7 +25,7 @@ function FaleConosco() {
     // Simular envio
     setEnviado(true);
     setTimeout(() => {
-      navigate('/');
+      navigate('/home');
     }, 2000);
   };
 
@@ -33,7 +33,11 @@ function FaleConosco() {
     return (
       <div style={{
         minHeight: '100vh',
+<<<<<<< HEAD
         background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
+=======
+        background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
+>>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -58,7 +62,11 @@ function FaleConosco() {
   return (
     <div style={{
       minHeight: '100vh',
+<<<<<<< HEAD
       background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
+=======
+      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
+>>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
       padding: '20px'
     }}>
       <div 
@@ -99,7 +107,7 @@ function FaleConosco() {
         marginTop: '50px'
       }}>
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/home')}
           style={{
             marginBottom: '20px',
             padding: '10px 15px',
@@ -111,7 +119,7 @@ function FaleConosco() {
             fontSize: '16px'
           }}
         >
-          ← Voltar
+          ← Voltar ao Início
         </button>
 
         <h1 style={{ color: theme.primary, textAlign: 'center', marginBottom: '30px' }}>
