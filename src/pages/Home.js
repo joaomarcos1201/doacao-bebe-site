@@ -41,9 +41,13 @@ function Home({ user, setUser }) {
       background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
     }}>
       <header style={{ 
-        backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)', 
-        backdropFilter: 'blur(10px)',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+        background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.98) 0%, rgba(173, 115, 120, 0.98) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 192, 203, 0.7) 100%)', 
+        backdropFilter: 'blur(25px)',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06)',
+        borderBottom: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
@@ -62,23 +66,56 @@ function Home({ user, setUser }) {
                 e.target.style.display = 'none';
               }}
             />
-            <h1 style={{ color: theme.primary, margin: 0 }}>Além do Positivo</h1>
+            <h1 style={{ 
+              color: theme.primary, 
+              margin: 0, 
+              fontSize: '24px',
+              fontWeight: '700',
+              letterSpacing: '-0.5px',
+              fontFamily: 'system-ui, -apple-system, sans-serif'
+            }}>Além do Positivo</h1>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <button 
               onClick={toggleTheme}
               style={{
-                padding: '8px',
-                backgroundColor: theme.background,
+                padding: '10px 12px',
+                backgroundColor: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)',
                 color: theme.text,
-                border: `1px solid ${theme.border}`,
-                borderRadius: '5px',
-                cursor: 'pointer'
+                border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.4)' : 'rgba(252, 192, 203, 0.4)'}`,
+                borderRadius: '8px',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                fontSize: '16px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)';
+                e.target.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)';
+                e.target.style.transform = 'translateY(0)';
               }}
             >
               {isDark ? '☀️' : '🌙'}
             </button>
-            <span style={{ color: theme.text }}>Olá, {user.nome}!</span>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '8px',
+              padding: '8px 12px',
+              backgroundColor: isDark ? 'rgba(173, 115, 120, 0.15)' : 'rgba(252, 192, 203, 0.15)',
+              borderRadius: '8px',
+              border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`
+            }}>
+              <span style={{ fontSize: '16px' }}>👤</span>
+              <span style={{ 
+                color: theme.text, 
+                fontSize: '14px', 
+                fontWeight: '500'
+              }}>Olá, {user.nome}!</span>
+            </div>
             
 
             
@@ -86,13 +123,23 @@ function Home({ user, setUser }) {
               <button 
                 onClick={() => setMenuAberto(!menuAberto)}
                 style={{
-                  padding: '8px',
-                  backgroundColor: theme.background,
+                  padding: '10px 12px',
+                  backgroundColor: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)',
                   color: theme.text,
-                  border: `1px solid ${theme.border}`,
-                  borderRadius: '5px',
+                  border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.4)' : 'rgba(252, 192, 203, 0.4)'}`,
+                  borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '18px'
+                  fontSize: '16px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)';
+                  e.target.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)';
+                  e.target.style.transform = 'translateY(0)';
                 }}
               >
                 ☰
@@ -103,11 +150,24 @@ function Home({ user, setUser }) {
               onClick={handleLogout}
               style={{
                 padding: '8px 16px',
-                backgroundColor: theme.danger,
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
+                backgroundColor: 'transparent',
+                color: theme.textSecondary,
+                border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`,
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '13px',
+                fontWeight: '500',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)';
+                e.target.style.color = '#ef4444';
+                e.target.style.borderColor = '#ef4444';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = 'transparent';
+                e.target.style.color = theme.textSecondary;
+                e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)';
               }}
             >
               Sair
@@ -115,10 +175,10 @@ function Home({ user, setUser }) {
           </div>
         </div>
         <div style={{ 
-          padding: '20px', 
-          backgroundColor: isDark ? 'rgba(69, 75, 96, 0.8)' : 'rgba(247, 182, 186, 0.8)', 
-          backdropFilter: 'blur(5px)',
-          borderTop: `1px solid ${theme.border}` 
+          padding: '24px', 
+          backgroundColor: isDark ? 'rgba(69, 75, 96, 0.6)' : 'rgba(247, 182, 186, 0.4)', 
+          backdropFilter: 'blur(15px)',
+          borderTop: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}` 
         }}>
           <div style={{ display: 'flex', gap: '15px', maxWidth: '800px', margin: '0 auto', flexWrap: 'wrap' }}>
             <input
@@ -128,26 +188,42 @@ function Home({ user, setUser }) {
               onChange={(e) => setPesquisa(e.target.value)}
               style={{
                 flex: '1',
-                minWidth: '250px',
-                padding: '12px 15px',
-                border: `1px solid ${theme.border}`,
-                borderRadius: '25px',
-                backgroundColor: isDark ? 'rgba(105, 72, 75, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+                minWidth: '280px',
+                padding: '14px 20px',
+                border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
+                borderRadius: '12px',
+                backgroundColor: isDark ? 'rgba(105, 72, 75, 0.8)' : 'rgba(255, 255, 255, 0.95)',
                 color: theme.text,
-                fontSize: '16px'
+                fontSize: '15px',
+                fontWeight: '500',
+                outline: 'none',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = theme.primary;
+                e.target.style.boxShadow = '0 6px 20px rgba(173, 115, 120, 0.15)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)';
+                e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
               }}
             />
             <select
               value={categoriaFiltro}
               onChange={(e) => setCategoriaFiltro(e.target.value)}
               style={{
-                padding: '12px 15px',
-                border: `1px solid ${theme.border}`,
-                borderRadius: '25px',
-                backgroundColor: isDark ? 'rgba(105, 72, 75, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+                padding: '14px 20px',
+                border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
+                borderRadius: '12px',
+                backgroundColor: isDark ? 'rgba(105, 72, 75, 0.8)' : 'rgba(255, 255, 255, 0.95)',
                 color: theme.text,
-                fontSize: '16px',
-                minWidth: '150px'
+                fontSize: '15px',
+                fontWeight: '500',
+                minWidth: '180px',
+                outline: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
               }}
             >
               <option value="">Todas as categorias</option>
@@ -295,7 +371,92 @@ function Home({ user, setUser }) {
         </>
       )}
 
-      <div style={{ padding: '30px', maxWidth: '1200px', margin: '0 auto' }}>
+      <div style={{ 
+        padding: '40px 30px 0', 
+        maxWidth: '1200px', 
+        margin: '0 auto' 
+      }}>
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '50px',
+          padding: '40px 20px',
+          background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.3) 0%, rgba(173, 115, 120, 0.2) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(252, 192, 203, 0.3) 100%)',
+          borderRadius: '20px',
+          backdropFilter: 'blur(10px)',
+          border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.3)'}`
+        }}>
+          <h2 style={{
+            fontSize: '36px',
+            fontWeight: '700',
+            color: theme.primary,
+            marginBottom: '16px',
+            letterSpacing: '-1px',
+            fontFamily: 'system-ui, -apple-system, sans-serif'
+          }}>
+            Produtos Disponíveis
+          </h2>
+          <p style={{
+            fontSize: '18px',
+            color: theme.textSecondary,
+            margin: 0,
+            fontWeight: '400',
+            lineHeight: '1.6'
+          }}>
+            Encontre produtos para bebês e gestantes doados por famílias solidárias
+          </p>
+        </div>
+        
+        <div style={{ padding: '0 0 30px' }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '25px',
+            padding: '0 10px'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px'
+            }}>
+              <span style={{
+                color: theme.textSecondary,
+                fontSize: '16px',
+                fontWeight: '500'
+              }}>
+                {produtosFiltrados.length} produto{produtosFiltrados.length !== 1 ? 's' : ''} encontrado{produtosFiltrados.length !== 1 ? 's' : ''}
+              </span>
+              {(pesquisa || categoriaFiltro) && (
+                <button
+                  onClick={() => {
+                    setPesquisa('');
+                    setCategoriaFiltro('');
+                  }}
+                  style={{
+                    padding: '6px 12px',
+                    backgroundColor: 'transparent',
+                    color: theme.primary,
+                    border: `1px solid ${theme.primary}`,
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: '500',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = theme.primary;
+                    e.target.style.color = 'white';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.color = theme.primary;
+                  }}
+                >
+                  Limpar filtros
+                </button>
+              )}
+            </div>
+          </div>
         {produtosFiltrados.length === 0 ? (
           <div style={{
             textAlign: 'center',
@@ -342,22 +503,25 @@ function Home({ user, setUser }) {
               }}>{produto.nome}</h3>
               <div style={{ marginBottom: '16px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 <span style={{ 
-                  backgroundColor: isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.2)', 
+                  backgroundColor: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)', 
                   color: theme.text, 
-                  padding: '4px 12px', 
-                  borderRadius: '20px', 
-                  fontSize: '12px', 
-                  fontWeight: '500',
-                  textTransform: 'capitalize'
+                  padding: '6px 12px', 
+                  borderRadius: '12px', 
+                  fontSize: '11px', 
+                  fontWeight: '600',
+                  textTransform: 'capitalize',
+                  border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`
                 }}>{produto.categoria}</span>
                 <span style={{ 
-                  backgroundColor: isDark ? 'rgba(179, 115, 122, 0.3)' : 'rgba(34, 197, 94, 0.1)', 
-                  color: isDark ? theme.text : '#059669', 
-                  padding: '4px 12px', 
-                  borderRadius: '20px', 
-                  fontSize: '12px', 
-                  fontWeight: '500',
-                  textTransform: 'capitalize'
+                  backgroundColor: produto.estado === 'novo' ? 'rgba(34, 197, 94, 0.1)' : produto.estado === 'seminovo' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(245, 158, 11, 0.1)', 
+                  color: produto.estado === 'novo' ? '#059669' : produto.estado === 'seminovo' ? '#2563eb' : '#d97706', 
+                  padding: '6px 12px', 
+                  borderRadius: '12px', 
+                  fontSize: '11px', 
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                  border: `1px solid ${produto.estado === 'novo' ? 'rgba(34, 197, 94, 0.2)' : produto.estado === 'seminovo' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(245, 158, 11, 0.2)'}`
                 }}>{produto.estado}</span>
               </div>
               <p style={{ 
@@ -366,18 +530,33 @@ function Home({ user, setUser }) {
                 lineHeight: '1.5', 
                 fontSize: '14px'
               }}>{produto.descricao}</p>
-              <p style={{ 
-                marginBottom: '20px', 
-                color: theme.text, 
-                fontSize: '13px',
-                fontWeight: '500'
-              }}>Doador: {produto.doador}</p>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '20px',
+                padding: '8px 12px',
+                backgroundColor: isDark ? 'rgba(173, 115, 120, 0.1)' : 'rgba(252, 192, 203, 0.1)',
+                borderRadius: '8px',
+                border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`
+              }}>
+                <span style={{ fontSize: '14px' }}>👤</span>
+                <span style={{ 
+                  color: theme.textSecondary, 
+                  fontSize: '12px',
+                  fontWeight: '500'
+                }}>Doado por</span>
+                <span style={{ 
+                  color: theme.text, 
+                  fontSize: '13px',
+                  fontWeight: '600'
+                }}>{produto.doador}</span>
+              </div>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 <button 
                   onClick={() => handleContact(produto.id)}
                   style={{
-                    flex: 1,
-                    minWidth: '140px',
+                    width: '100%',
                     padding: '12px 20px',
                     backgroundColor: theme.primary,
                     color: 'white',
@@ -398,40 +577,17 @@ function Home({ user, setUser }) {
                     e.target.style.transform = 'translateY(0)';
                   }}
                 >
-                  Ver Detalhes
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                    <span>💬</span>
+                    <span>Entrar em Contato</span>
+                  </span>
                 </button>
-
-                {user.isAdmin && (
-                  <button 
-                    onClick={() => handleRemoverProduto(produto.id, produto.nome)}
-                    style={{
-                      padding: '12px',
-                      backgroundColor: '#ef4444',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '10px',
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      transition: 'all 0.2s ease',
-                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = '#dc2626';
-                      e.target.style.transform = 'translateY(-1px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = '#ef4444';
-                      e.target.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    🗑️
-                  </button>
-                )}
               </div>
             </div>
             ))}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

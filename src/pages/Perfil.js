@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 
 function Perfil({ user, setUser }) {
+  const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
   const [nome, setNome] = useState(user?.nome || '');
   const [email, setEmail] = useState(user?.email || '');
@@ -66,12 +67,36 @@ function Perfil({ user, setUser }) {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      backgroundImage: 'url(https://www.unimedfortaleza.com.br/portaluploads/uploads/2024/03/mulher-gravida-mostrando-barriga.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
+      background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
       padding: '20px'
     }}>
+      <div 
+        onClick={() => navigate('/home')}
+        style={{ 
+          position: 'absolute', 
+          top: '20px', 
+          left: '20px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '10px',
+          cursor: 'pointer',
+          transition: 'transform 0.2s ease'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+      >
+        <img 
+          src="logo.JPEG"
+          alt="Logo Além do Positivo"
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            objectFit: 'cover'
+          }}
+        />
+        <span style={{ color: theme.primary, fontWeight: 'bold', fontSize: '18px' }}>Além do Positivo</span>
+      </div>
       <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
         <button 
           onClick={toggleTheme}

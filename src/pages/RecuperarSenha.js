@@ -90,10 +90,7 @@ function RecuperarSenha() {
     return (
       <div style={{
         minHeight: '100vh',
-        backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
         padding: '20px',
         display: 'flex',
         alignItems: 'center',
@@ -178,10 +175,7 @@ function RecuperarSenha() {
     return (
       <div style={{
         minHeight: '100vh',
-        backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
         padding: '20px',
         display: 'flex',
         alignItems: 'center',
@@ -266,14 +260,10 @@ function RecuperarSenha() {
     );
   }
 
-  // O return abaixo é o ÚNICO fora dos ifs
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
+      background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
       padding: '20px',
       display: 'flex',
       alignItems: 'center',
