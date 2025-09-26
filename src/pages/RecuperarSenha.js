@@ -28,13 +28,14 @@ function RecuperarSenha() {
       });
 
       if (response.ok) {
-        alert('Código gerado com sucesso!\n\n📝 Para desenvolvimento: O código aparece no console do servidor.\n📧 Em produção: Será enviado por email.');
+        alert('✅ Além do Positivo\n\nCódigo enviado para seu email! Verifique sua caixa de entrada.');
         setEtapa('verificar');
       } else {
-        alert('Não foi possível enviar o código. Verifique se o email está correto e tente novamente.');
+        const errorText = await response.text();
+        alert('❌ Além do Positivo\n\n' + (errorText || 'Não foi possível enviar o código. Verifique se o email está correto.'));
       }
     } catch (error) {
-      alert('Serviço de email temporáriamente indisponível. Tente novamente em alguns minutos.');
+      alert('❌ Além do Positivo\n\nErro de conexão. Verifique sua internet e tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -56,10 +57,10 @@ function RecuperarSenha() {
         setEtapa('redefinir');
       } else {
         const errorText = await response.text();
-        alert(errorText || 'Código incorreto!');
+        alert('❌ Além do Positivo\n\n' + (errorText || 'Código incorreto!'));
       }
     } catch (error) {
-      alert('Erro de conexão. Verifique sua internet e tente novamente.');
+      alert('❌ Além do Positivo\n\nErro de conexão. Verifique sua internet e tente novamente.');
     }
   };
 
@@ -67,11 +68,11 @@ function RecuperarSenha() {
     alert('TESTE: Função handleRedefinirSenha foi chamada!');
     e.preventDefault();
     if (novaSenha !== confirmarSenha) {
-      alert('As senhas não coincidem!');
+      alert('❌ Além do Positivo\n\nAs senhas não coincidem!');
       return;
     }
     if (novaSenha.length < 6) {
-      alert('A senha deve ter pelo menos 6 caracteres!');
+      alert('❌ Além do Positivo\n\nA senha deve ter pelo menos 6 caracteres!');
       return;
     }
 
@@ -97,16 +98,16 @@ function RecuperarSenha() {
       if (response.ok) {
         const successData = await response.text();
         alert('DEBUG: Sucesso - ' + successData);
-        alert('Senha redefinida com sucesso!');
+        alert('✅ Além do Positivo\n\nSenha redefinida com sucesso!');
         window.location.href = '/login';
       } else {
         const errorData = await response.text();
         alert('DEBUG: Erro da API - ' + errorData);
-        alert(errorData || 'Erro ao redefinir senha');
+        alert('❌ Além do Positivo\n\n' + (errorData || 'Erro ao redefinir senha'));
       }
     } catch (error) {
       alert('DEBUG: Erro de conexão - ' + error.message);
-      alert('Erro de conexão com o servidor: ' + error.message);
+      alert('❌ Além do Positivo\n\nErro de conexão com o servidor: ' + error.message);
     }
   };
 
@@ -114,11 +115,7 @@ function RecuperarSenha() {
     return (
       <div style={{
         minHeight: '100vh',
-<<<<<<< HEAD
-        background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
-=======
         background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
->>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
         padding: '20px',
         display: 'flex',
         alignItems: 'center',
@@ -203,11 +200,7 @@ function RecuperarSenha() {
     return (
       <div style={{
         minHeight: '100vh',
-<<<<<<< HEAD
-        background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
-=======
         background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
->>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
         padding: '20px',
         display: 'flex',
         alignItems: 'center',
@@ -295,11 +288,7 @@ function RecuperarSenha() {
   return (
     <div style={{
       minHeight: '100vh',
-<<<<<<< HEAD
-      background: 'linear-gradient(135deg, white 0%, #f8d7da 100%)',
-=======
       background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
->>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
       padding: '20px',
       display: 'flex',
       alignItems: 'center',
@@ -340,41 +329,18 @@ function RecuperarSenha() {
           Recuperar Senha
         </h2>
 
-        <div style={{ marginBottom: '25px', textAlign: 'center' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
-            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: theme.text }}>
-              <input
-                type="radio"
-                value="email"
-                checked={tipoRecuperacao === 'email'}
-                onChange={(e) => setTipoRecuperacao(e.target.value)}
-                style={{ marginRight: '8px' }}
-              />
-              Email
-            </label>
-            <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', color: theme.text }}>
-              <input
-                type="radio"
-                value="celular"
-                checked={tipoRecuperacao === 'celular'}
-                onChange={(e) => setTipoRecuperacao(e.target.value)}
-                style={{ marginRight: '8px' }}
-              />
-              Celular
-            </label>
-          </div>
-        </div>
+
 
         <form onSubmit={handleEnviarCodigo}>
           <div style={{ marginBottom: '20px' }}>
             <label style={{ display: 'block', marginBottom: '5px', color: theme.text }}>
-              {tipoRecuperacao === 'email' ? 'Email:' : 'Número do Celular:'}
+              Email:
             </label>
             <input
-              type={tipoRecuperacao === 'email' ? 'email' : 'tel'}
+              type="email"
               value={contato}
               onChange={(e) => setContato(e.target.value)}
-              placeholder={tipoRecuperacao === 'email' ? 'seu@email.com' : '+55 (11) 99999-9999'}
+              placeholder="seu@email.com"
               style={{
                 width: '100%',
                 padding: '12px',
@@ -415,7 +381,7 @@ function RecuperarSenha() {
           color: theme.textSecondary
         }}>
           <strong>Como funciona:</strong><br />
-          Enviaremos um código de 6 dígitos para {tipoRecuperacao === 'email' ? 'seu email' : 'seu celular'}. Digite o código na próxima tela para redefinir sua senha.
+          Enviaremos um código de 6 dígitos para seu email. Digite o código na próxima tela para redefinir sua senha.
         </div>
       </div>
     </div>

@@ -42,17 +42,8 @@ function Doacao() {
   };
 
   return (
-<<<<<<< HEAD
-    <div style={{ 
-      minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', 
-      padding: '20px' 
-    }}>
-      <div style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 10 }}>
-=======
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: '20px' }}>
       <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
->>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
         <button 
           onClick={toggleTheme}
           style={{
@@ -353,7 +344,6 @@ function Doacao() {
             </button>
           </form>
 
-<<<<<<< HEAD
           <div style={{ 
             marginTop: '30px', 
             padding: '25px', 
@@ -401,7 +391,7 @@ function Doacao() {
                   fontSize: '12px', 
                   fontWeight: 'bold' 
                 }}>2</span>
-                <p style={{ margin: 0, color: theme.text, fontSize: '14px' }}>Seu produto aparecerá na lista para outras famílias</p>
+                <p style={{ margin: 0, color: theme.text, fontSize: '14px' }}>Aguarde a aprovação do administrador</p>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span style={{ 
@@ -420,15 +410,6 @@ function Doacao() {
               </div>
             </div>
           </div>
-=======
-      <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
-        <h4 style={{ color: '#ff69b4', marginBottom: '10px' }}>Como funciona?</h4>
-        <p>1. Preencha o formulário com os dados do produto</p>
-        <p>2. Aguarde a aprovação do administrador</p>
-        <p>3. Após aprovado, aparecerá no site para doação</p>
-        <p>4. Interessados entrarão em contato com você</p>
-      </div>
->>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
     </div>
 
     {/* Notificações */}

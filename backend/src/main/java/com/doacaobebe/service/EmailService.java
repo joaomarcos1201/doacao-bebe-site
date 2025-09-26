@@ -18,6 +18,15 @@ public class EmailService {
         System.out.println("Código: " + codigo);
         
         try {
+            // Simular envio de email para desenvolvimento
+            System.out.println("\n" + "=".repeat(50));
+            System.out.println("📧 EMAIL SIMULADO - CÓDIGO DE RECUPERAÇÃO");
+            System.out.println("Para: " + destinatario);
+            System.out.println("Código: " + codigo);
+            System.out.println("=".repeat(50) + "\n");
+            
+            // Comentar o código real de envio até configurar senha do Gmail
+            /*
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             
@@ -36,7 +45,9 @@ public class EmailService {
             
             helper.setText(htmlContent, true);
             mailSender.send(message);
-            System.out.println("Email enviado com sucesso!");
+            */
+            
+            System.out.println("Email simulado enviado com sucesso!");
             
         } catch (Exception e) {
             System.out.println("Erro ao enviar email: " + e.getMessage());

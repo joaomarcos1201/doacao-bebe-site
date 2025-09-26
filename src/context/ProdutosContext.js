@@ -53,8 +53,8 @@ export const ProdutosProvider = ({ children }) => {
       estado: 'Novo',
       doador: 'simone Menezes',
       contato: '(11) 66666-6666',
-<<<<<<< HEAD
-      imagem: 'https://a-static.mlcdn.com.br/1500x1500/kit-brinquedos-educativos-de-madeira-primeira-infancia-aramado-pedagogico-sensoriais-bebe-infantil-brinque-e-leia/brinqueeleia/13438465083/dd04c8fcc517710a96588637e2c7c4fe.jpeg'
+      imagem: 'https://a-static.mlcdn.com.br/1500x1500/kit-brinquedos-educativos-de-madeira-primeira-infancia-aramado-pedagogico-sensoriais-bebe-infantil-brinque-e-leia/brinqueeleia/13438465083/dd04c8fcc517710a96588637e2c7c4fe.jpeg',
+      status: 'aprovado'
     },
     {
       id: 5,
@@ -64,11 +64,8 @@ export const ProdutosProvider = ({ children }) => {
       estado: 'novo',
       doador: 'Fernanda Costa',
       contato: '(11) 33333-3333',
-      imagem: 'https://cdn.awsli.com.br/600x700/1553/1553321/produto/285443956/mochila-funcional-77117079b8354b374c9bfcb25327de39b9b6d15d-zngso87pko.jpg'
-=======
-      imagem: 'https://a-static.mlcdn.com.br/1500x1500/kit-brinquedos-educativos-de-madeira-primeira-infancia-aramado-pedagogico-sensoriais-bebe-infantil-brinque-e-leia/brinqueeleia/13438465083/dd04c8fcc517710a96588637e2c7c4fe.jpeg',
+      imagem: 'https://cdn.awsli.com.br/600x700/1553/1553321/produto/285443956/mochila-funcional-77117079b8354b374c9bfcb25327de39b9b6d15d-zngso87pko.jpg',
       status: 'aprovado'
->>>>>>> 5eb5bb0e7acc2e82bebc4dbe59efb663ccd71c92
     }
   ]);
 
