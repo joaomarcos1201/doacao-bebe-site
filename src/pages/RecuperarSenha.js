@@ -18,24 +18,49 @@ function RecuperarSenha() {
     e.preventDefault();
     setLoading(true);
 
-    // Gerar código aleatório de 6 dígitos
-    const codigoGerado = Math.floor(100000 + Math.random() * 900000).toString();
-    setCodigoEnviado(codigoGerado);
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/enviar-codigo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: contato }),
+      });
 
-    // Simular envio (em produção, usar APIs reais)
-    setTimeout(() => {
-      alert(`Código enviado: ${codigoGerado} (Para demonstração)`);
-      setEtapa('verificar');
+      if (response.ok) {
+        alert('Código enviado para seu email! Verifique sua caixa de entrada.');
+        setEtapa('verificar');
+      } else {
+        const errorText = await response.text();
+        alert(errorText || 'Erro ao enviar código');
+      }
+    } catch (error) {
+      alert('Erro de conexão. Verifique sua internet e tente novamente.');
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
-  const handleVerificarCodigo = (e) => {
+  const handleVerificarCodigo = async (e) => {
     e.preventDefault();
-    if (codigo === codigoEnviado) {
-      setEtapa('redefinir');
-    } else {
-      alert('Código incorreto! Tente novamente.');
+    
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/verificar-codigo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: contato, codigo: codigo }),
+      });
+
+      if (response.ok) {
+        setEtapa('redefinir');
+      } else {
+        const errorText = await response.text();
+        alert(errorText || 'Código incorreto!');
+      }
+    } catch (error) {
+      alert('Erro de conexão. Verifique sua internet e tente novamente.');
     }
   };
 
@@ -90,10 +115,7 @@ function RecuperarSenha() {
     return (
       <div style={{
         minHeight: '100vh',
-        backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
         padding: '20px',
         display: 'flex',
         alignItems: 'center',
@@ -178,10 +200,7 @@ function RecuperarSenha() {
     return (
       <div style={{
         minHeight: '100vh',
-        backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
         padding: '20px',
         display: 'flex',
         alignItems: 'center',
@@ -266,14 +285,10 @@ function RecuperarSenha() {
     );
   }
 
-  // O return abaixo é o ÚNICO fora dos ifs
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundImage: 'url(https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1920&h=1080&fit=crop)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
+      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
       padding: '20px',
       display: 'flex',
       alignItems: 'center',

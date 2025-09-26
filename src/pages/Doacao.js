@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
+import { useNotification } from '../hooks/useNotification';
+import Notification from '../components/Notification';
 
 function Doacao() {
   const [produto, setProduto] = useState('');
@@ -14,6 +16,7 @@ function Doacao() {
   const { adicionarProduto } = useProdutos();
   const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
+  const { notifications, showSuccess, removeNotification } = useNotification();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,7 +29,7 @@ function Doacao() {
         contato,
         imagem
       });
-      alert('Doação cadastrada com sucesso!');
+      showSuccess('Produto cadastrado com sucesso! Obrigado por sua doação.');
       setProduto('');
       setCategoria('');
       setDescricao('');
@@ -39,7 +42,7 @@ function Doacao() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: theme.background, padding: '20px' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: '20px' }}>
       <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
         <button 
           onClick={toggleTheme}
@@ -215,10 +218,21 @@ function Doacao() {
       <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
         <h4 style={{ color: '#ff69b4', marginBottom: '10px' }}>Como funciona?</h4>
         <p>1. Preencha o formulário com os dados do produto</p>
-        <p>2. Nossa equipe entrará em contato para combinar a retirada</p>
-        <p>3. Seu produto será destinado a famílias necessitadas</p>
+        <p>2. Entre em contato com quem está doando</p>
+        <p>3. Combine como será feito o transporte</p>
       </div>
     </div>
+
+    {/* Notificações */}
+    {notifications.map(notification => (
+      <Notification
+        key={notification.id}
+        message={notification.message}
+        type={notification.type}
+        duration={notification.duration}
+        onClose={() => removeNotification(notification.id)}
+      />
+    ))}
   </div>
 </div>
   );

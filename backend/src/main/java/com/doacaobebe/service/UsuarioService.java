@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class UsuarioService {
@@ -23,6 +27,23 @@ public class UsuarioService {
 
     @Autowired
     private JwtService jwtService;
+
+    // Cache temporário para códigos de recuperação (em produção, usar Redis)
+    private final Map<String, CodigoRecuperacao> codigosRecuperacao = new ConcurrentHashMap<>();
+
+    private static class CodigoRecuperacao {
+        String codigo;
+        LocalDateTime expiracao;
+        
+        CodigoRecuperacao(String codigo) {
+            this.codigo = codigo;
+            this.expiracao = LocalDateTime.now().plus(10, ChronoUnit.MINUTES);
+        }
+        
+        boolean isValido() {
+            return LocalDateTime.now().isBefore(expiracao);
+        }
+    }
 
     public AuthResponse login(LoginRequest loginRequest) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(loginRequest.getEmail());
@@ -105,5 +126,38 @@ public class UsuarioService {
         
         usuario.setSenha(passwordEncoder.encode(novaSenha));
         usuarioRepository.save(usuario);
+    }
+
+    public Usuario alterarPrivilegiosAdmin(Long id, Boolean isAdmin) {
+        System.out.println("DEBUG: Alterando privilégios - ID: " + id + ", isAdmin: " + isAdmin);
+        
+        Usuario usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        System.out.println("DEBUG: Usuário encontrado: " + usuario.getNome() + ", Admin atual: " + usuario.getIsAdmin());
+        
+        usuario.setIsAdmin(isAdmin);
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+        
+        System.out.println("DEBUG: Usuário salvo com isAdmin: " + usuarioSalvo.getIsAdmin());
+        
+        return usuarioSalvo;
+    }
+
+    public boolean emailExiste(String email) {
+        return usuarioRepository.findByEmail(email).isPresent();
+    }
+
+    public void salvarCodigoRecuperacao(String email, String codigo) {
+        codigosRecuperacao.put(email, new CodigoRecuperacao(codigo));
+    }
+
+    public boolean verificarCodigoRecuperacao(String email, String codigo) {
+        CodigoRecuperacao codigoSalvo = codigosRecuperacao.get(email);
+        if (codigoSalvo != null && codigoSalvo.isValido() && codigoSalvo.codigo.equals(codigo)) {
+            codigosRecuperacao.remove(email); // Remove após uso
+            return true;
+        }
+        return false;
     }
 }

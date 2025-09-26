@@ -1,5 +1,6 @@
 package com.doacaobebe.controller;
 
+import com.doacaobebe.dto.AdminRequest;
 import com.doacaobebe.dto.AlterarSenhaRequest;
 import com.doacaobebe.entity.Usuario;
 import com.doacaobebe.service.UsuarioService;
@@ -66,6 +67,16 @@ public class UsuarioController {
             return ResponseEntity.ok("Senha alterada com sucesso");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao alterar senha: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/admin")
+    public ResponseEntity<?> alterarPrivilegiosAdmin(@PathVariable Long id, @RequestBody AdminRequest request) {
+        try {
+            Usuario usuario = usuarioService.alterarPrivilegiosAdmin(id, request.getIsAdmin());
+            return ResponseEntity.ok(usuario);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao alterar privilégios: " + e.getMessage());
         }
     }
 }

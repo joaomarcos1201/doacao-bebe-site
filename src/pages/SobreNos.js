@@ -8,10 +8,7 @@ function SobreNos() {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      backgroundImage: 'url(https://www.unimedfortaleza.com.br/portaluploads/uploads/2024/03/mulher-gravida-mostrando-barriga.png)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
+      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
       padding: '20px'
     }}>
       <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
