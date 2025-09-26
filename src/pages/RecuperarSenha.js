@@ -28,14 +28,13 @@ function RecuperarSenha() {
       });
 
       if (response.ok) {
-        alert('Código enviado para seu email! Verifique sua caixa de entrada.');
+        alert('Código gerado com sucesso!\n\n📝 Para desenvolvimento: O código aparece no console do servidor.\n📧 Em produção: Será enviado por email.');
         setEtapa('verificar');
       } else {
-        const errorText = await response.text();
-        alert(errorText || 'Erro ao enviar código');
+        alert('Não foi possível enviar o código. Verifique se o email está correto e tente novamente.');
       }
     } catch (error) {
-      alert('Erro de conexão. Verifique sua internet e tente novamente.');
+      alert('Serviço de email temporáriamente indisponível. Tente novamente em alguns minutos.');
     } finally {
       setLoading(false);
     }

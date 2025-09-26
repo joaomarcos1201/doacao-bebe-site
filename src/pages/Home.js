@@ -34,7 +34,8 @@ function Home({ user, setUser }) {
     const matchPesquisa = produto.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
                          produto.descricao.toLowerCase().includes(pesquisa.toLowerCase());
     const matchCategoria = categoriaFiltro === '' || produto.categoria === categoriaFiltro;
-    return matchPesquisa && matchCategoria;
+    const isAprovado = produto.status === 'aprovado';
+    return matchPesquisa && matchCategoria && isAprovado;
   });
 
   return (
@@ -374,62 +375,32 @@ function Home({ user, setUser }) {
                 fontSize: '13px',
                 fontWeight: '500'
               }}>Doador: {produto.doador}</p>
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <button 
-                  onClick={() => handleContact(produto.id)}
-                  style={{
-                    flex: 1,
-                    minWidth: '140px',
-                    padding: '12px 20px',
-                    backgroundColor: theme.primary,
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    fontSize: '14px',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 2px 8px rgba(173, 115, 120, 0.3)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#9a6b70';
-                    e.target.style.transform = 'translateY(-1px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = theme.primary;
-                    e.target.style.transform = 'translateY(0)';
-                  }}
-                >
-                  Ver Detalhes
-                </button>
-
-                {user.isAdmin && (
-                  <button 
-                    onClick={() => handleRemoverProduto(produto.id, produto.nome)}
-                    style={{
-                      padding: '12px',
-                      backgroundColor: '#ef4444',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '10px',
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      transition: 'all 0.2s ease',
-                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.3)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = '#dc2626';
-                      e.target.style.transform = 'translateY(-1px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = '#ef4444';
-                      e.target.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    🗑️
-                  </button>
-                )}
-              </div>
+              <button 
+                onClick={() => handleContact(produto.id)}
+                style={{
+                  width: '100%',
+                  padding: '12px 20px',
+                  backgroundColor: theme.primary,
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '10px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 2px 8px rgba(173, 115, 120, 0.3)'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#9a6b70';
+                  e.target.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = theme.primary;
+                  e.target.style.transform = 'translateY(0)';
+                }}
+              >
+                Ver Detalhes
+              </button>
             </div>
             ))}
           </div>

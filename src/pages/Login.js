@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 
@@ -10,8 +10,16 @@ function Login({ setUser }) {
   const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
 
+  // Limpar estado quando acessar a página de login
+  useEffect(() => {
+    setUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+  }, [setUser]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (email && senha) {
       if (tipoLogin === 'admin') {
         if (email === 'admin@alemdopositivo.com' && senha === 'admin123') {

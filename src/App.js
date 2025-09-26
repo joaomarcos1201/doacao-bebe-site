@@ -66,7 +66,7 @@ function App() {
                 <Route path="/login" element={<Login setUser={setUser} />} />
                 <Route path="/cadastro" element={<Cadastro />} />
                 <Route path="/home" element={user ? <Home user={user} setUser={setUser} /> : <Navigate to="/login" />} />
-                <Route path="/admin" element={user ? <Admin /> : <Navigate to="/login" />} />
+                <Route path="/admin" element={user && user.isAdmin ? <Admin /> : <Navigate to="/login" />} />
                 <Route path="/doacao" element={user ? <Doacao /> : <Navigate to="/login" />} />
                 <Route path="/produto/:id" element={user ? <DetalhesProduto /> : <Navigate to="/login" />} />
                 <Route path="/perfil" element={user ? <Perfil user={user} setUser={setUser} /> : <Navigate to="/login" />} />

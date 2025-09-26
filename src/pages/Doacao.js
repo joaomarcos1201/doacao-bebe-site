@@ -29,7 +29,7 @@ function Doacao() {
         contato,
         imagem
       });
-      showSuccess('Produto cadastrado com sucesso! Obrigado por sua doação.');
+      showSuccess('Produto enviado para aprovação! Será analisado pelo administrador antes de aparecer no site.');
       setProduto('');
       setCategoria('');
       setDescricao('');
@@ -218,8 +218,9 @@ function Doacao() {
       <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
         <h4 style={{ color: '#ff69b4', marginBottom: '10px' }}>Como funciona?</h4>
         <p>1. Preencha o formulário com os dados do produto</p>
-        <p>2. Entre em contato com quem está doando</p>
-        <p>3. Combine como será feito o transporte</p>
+        <p>2. Aguarde a aprovação do administrador</p>
+        <p>3. Após aprovado, aparecerá no site para doação</p>
+        <p>4. Interessados entrarão em contato com você</p>
       </div>
     </div>
 

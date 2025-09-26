@@ -20,7 +20,8 @@ export const ProdutosProvider = ({ children }) => {
       estado: 'seminovo',
       doador: 'Maria Silva',
       contato: '(11) 99999-9999',
-      imagem: 'https://voyageinfantil.com.br/cdn/shop/files/z01bfqcxq37wx2ew807pjm2pa0mk.png?v=1739392467'
+      imagem: 'https://voyageinfantil.com.br/cdn/shop/files/z01bfqcxq37wx2ew807pjm2pa0mk.png?v=1739392467',
+      status: 'aprovado'
     },
     {
       id: 2,
@@ -30,7 +31,8 @@ export const ProdutosProvider = ({ children }) => {
       estado: 'usado',
       doador: 'Ana Santos',
       contato: '(11) 88888-8888',
-      imagem: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400'
+      imagem: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=400',
+      status: 'aprovado'
     },
     {
       id: 3,
@@ -40,7 +42,8 @@ export const ProdutosProvider = ({ children }) => {
       estado: 'seminovo',
       doador: 'João Oliveira',
       contato: '(11) 77777-7777',
-      imagem: 'https://abramais.vteximg.com.br/arquivos/ids/220680/berco-portatil-hello-cinza-risca-diagonal.jpg?v=638436066808600000'
+      imagem: 'https://abramais.vteximg.com.br/arquivos/ids/220680/berco-portatil-hello-cinza-risca-diagonal.jpg?v=638436066808600000',
+      status: 'aprovado'
     },
     {
       id: 4,
@@ -50,7 +53,8 @@ export const ProdutosProvider = ({ children }) => {
       estado: 'Novo',
       doador: 'simone Menezes',
       contato: '(11) 66666-6666',
-      imagem: 'https://a-static.mlcdn.com.br/1500x1500/kit-brinquedos-educativos-de-madeira-primeira-infancia-aramado-pedagogico-sensoriais-bebe-infantil-brinque-e-leia/brinqueeleia/13438465083/dd04c8fcc517710a96588637e2c7c4fe.jpeg'
+      imagem: 'https://a-static.mlcdn.com.br/1500x1500/kit-brinquedos-educativos-de-madeira-primeira-infancia-aramado-pedagogico-sensoriais-bebe-infantil-brinque-e-leia/brinqueeleia/13438465083/dd04c8fcc517710a96588637e2c7c4fe.jpeg',
+      status: 'aprovado'
     }
   ]);
 
@@ -58,9 +62,20 @@ export const ProdutosProvider = ({ children }) => {
     const produto = {
       ...novoProduto,
       id: Date.now(),
-      doador: 'Usuário Logado'
+      doador: 'Usuário Logado',
+      status: 'pendente'
     };
     setProdutos(prev => [produto, ...prev]);
+  };
+
+  const aprovarProduto = (produtoId) => {
+    setProdutos(prev => prev.map(produto => 
+      produto.id === produtoId ? { ...produto, status: 'aprovado' } : produto
+    ));
+  };
+
+  const rejeitarProduto = (produtoId) => {
+    setProdutos(prev => prev.filter(produto => produto.id !== produtoId));
   };
 
   const removerProduto = (produtoId) => {
@@ -68,7 +83,7 @@ export const ProdutosProvider = ({ children }) => {
   };
 
   return (
-    <ProdutosContext.Provider value={{ produtos, adicionarProduto, removerProduto }}>
+    <ProdutosContext.Provider value={{ produtos, adicionarProduto, removerProduto, aprovarProduto, rejeitarProduto }}>
       {children}
     </ProdutosContext.Provider>
   );
