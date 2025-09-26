@@ -13,7 +13,7 @@ Para que o sistema envie emails de recuperação de senha, você precisa configu
 - Ainda em https://myaccount.google.com/security
 - Clique em "Senhas de app"
 - Selecione "Outro (nome personalizado)"
-- Digite: "Doacao Bebe Site"
+- Digite: "dd"
 - Clique em "Gerar"
 - **Copie a senha gerada (16 caracteres)**
 
