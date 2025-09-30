@@ -27,7 +27,7 @@ function Admin() {
 
   const carregarUsuarios = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/usuarios');
+      const response = await fetch('http://localhost:8080/api/usuarios');
       if (response.ok) {
         const data = await response.json();
         setUsuarios(data);
@@ -50,7 +50,7 @@ function Admin() {
 
   const toggleStatus = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/usuarios/${id}/status`, {
+      const response = await fetch(`http://localhost:8080/api/usuarios/${id}/status`, {
         method: 'PUT',
       });
       if (response.ok) {
@@ -70,7 +70,7 @@ function Admin() {
       'Esta ação não pode ser desfeita. Tem certeza que deseja remover este usuário?',
       async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/usuarios/${id}`, {
+          const response = await fetch(`http://localhost:8080/api/usuarios/${id}`, {
             method: 'DELETE',
           });
           if (response.ok) {
@@ -95,7 +95,7 @@ function Admin() {
       `Tem certeza que deseja ${acao} deste usuário?`,
       async () => {
         try {
-          const response = await fetch(`http://localhost:5000/api/usuarios/${id}/admin`, {
+          const response = await fetch(`http://localhost:8080/api/usuarios/${id}/admin`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

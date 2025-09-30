@@ -18,26 +18,42 @@ function Doacao() {
   const { theme, isDark, toggleTheme } = useTheme();
   const { notifications, showSuccess, removeNotification } = useNotification();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (produto && categoria && descricao && estado && contato) {
-      adicionarProduto({
-        nome: produto,
-        categoria,
-        descricao,
-        estado,
-        contato,
-        imagem
-      });
-      showSuccess('Produto enviado para aprovação! Será analisado pelo administrador antes de aparecer no site.');
-      setProduto('');
-      setCategoria('');
-      setDescricao('');
-      setEstado('');
-      setContato('');
-      setImagem('');
-      setImagemArquivo(null);
-      navigate('/home');
+      try {
+        const response = await fetch('http://localhost:8080/api/produtos', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nome: produto,
+            categoria,
+            descricao,
+            estado,
+            contato,
+            imagem
+          }),
+        });
+
+        if (response.ok) {
+          showSuccess('Produto enviado para aprovação! Será analisado pelo administrador antes de aparecer no site.');
+          setProduto('');
+          setCategoria('');
+          setDescricao('');
+          setEstado('');
+          setContato('');
+          setImagem('');
+          setImagemArquivo(null);
+          navigate('/home');
+        } else {
+          const errorData = await response.text();
+          alert(errorData || 'Erro ao cadastrar produto');
+        }
+      } catch (error) {
+        alert('Erro de conexão com o servidor');
+      }
     }
   };
 
@@ -273,45 +289,64 @@ function Doacao() {
               </div>
             </div>
 
-        <div className="form-group">
-          <label>Imagem do Produto (opcional):</label>
-          <div style={{ marginBottom: '10px' }}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  setImagemArquivo(file);
-                  const reader = new FileReader();
-                  reader.onload = (event) => setImagem(event.target.result);
-                  reader.readAsDataURL(file);
-                }
-              }}
-              style={{ marginBottom: '10px' }}
-            />
-          </div>
-          <div style={{ fontSize: '14px', color: '#666', marginBottom: '10px' }}>ou</div>
-          <input
-            type="url"
-            value={imagemArquivo ? '' : imagem}
-            onChange={(e) => {
-              setImagem(e.target.value);
-              setImagemArquivo(null);
-            }}
-            placeholder="https://exemplo.com/imagem.jpg"
-            disabled={imagemArquivo !== null}
-          />
-          {imagem && (
-            <div style={{ marginTop: '10px' }}>
-              <img 
-                src={imagem} 
-                alt="Preview" 
-                style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px' }}
+            <div style={{ marginBottom: '25px' }}>
+              <label style={{ 
+                display: 'block', 
+                marginBottom: '8px', 
+                color: theme.text,
+                fontWeight: '600',
+                fontSize: '14px'
+              }}>📷 Imagem do Produto (opcional)</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setImagemArquivo(file);
+                    const reader = new FileReader();
+                    reader.onload = (event) => setImagem(event.target.result);
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                style={{
+                  width: '100%',
+                  padding: '14px 16px',
+                  border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
+                  borderRadius: '12px',
+                  backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
+                  color: theme.text,
+                  fontSize: '15px',
+                  transition: 'all 0.2s ease',
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+                onFocus={(e) => e.target.style.borderColor = theme.primary}
+                onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
               />
+              {imagem && (
+                <div style={{ marginTop: '15px', textAlign: 'center' }}>
+                  <img 
+                    src={imagem} 
+                    alt="Preview" 
+                    style={{ 
+                      width: '150px', 
+                      height: '150px', 
+                      objectFit: 'cover', 
+                      borderRadius: '12px',
+                      border: `2px solid ${theme.primary}`,
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                    }}
+                  />
+                  <p style={{ 
+                    color: theme.textSecondary, 
+                    fontSize: '14px', 
+                    marginTop: '8px',
+                    margin: '8px 0 0 0'
+                  }}>Preview da imagem selecionada</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
             <button 
               type="submit" 
