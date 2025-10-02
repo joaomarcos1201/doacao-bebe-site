@@ -47,153 +47,288 @@ function DetalhesProduto() {
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
     }}>
-      <div style={{ 
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        zIndex: 1000
-      }}>
-        <button 
-          onClick={toggleTheme}
-          style={{
-            padding: '10px',
-            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-            color: theme.text,
-            border: `1px solid ${theme.border}`,
-            borderRadius: '5px',
-            cursor: 'pointer',
-            backdropFilter: 'blur(10px)'
-          }}
-        >
-          {isDark ? '☀️' : '🌙'}
-        </button>
-      </div>
-      
-      <div style={{ 
-        minHeight: '100vh',
-        backgroundColor: isDark ? 'rgba(105, 72, 75, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(15px)',
-        padding: '20px'
+      {/* Header com navegação */}
+      <div style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 1000,
+        background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.95) 0%, rgba(173, 115, 120, 0.95) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 192, 203, 0.7) 100%)',
+        backdropFilter: 'blur(25px)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+        borderBottom: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`
       }}>
         <div style={{ 
-          maxWidth: '100%',
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          paddingTop: '60px'
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          padding: '15px 20px',
+          maxWidth: '1400px',
+          margin: '0 auto'
         }}>
-          <div style={{ marginBottom: '20px' }}>
-            <Link to="/home" style={{ 
-              color: theme.primary, 
-              textDecoration: 'none', 
-              fontSize: '18px',
-              fontWeight: 'bold'
-            }}>← Voltar ao Início</Link>
-          </div>
+          <Link to="/home" style={{ 
+            color: theme.primary, 
+            textDecoration: 'none', 
+            fontSize: '18px',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            transition: 'all 0.2s ease'
+          }}>← Voltar ao Início</Link>
           
+          <button 
+            onClick={toggleTheme}
+            style={{
+              padding: '12px',
+              backgroundColor: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)',
+              color: theme.text,
+              border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.4)' : 'rgba(252, 192, 203, 0.4)'}`,
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontSize: '16px',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            {isDark ? '☀️' : '🌙'}
+          </button>
+        </div>
+      </div>
+      
+      {/* Conteúdo principal */}
+      <div style={{ 
+        padding: '30px 20px',
+        maxWidth: '1400px',
+        margin: '0 auto'
+      }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: window.innerWidth > 768 ? '1fr 1fr' : '1fr', 
+          gap: window.innerWidth > 768 ? '60px' : '30px',
+          alignItems: 'center',
+          minHeight: '70vh'
+        }}>
+          {/* Seção da imagem */}
           <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr', 
-            gap: '40px',
-            flex: 1,
-            minHeight: 'calc(100vh - 140px)'
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative'
           }}>
-            <div style={{ 
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%'
+            <div style={{
+              background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.9) 0%, rgba(173, 115, 120, 0.9) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(252, 192, 203, 0.3) 100%)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '24px',
+              padding: window.innerWidth > 768 ? '30px' : '20px',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+              border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`
             }}>
               {produto.imagem ? (
                 <img 
                   src={produto.imagem} 
                   alt={produto.nome}
                   style={{ 
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    objectFit: 'contain',
-                    borderRadius: '12px',
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+                    width: '100%',
+                    maxWidth: window.innerWidth > 768 ? '500px' : '100%',
+                    height: 'auto',
+                    objectFit: 'cover',
+                    borderRadius: '16px',
+                    boxShadow: '0 12px 40px rgba(0,0,0,0.2)'
                   }}
                   onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/600x400?text=Sem+Imagem';
+                    e.target.src = 'https://via.placeholder.com/500x400?text=Sem+Imagem';
                   }}
                 />
               ) : (
                 <div style={{
-                  width: '80%',
-                  height: '60%',
-                  backgroundColor: isDark ? 'rgba(69, 75, 96, 0.8)' : 'rgba(247, 182, 186, 0.8)',
+                  width: window.innerWidth > 768 ? '500px' : '100%',
+                  height: window.innerWidth > 768 ? '400px' : '250px',
+                  backgroundColor: isDark ? 'rgba(69, 75, 96, 0.6)' : 'rgba(247, 182, 186, 0.6)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderRadius: '12px',
+                  borderRadius: '16px',
                   color: theme.textSecondary,
                   fontSize: '18px',
-                  backdropFilter: 'blur(10px)'
+                  fontWeight: '500'
                 }}>
                   Sem imagem disponível
                 </div>
               )}
             </div>
+          </div>
           
+          {/* Seção das informações */}
+          <div style={{ 
+            background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.9) 0%, rgba(173, 115, 120, 0.9) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(252, 192, 203, 0.3) 100%)',
+            backdropFilter: 'blur(20px)',
+            padding: window.innerWidth > 768 ? '50px' : '30px',
+            borderRadius: '24px',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+            border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`
+          }}>
+            <h1 style={{ 
+              color: theme.primary, 
+              marginBottom: '30px', 
+              fontSize: window.innerWidth > 768 ? '2.5rem' : '2rem',
+              fontWeight: '700',
+              letterSpacing: '-1px',
+              lineHeight: '1.2'
+            }}>{produto.nome}</h1>
+            
+            <div style={{ display: 'flex', gap: '15px', marginBottom: '30px', flexWrap: 'wrap' }}>
+              <span style={{ 
+                backgroundColor: isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)', 
+                color: theme.text, 
+                padding: '8px 16px', 
+                borderRadius: '20px', 
+                fontSize: '14px', 
+                fontWeight: '600',
+                textTransform: 'capitalize',
+                border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.4)' : 'rgba(252, 192, 203, 0.4)'}`
+              }}>{produto.categoria}</span>
+              
+              <span style={{ 
+                backgroundColor: produto.estado === 'novo' ? 'rgba(34, 197, 94, 0.2)' : produto.estado === 'seminovo' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(245, 158, 11, 0.2)', 
+                color: produto.estado === 'novo' ? '#059669' : produto.estado === 'seminovo' ? '#2563eb' : '#d97706', 
+                padding: '8px 16px', 
+                borderRadius: '20px', 
+                fontSize: '14px', 
+                fontWeight: '600',
+                textTransform: 'uppercase',
+                border: `1px solid ${produto.estado === 'novo' ? 'rgba(34, 197, 94, 0.3)' : produto.estado === 'seminovo' ? 'rgba(59, 130, 246, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`
+              }}>{produto.estado}</span>
+            </div>
+            
             <div style={{ 
-              padding: '40px',
-              backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(15px)',
-              borderRadius: '12px',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center'
+              marginBottom: '30px',
+              padding: '20px',
+              backgroundColor: isDark ? 'rgba(69, 75, 96, 0.3)' : 'rgba(247, 182, 186, 0.2)',
+              borderRadius: '16px',
+              border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.3)'}`
             }}>
-              <h1 style={{ 
-                color: theme.primary, 
-                marginBottom: '40px', 
-                fontSize: '3rem',
-                textAlign: 'center'
-              }}>{produto.nome}</h1>
+              <h3 style={{ 
+                fontSize: '18px', 
+                color: theme.text,
+                marginBottom: '12px',
+                fontWeight: '600'
+              }}>Descrição</h3>
+              <p style={{ 
+                lineHeight: '1.7', 
+                fontSize: '16px', 
+                color: theme.textSecondary,
+                margin: 0
+              }}>{produto.descricao}</p>
+            </div>
             
-              <div style={{ marginBottom: '25px', fontSize: '20px', color: theme.text }}>
-                <strong>Categoria:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.categoria}</span>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              marginBottom: '20px',
+              padding: '16px',
+              backgroundColor: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)',
+              borderRadius: '12px',
+              border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`
+            }}>
+
+              <div>
+                <span style={{ 
+                  color: theme.textSecondary, 
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}>Doado por</span>
+                <div style={{ 
+                  color: theme.text, 
+                  fontSize: '16px',
+                  fontWeight: '600'
+                }}>{produto.doador}</div>
               </div>
-              
-              <div style={{ marginBottom: '25px', fontSize: '20px', color: theme.text }}>
-                <strong>Estado:</strong> <span style={{ textTransform: 'capitalize' }}>{produto.estado}</span>
-              </div>
-              
-              <div style={{ marginBottom: '30px' }}>
-                <strong style={{ fontSize: '20px', color: theme.text }}>Descrição:</strong>
-                <p style={{ marginTop: '15px', lineHeight: '1.6', fontSize: '18px', color: theme.textSecondary }}>{produto.descricao}</p>
-              </div>
-              
-              <div style={{ marginBottom: '25px', fontSize: '20px', color: theme.text }}>
-                <strong>Doador:</strong> {produto.doador}
-              </div>
-              
-              <div style={{ marginBottom: '30px', fontSize: '20px', color: theme.text }}>
-                <strong>Contato:</strong> {produto.contato}
-              </div>
+            </div>
             
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+              marginBottom: '30px',
+              padding: '16px',
+              backgroundColor: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)',
+              borderRadius: '12px',
+              border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`
+            }}>
+
+              <div>
+                <span style={{ 
+                  color: theme.textSecondary, 
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}>Contato</span>
+                <div style={{ 
+                  color: theme.text, 
+                  fontSize: '16px',
+                  fontWeight: '600'
+                }}>{produto.contato}</div>
+              </div>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth > 768 ? '1fr 1fr' : '1fr', gap: '15px' }}>
               <button 
                 onClick={handleWhatsApp}
                 style={{ 
-                  width: '100%',
-                  padding: '20px',
-                  backgroundColor: '#25D366',
+                  padding: '16px 20px',
+                  background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
                   color: 'white',
                   border: 'none',
                   borderRadius: '12px',
-                  fontSize: '20px',
+                  fontSize: '16px',
                   cursor: 'pointer',
-                  fontWeight: 'bold',
-                  marginTop: '20px',
-                  boxShadow: '0 4px 15px rgba(37, 211, 102, 0.3)'
+                  fontWeight: '600',
+                  boxShadow: '0 6px 20px rgba(37, 211, 102, 0.3)',
+                  transition: 'all 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#128C7E'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#25D366'}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(37, 211, 102, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 6px 20px rgba(37, 211, 102, 0.3)';
+                }}
               >
-                💬 Entrar em Contato via WhatsApp
+                <span>WhatsApp</span>
+              </button>
+              
+              <button 
+                onClick={() => window.location.href = `/chat/${produto.id}`}
+                style={{ 
+                  padding: '16px 20px',
+                  background: `linear-gradient(135deg, ${theme.primary} 0%, #9a6b70 100%)`,
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '12px',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  boxShadow: '0 6px 20px rgba(173, 115, 120, 0.3)',
+                  transition: 'all 0.3s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 8px 25px rgba(173, 115, 120, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 6px 20px rgba(173, 115, 120, 0.3)';
+                }}
+              >
+                <span>Chat Interno</span>
               </button>
             </div>
           </div>
@@ -203,4 +338,4 @@ function DetalhesProduto() {
   );
 }
 
-export default DetalhesProduto; 
+export default DetalhesProduto;

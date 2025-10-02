@@ -52,7 +52,7 @@ function Home({ user, setUser }) {
         top: 0,
         zIndex: 1000
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 30px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 20px', flexWrap: 'wrap', gap: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <img 
               src="logo.JPEG"
@@ -183,7 +183,7 @@ function Home({ user, setUser }) {
           backdropFilter: 'blur(15px)',
           borderTop: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}` 
         }}>
-          <div style={{ display: 'flex', gap: '15px', maxWidth: '800px', margin: '0 auto', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '15px', maxWidth: '800px', margin: '0 auto', flexWrap: 'wrap', flexDirection: window.innerWidth < 768 ? 'column' : 'row' }}>
             <input
               type="text"
               placeholder="🔍 Pesquisar produtos..."
@@ -191,7 +191,7 @@ function Home({ user, setUser }) {
               onChange={(e) => setPesquisa(e.target.value)}
               style={{
                 flex: '1',
-                minWidth: '280px',
+                minWidth: window.innerWidth < 768 ? '100%' : '280px',
                 padding: '14px 20px',
                 border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
                 borderRadius: '12px',
@@ -223,7 +223,7 @@ function Home({ user, setUser }) {
                 color: theme.text,
                 fontSize: '15px',
                 fontWeight: '500',
-                minWidth: '180px',
+                minWidth: window.innerWidth < 768 ? '100%' : '180px',
                 outline: 'none',
                 cursor: 'pointer',
                 boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
@@ -336,7 +336,7 @@ function Home({ user, setUser }) {
               style={{
                 padding: '20px 25px',
                 color: theme.text,
-                borderBottom: user.isAdmin ? `1px solid ${theme.border}` : 'none',
+                borderBottom: `1px solid ${theme.border}`,
                 cursor: 'pointer',
                 fontSize: '16px',
                 display: 'flex',
@@ -349,6 +349,25 @@ function Home({ user, setUser }) {
             >
               <span style={{ fontSize: '20px' }}>📞</span>
               <span>Fale Conosco</span>
+            </div>
+            <div 
+              onClick={() => { navigate('/faq'); setMenuAberto(false); }}
+              style={{
+                padding: '20px 25px',
+                color: theme.text,
+                borderBottom: user.isAdmin ? `1px solid ${theme.border}` : 'none',
+                cursor: 'pointer',
+                fontSize: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '15px',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+            >
+              <span style={{ fontSize: '20px' }}>❓</span>
+              <span>FAQ</span>
             </div>
             {user.isAdmin && (
               <div 
@@ -375,28 +394,28 @@ function Home({ user, setUser }) {
       )}
 
       <div style={{ 
-        padding: '40px 30px 0', 
+        padding: window.innerWidth < 768 ? '20px 15px 0' : '40px 30px 0', 
         maxWidth: '1200px', 
         margin: '0 auto' 
       }}>
         <div style={{
           textAlign: 'center',
-          marginBottom: '50px',
-          padding: '40px 20px',
+          marginBottom: window.innerWidth < 768 ? '30px' : '50px',
+          padding: window.innerWidth < 768 ? '30px 15px' : '40px 20px',
           background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.3) 0%, rgba(173, 115, 120, 0.2) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(252, 192, 203, 0.3) 100%)',
           borderRadius: '20px',
           backdropFilter: 'blur(10px)',
           border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.3)'}`
         }}>
           <h2 style={{
-            fontSize: '36px',
+            fontSize: window.innerWidth < 768 ? '28px' : '36px',
             fontWeight: '700',
             color: theme.primary,
             marginBottom: '16px',
             letterSpacing: '-1px',
             fontFamily: 'system-ui, -apple-system, sans-serif'
           }}>
-            Produtos Disponíveis
+            Doações Disponíveis
           </h2>
           <p style={{
             fontSize: '18px',
@@ -474,7 +493,7 @@ function Home({ user, setUser }) {
             <p>Tente ajustar sua pesquisa ou filtro de categoria</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
             {produtosFiltrados.map(produto => (
             <div key={produto.id} style={{
               background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.95) 0%, rgba(173, 115, 120, 0.95) 100%)' : 'linear-gradient(135deg, white 0%, #ffc0cb 100%)',

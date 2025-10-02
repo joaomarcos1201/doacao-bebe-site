@@ -131,14 +131,14 @@ function Admin() {
       {/* Header */}
       <div style={{
         backgroundColor: theme.cardBackground,
-        padding: '20px 40px',
+        padding: window.innerWidth < 768 ? '15px 20px' : '20px 40px',
         boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
         borderBottom: `1px solid ${theme.border}`
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1400px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1400px', margin: '0 auto', flexWrap: 'wrap', gap: '10px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <Link to="/home" style={{ color: theme.primary, textDecoration: 'none', fontSize: '16px' }}>← Voltar</Link>
-            <h1 style={{ color: theme.primary, margin: 0, fontSize: '28px' }}>Painel Administrativo</h1>
+            <h1 style={{ color: theme.primary, margin: 0, fontSize: window.innerWidth < 768 ? '20px' : '28px' }}>Painel Administrativo</h1>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
             <button 
@@ -177,9 +177,9 @@ function Admin() {
         </div>
       </div>
 
-      <div style={{ padding: '40px', maxWidth: '1400px', margin: '0 auto' }}>
+      <div style={{ padding: window.innerWidth < 768 ? '20px' : '40px', maxWidth: '1400px', margin: '0 auto' }}>
         {/* Abas */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '30px' }}>
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '30px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setAbaSelecionada('usuarios')}
             style={{
@@ -213,7 +213,7 @@ function Admin() {
         {abaSelecionada === 'usuarios' && (
         <>
         {/* Dashboard Cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginBottom: '40px' }}>
           <div style={{
             backgroundColor: theme.cardBackground,
             padding: '25px',
@@ -279,7 +279,8 @@ function Admin() {
             <h2 style={{ color: theme.text, margin: 0, fontSize: '22px' }}>Gerenciamento de Usuários</h2>
           </div>
           <div style={{ padding: '0 30px 30px 30px' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
               <thead>
                 <tr style={{ backgroundColor: isDark ? 'rgba(69, 75, 96, 0.5)' : 'rgba(247, 182, 186, 0.2)' }}>
                   <th style={{ padding: '15px', textAlign: 'left', color: theme.text, fontWeight: '600', fontSize: '14px' }}>USUÁRIO</th>
@@ -398,6 +399,7 @@ function Admin() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
         </>
@@ -454,7 +456,7 @@ function Admin() {
                   border: `1px solid ${theme.border}`,
                   borderRadius: '8px',
                   padding: '20px',
-                  backgroundColor: isDark ? 'rgba(69, 75, 96, 0.3)' : 'rgba(247, 182, 186, 0.1)'
+                  background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
                 }}>
                   <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
                     {produto.imagem && (
@@ -545,7 +547,7 @@ function Admin() {
                     padding: '15px',
                     border: `1px solid ${theme.border}`,
                     borderRadius: '8px',
-                    backgroundColor: isDark ? 'rgba(69, 75, 96, 0.2)' : 'rgba(247, 182, 186, 0.05)'
+                    background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
                   }}>
                     <div>
                       <h4 style={{ color: theme.text, margin: '0 0 5px 0' }}>{produto.nome}</h4>

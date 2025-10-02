@@ -51,7 +51,7 @@ function Cadastro() {
         <div style={{ 
           backgroundColor: isDark ? 'rgba(105, 72, 75, 0.95)' : 'rgba(255, 255, 255, 0.95)', 
           backdropFilter: 'blur(15px)',
-          padding: '50px', 
+          padding: window.innerWidth < 768 ? '30px 25px' : '50px', 
           borderRadius: '16px', 
           boxShadow: '0 12px 40px rgba(0,0,0,0.4)',
           width: '100%',
@@ -69,7 +69,7 @@ function Cadastro() {
           <h2 style={{ 
             color: theme.primary, 
             marginBottom: '20px',
-            fontSize: '28px'
+            fontSize: window.innerWidth < 768 ? '24px' : '28px'
           }}>
             Cadastro confirmado!
           </h2>
@@ -96,12 +96,12 @@ function Cadastro() {
     <div style={{ 
       minHeight: '100vh', 
       background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
-      padding: '20px', 
+      padding: window.innerWidth < 768 ? '15px' : '20px', 
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center' 
     }}>
-      <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+      <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
         <button 
           onClick={toggleTheme}
           style={{
@@ -120,7 +120,7 @@ function Cadastro() {
       <div style={{ 
         backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.85)', 
         backdropFilter: 'blur(10px)',
-        padding: '40px', 
+        padding: window.innerWidth < 768 ? '30px 25px' : '40px', 
         borderRadius: '12px', 
         boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
         width: '100%',
@@ -128,7 +128,7 @@ function Cadastro() {
         color: theme.text,
         border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(179, 116, 122, 0.3)'}`
       }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '30px', color: theme.primary }}>
+        <h2 style={{ textAlign: 'center', marginBottom: window.innerWidth < 768 ? '25px' : '30px', color: theme.primary, fontSize: window.innerWidth < 768 ? '20px' : '24px' }}>
           Cadastro - Além do Positivo
         </h2>
         <form onSubmit={handleSubmit}>

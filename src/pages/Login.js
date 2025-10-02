@@ -69,7 +69,7 @@ function Login({ setUser }) {
       background: isDark 
         ? 'linear-gradient(135deg, #2d1b2e 0%, #4a2c4a 50%, #6b4c6b 100%)'
         : 'linear-gradient(135deg, #ffeef0 0%, #fce4ec 30%, #f8bbd9 100%)',
-      padding: '20px', 
+      padding: window.innerWidth < 768 ? '15px' : '20px', 
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
@@ -89,7 +89,7 @@ function Login({ setUser }) {
         animation: 'float 20s ease-in-out infinite'
       }} />
       
-      <div style={{ position: 'absolute', top: '30px', right: '30px', zIndex: 10 }}>
+      <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '30px', right: window.innerWidth < 768 ? '15px' : '30px', zIndex: 10 }}>
         <button 
           onClick={toggleTheme}
           style={{
@@ -123,7 +123,7 @@ function Login({ setUser }) {
           ? 'rgba(45, 27, 46, 0.95)' 
           : 'rgba(255, 255, 255, 0.95)', 
         backdropFilter: 'blur(20px)',
-        padding: '50px 40px', 
+        padding: window.innerWidth < 768 ? '30px 25px' : '50px 40px', 
         borderRadius: '24px', 
         boxShadow: isDark 
           ? '0 25px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(173, 115, 120, 0.2)'
@@ -136,7 +136,7 @@ function Login({ setUser }) {
         transition: 'all 0.3s ease'
       }}>
         {/* Logo e título */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <div style={{ textAlign: 'center', marginBottom: window.innerWidth < 768 ? '30px' : '40px' }}>
           <img 
             src="logo.JPEG"
             alt="Logo Além do Positivo"
@@ -175,7 +175,7 @@ function Login({ setUser }) {
           <h1 style={{ 
             color: theme.primary, 
             margin: '0 0 8px 0', 
-            fontSize: '28px',
+            fontSize: window.innerWidth < 768 ? '24px' : '28px',
             fontWeight: '700',
             letterSpacing: '-0.5px'
           }}>
@@ -192,13 +192,15 @@ function Login({ setUser }) {
         </div>
         
         {/* Seletor de tipo de login */}
-        <div style={{ marginBottom: '35px' }}>
+        <div style={{ marginBottom: window.innerWidth < 768 ? '25px' : '35px' }}>
           <div style={{ 
             display: 'flex', 
             backgroundColor: isDark ? 'rgba(69, 75, 96, 0.3)' : 'rgba(252, 192, 203, 0.1)',
             borderRadius: '16px',
             padding: '6px',
-            border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`
+            border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`,
+            flexDirection: window.innerWidth < 480 ? 'column' : 'row',
+            gap: window.innerWidth < 480 ? '6px' : '0'
           }}>
             <button
               type="button"

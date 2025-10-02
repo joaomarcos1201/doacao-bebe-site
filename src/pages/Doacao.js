@@ -58,8 +58,8 @@ function Doacao() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: '20px' }}>
-      <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: window.innerWidth < 768 ? '15px' : '20px' }}>
+      <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
         <button 
           onClick={toggleTheme}
           style={{
@@ -77,7 +77,7 @@ function Doacao() {
         </button>
       </div>
       
-      <div style={{ maxWidth: '900px', margin: '0 auto', paddingTop: '60px' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', paddingTop: window.innerWidth < 768 ? '50px' : '60px' }}>
         <div style={{ marginBottom: '30px' }}>
           <Link 
             to="/home" 
@@ -99,7 +99,7 @@ function Doacao() {
         <div style={{
           background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.95) 0%, rgba(173, 115, 120, 0.95) 100%)' : 'linear-gradient(135deg, white 0%, #ffc0cb 100%)',
           backdropFilter: 'blur(15px)',
-          padding: '40px',
+          padding: window.innerWidth < 768 ? '25px' : '40px',
           borderRadius: '20px',
           boxShadow: '0 20px 60px rgba(0,0,0,0.15), 0 8px 25px rgba(0,0,0,0.1)',
           border: '1px solid #ffc0cb'
@@ -107,7 +107,7 @@ function Doacao() {
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <h1 style={{ 
               color: theme.primary, 
-              fontSize: '32px', 
+              fontSize: window.innerWidth < 768 ? '26px' : '32px', 
               fontWeight: '700',
               marginBottom: '8px',
               letterSpacing: '-0.5px'
@@ -124,7 +124,7 @@ function Doacao() {
           </div>
       
           <form onSubmit={handleSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
               <div>
                 <label style={{ 
                   display: 'block', 
@@ -224,7 +224,7 @@ function Doacao() {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
               <div>
                 <label style={{ 
                   display: 'block', 
