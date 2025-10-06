@@ -57,9 +57,9 @@ const Notification = ({ message, type = 'info', duration = 4000, onClose }) => {
       }}
     >
       <span style={{ fontSize: '20px' }}>{getIcon()}</span>
-      <span style={{ color: colors.text, fontSize: '14px', fontWeight: '500' }}>
+      <div style={{ color: colors.text, fontSize: '14px', fontWeight: '500', whiteSpace: 'pre-line' }}>
         {message}
-      </span>
+      </div>
       <button
         onClick={() => {
           setIsVisible(false);

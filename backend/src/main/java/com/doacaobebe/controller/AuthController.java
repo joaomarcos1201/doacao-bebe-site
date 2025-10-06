@@ -57,13 +57,19 @@ public class AuthController {
         try {
             String email = request.get("email");
             
+            // Validar email
+            if (email == null || email.trim().isEmpty() || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                return ResponseEntity.badRequest().body("Email inválido");
+            }
+            
             // Verificar se o email existe
             if (!usuarioService.emailExiste(email)) {
                 return ResponseEntity.badRequest().body("Email não encontrado");
             }
             
-            // Gerar código de 6 dígitos
-            String codigo = String.format("%06d", (int)(Math.random() * 1000000));
+            // Gerar código de 6 dígitos seguro
+            java.security.SecureRandom secureRandom = new java.security.SecureRandom();
+            String codigo = String.format("%06d", secureRandom.nextInt(1000000));
             
             // Salvar código temporariamente (em produção, usar Redis ou cache)
             usuarioService.salvarCodigoRecuperacao(email, codigo);
@@ -82,6 +88,15 @@ public class AuthController {
         try {
             String email = request.get("email");
             String codigo = request.get("codigo");
+            
+            // Validar entrada
+            if (email == null || email.trim().isEmpty() || codigo == null || codigo.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Email e código são obrigatórios");
+            }
+            
+            if (!codigo.matches("^\\d{6}$")) {
+                return ResponseEntity.badRequest().body("Código deve ter 6 dígitos");
+            }
             
             if (usuarioService.verificarCodigoRecuperacao(email, codigo)) {
                 return ResponseEntity.ok("Código válido");

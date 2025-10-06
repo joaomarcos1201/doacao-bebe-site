@@ -133,6 +133,8 @@ function Perfil({ user, setUser }) {
               Gerencie suas informações pessoais e configurações
             </p>
           </div>
+
+
           
           <form onSubmit={handleSubmit}>
             <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>

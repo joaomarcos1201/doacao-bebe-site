@@ -13,16 +13,16 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void enviarCodigoRecuperacao(String destinatario, String codigo) throws Exception {
+        // Log seguro sem expor dados sensíveis
         System.out.println("=== ENVIANDO EMAIL ===");
-        System.out.println("Para: " + destinatario);
-        System.out.println("Código: " + codigo);
+        System.out.println("Para: " + destinatario.replaceAll("(.{2}).*(@.*)", "$1***$2"));
         
         try {
             // Simular envio de email para desenvolvimento
             System.out.println("\n" + "=".repeat(50));
             System.out.println("📧 EMAIL SIMULADO - CÓDIGO DE RECUPERAÇÃO");
-            System.out.println("Para: " + destinatario);
-            System.out.println("Código: " + codigo);
+            System.out.println("Para: " + destinatario.replaceAll("(.{2}).*(@.*)", "$1***$2"));
+            System.out.println("Código enviado com sucesso");
             System.out.println("=".repeat(50) + "\n");
             
             // Comentar o código real de envio até configurar senha do Gmail
@@ -50,8 +50,8 @@ public class EmailService {
             System.out.println("Email simulado enviado com sucesso!");
             
         } catch (Exception e) {
-            System.out.println("Erro ao enviar email: " + e.getMessage());
-            throw new Exception("Erro ao enviar email: " + e.getMessage());
+            System.out.println("Erro ao enviar email");
+            throw new Exception("Erro ao enviar email", e);
         }
     }
 }

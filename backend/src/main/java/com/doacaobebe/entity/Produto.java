@@ -25,6 +25,9 @@ public class Produto {
     @Column(nullable = false)
     private String contato;
 
+    @Column(nullable = true)
+    private String cpf;
+
     private String imagem;
 
     @Column(nullable = false)
@@ -39,12 +42,13 @@ public class Produto {
     // Construtores
     public Produto() {}
 
-    public Produto(String nome, String categoria, String descricao, String estado, String contato, String imagem, String doador) {
+    public Produto(String nome, String categoria, String descricao, String estado, String contato, String cpf, String imagem, String doador) {
         this.nome = nome;
         this.categoria = categoria;
         this.descricao = descricao;
         this.estado = estado;
         this.contato = contato;
+        this.cpf = cpf;
         this.imagem = imagem;
         this.doador = doador;
     }
@@ -67,6 +71,9 @@ public class Produto {
 
     public String getContato() { return contato; }
     public void setContato(String contato) { this.contato = contato; }
+
+    public String getCpf() { return cpf; }
+    public void setCpf(String cpf) { this.cpf = cpf; }
 
     public String getImagem() { return imagem; }
     public void setImagem(String imagem) { this.imagem = imagem; }

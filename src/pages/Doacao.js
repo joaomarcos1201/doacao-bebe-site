@@ -4,6 +4,7 @@ import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import Notification from '../components/Notification';
+import '../styles/global.css';
 
 function Doacao() {
   const [produto, setProduto] = useState('');
@@ -11,6 +12,8 @@ function Doacao() {
   const [descricao, setDescricao] = useState('');
   const [estado, setEstado] = useState('');
   const [contato, setContato] = useState('');
+  const [cpf, setCpf] = useState('');
+  const [nomeDoador, setNomeDoador] = useState('');
   const [imagem, setImagem] = useState('');
   const [imagemArquivo, setImagemArquivo] = useState(null);
   const { adicionarProduto } = useProdutos();
@@ -20,7 +23,7 @@ function Doacao() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (produto && categoria && descricao && estado && contato) {
+    if (produto && categoria && descricao && estado && contato && cpf && nomeDoador) {
       try {
         const response = await fetch('http://localhost:8080/api/produtos', {
           method: 'POST',
@@ -33,7 +36,9 @@ function Doacao() {
             descricao,
             estado,
             contato,
-            imagem
+            cpf,
+            imagem,
+            doador: nomeDoador
           }),
         });
 
@@ -44,6 +49,8 @@ function Doacao() {
           setDescricao('');
           setEstado('');
           setContato('');
+          setCpf('');
+          setNomeDoador('');
           setImagem('');
           setImagemArquivo(null);
           navigate('/home');
@@ -58,19 +65,20 @@ function Doacao() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: window.innerWidth < 768 ? '15px' : '20px' }}>
+    <div style={{ minHeight: '100vh', background: isDark ? 'linear-gradient(135deg, #0f1419 0%, #1e2328 50%, #2a2d33 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)', padding: window.innerWidth < 768 ? '15px' : '20px' }}>
       <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
         <button 
           onClick={toggleTheme}
           style={{
-            padding: '12px',
-            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+            padding: '12px 16px',
+            backgroundColor: isDark ? '#2a2d33' : 'rgba(255, 255, 255, 0.9)',
             color: theme.text,
-            border: `1px solid ${theme.border}`,
-            borderRadius: '10px',
+            border: `2px solid ${theme.inputBorder}`,
+            borderRadius: '12px',
             cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            transition: 'all 0.2s ease'
+            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
+            transition: 'all 0.2s ease',
+            backdropFilter: 'blur(10px)'
           }}
         >
           {isDark ? '☀️' : '🌙'}
@@ -97,7 +105,7 @@ function Doacao() {
         </div>
         
         <div style={{
-          background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.95) 0%, rgba(173, 115, 120, 0.95) 100%)' : 'linear-gradient(135deg, white 0%, #ffc0cb 100%)',
+          background: isDark ? 'linear-gradient(135deg, #1e2328 0%, #2a2d33 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
           backdropFilter: 'blur(15px)',
           padding: window.innerWidth < 768 ? '25px' : '40px',
           borderRadius: '20px',
@@ -289,6 +297,75 @@ function Doacao() {
               </div>
             </div>
 
+            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+              <div>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  color: theme.text,
+                  fontWeight: '600',
+                  fontSize: '14px'
+                }}>Nome do Doador *</label>
+                <input
+                  type="text"
+                  value={nomeDoador}
+                  onChange={(e) => setNomeDoador(e.target.value)}
+                  placeholder="Seu nome completo"
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
+                    borderRadius: '12px',
+                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
+                    color: theme.text,
+                    fontSize: '15px',
+                    transition: 'all 0.2s ease',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = theme.primary}
+                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
+                  required
+                />
+              </div>
+
+              <div>
+                <label style={{ 
+                  display: 'block', 
+                  marginBottom: '8px', 
+                  color: theme.text,
+                  fontWeight: '600',
+                  fontSize: '14px'
+                }}>CPF do Doador *</label>
+                <input
+                  type="text"
+                  value={cpf}
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+                    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                    setCpf(value);
+                  }}
+                  placeholder="000.000.000-00"
+                  maxLength="14"
+                  style={{
+                    width: '100%',
+                    padding: '14px 16px',
+                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
+                    borderRadius: '12px',
+                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
+                    color: theme.text,
+                    fontSize: '15px',
+                    transition: 'all 0.2s ease',
+                    outline: 'none'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = theme.primary}
+                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
+                  required
+                />
+              </div>
+            </div>
+
             <div style={{ marginBottom: '25px' }}>
               <label style={{ 
                 display: 'block', 
@@ -328,7 +405,7 @@ function Doacao() {
                 <div style={{ marginTop: '15px', textAlign: 'center' }}>
                   <img 
                     src={imagem} 
-                    alt="Preview" 
+                    alt="Visualização" 
                     style={{ 
                       width: '150px', 
                       height: '150px', 
@@ -343,7 +420,7 @@ function Doacao() {
                     fontSize: '14px', 
                     marginTop: '8px',
                     margin: '8px 0 0 0'
-                  }}>Preview da imagem selecionada</p>
+                  }}>Visualização da imagem selecionada</p>
                 </div>
               )}
             </div>
@@ -382,9 +459,10 @@ function Doacao() {
           <div style={{ 
             marginTop: '30px', 
             padding: '25px', 
-            background: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)', 
+            background: isDark ? 'linear-gradient(135deg, #2a2d33 0%, #3e4147 100%)' : '#f8f9fa', 
             borderRadius: '15px',
-            border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`
+            border: `1px solid ${isDark ? '#4a4d53' : '#dddddd'}`,
+            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 2px 10px rgba(0,0,0,0.1)'
           }}>
             <h3 style={{ 
               color: theme.primary, 

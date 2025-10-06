@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { sanitizeInput, validateEmail, getSecureHeaders, API_BASE_URL } from '../utils/security';
 
 function Login({ setUser }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [tipoLogin, setTipoLogin] = useState('usuario');
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
@@ -23,40 +24,47 @@ function Login({ setUser }) {
     if (email && senha) {
       setLoading(true);
       
-      if (tipoLogin === 'admin') {
-        if (email === 'admin@alemdopositivo.com' && senha === 'admin123') {
-          setUser({ email, nome: 'Administrador', isAdmin: true });
-          navigate('/admin');
-        } else {
-          alert('Credenciais de administrador inválidas!');
-        }
-      } else {
-        try {
-          const response = await fetch('http://localhost:8080/api/auth/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, senha }),
-          });
+      {
+      // Validar entrada
+      const cleanEmail = sanitizeInput(email);
+      const cleanSenha = sanitizeInput(senha);
+      
+      if (!validateEmail(cleanEmail)) {
+        alert('Email inválido');
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+          method: 'POST',
+          headers: getSecureHeaders(),
+          body: JSON.stringify({ email: cleanEmail, senha: cleanSenha }),
+        });
 
-          if (response.ok) {
-            const data = await response.json();
-            localStorage.setItem('token', data.token);
-            setUser({ 
-              id: data.id,
-              email: data.email, 
-              nome: data.nome, 
-              isAdmin: data.isAdmin 
-            });
-            navigate('/home');
+        if (response.ok) {
+          const data = await response.json();
+          localStorage.setItem('token', data.token);
+          setUser({ 
+            id: data.id,
+            email: data.email, 
+            nome: data.nome, 
+            isAdmin: data.isAdmin 
+          });
+          
+          // Redirecionar baseado no tipo de usuário
+          if (data.isAdmin) {
+            navigate('/admin');
           } else {
-            const errorData = await response.text();
-            alert(errorData || 'Erro no login');
+            navigate('/home');
           }
-        } catch (error) {
-          alert('Erro de conexão com o servidor');
+        } else {
+          const errorData = await response.text();
+          alert(errorData || 'Erro no login');
         }
+      } catch (error) {
+        alert('Erro de conexão com o servidor');
+      }
       }
       
       setLoading(false);
@@ -191,61 +199,7 @@ function Login({ setUser }) {
           </p>
         </div>
         
-        {/* Seletor de tipo de login */}
-        <div style={{ marginBottom: window.innerWidth < 768 ? '25px' : '35px' }}>
-          <div style={{ 
-            display: 'flex', 
-            backgroundColor: isDark ? 'rgba(69, 75, 96, 0.3)' : 'rgba(252, 192, 203, 0.1)',
-            borderRadius: '16px',
-            padding: '6px',
-            border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`,
-            flexDirection: window.innerWidth < 480 ? 'column' : 'row',
-            gap: window.innerWidth < 480 ? '6px' : '0'
-          }}>
-            <button
-              type="button"
-              onClick={() => setTipoLogin('usuario')}
-              style={{
-                flex: 1,
-                padding: '12px 20px',
-                backgroundColor: tipoLogin === 'usuario' 
-                  ? (isDark ? 'rgba(173, 115, 120, 0.8)' : 'rgba(252, 192, 203, 0.8)')
-                  : 'transparent',
-                color: tipoLogin === 'usuario' ? 'white' : theme.text,
-                border: 'none',
-                borderRadius: '12px',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: tipoLogin === 'usuario' ? '0 4px 12px rgba(0,0,0,0.15)' : 'none'
-              }}
-            >
-              👤 Usuário
-            </button>
-            <button
-              type="button"
-              onClick={() => setTipoLogin('admin')}
-              style={{
-                flex: 1,
-                padding: '12px 20px',
-                backgroundColor: tipoLogin === 'admin' 
-                  ? (isDark ? 'rgba(173, 115, 120, 0.8)' : 'rgba(252, 192, 203, 0.8)')
-                  : 'transparent',
-                color: tipoLogin === 'admin' ? 'white' : theme.text,
-                border: 'none',
-                borderRadius: '12px',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: tipoLogin === 'admin' ? '0 4px 12px rgba(0,0,0,0.15)' : 'none'
-              }}
-            >
-              🔐 Admin
-            </button>
-          </div>
-        </div>
+
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '25px' }}>
@@ -260,7 +214,7 @@ function Login({ setUser }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={tipoLogin === 'admin' ? 'admin@alemdopositivo.com' : 'seu@email.com'}
+              placeholder="seu@email.com"
               style={{
                 width: '100%',
                 padding: '16px 20px',
@@ -296,7 +250,7 @@ function Login({ setUser }) {
               type="password"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
-              placeholder={tipoLogin === 'admin' ? 'admin123' : '••••••••'}
+              placeholder="••••••••"
               style={{
                 width: '100%',
                 padding: '16px 20px',
@@ -372,62 +326,60 @@ function Login({ setUser }) {
               </>
             ) : (
               <>
-                {tipoLogin === 'admin' ? '🔐 Entrar como Admin' : '🚀 Entrar'}
+                🚀 Entrar
               </>
             )}
           </button>
         </form>
         
-        {tipoLogin === 'usuario' && (
-          <div style={{ textAlign: 'center', borderTop: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`, paddingTop: '25px' }}>
-            <Link 
-              to="/cadastro" 
-              style={{ 
-                color: theme.primary, 
-                textDecoration: 'none', 
-                marginBottom: '15px', 
-                display: 'inline-block',
-                fontSize: '15px',
-                fontWeight: '600',
-                padding: '8px 16px',
-                borderRadius: '8px',
-                backgroundColor: isDark ? 'rgba(173, 115, 120, 0.1)' : 'rgba(252, 192, 203, 0.1)',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)';
-                e.target.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.1)' : 'rgba(252, 192, 203, 0.1)';
-                e.target.style.transform = 'translateY(0)';
-              }}
-            >
-              ✨ Não tem conta? Cadastre-se
-            </Link>
-            <br />
-            <Link 
-              to="/recuperar-senha"
-              style={{
-                color: theme.textSecondary,
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: '500',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.color = theme.primary;
-                e.target.style.textDecoration = 'underline';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.color = theme.textSecondary;
-                e.target.style.textDecoration = 'none';
-              }}
-            >
-              🔑 Esqueci minha senha
-            </Link>
-          </div>
-        )}
+        <div style={{ textAlign: 'center', borderTop: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`, paddingTop: '25px' }}>
+          <Link 
+            to="/cadastro" 
+            style={{ 
+              color: theme.primary, 
+              textDecoration: 'none', 
+              marginBottom: '15px', 
+              display: 'inline-block',
+              fontSize: '15px',
+              fontWeight: '600',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              backgroundColor: isDark ? 'rgba(173, 115, 120, 0.1)' : 'rgba(252, 192, 203, 0.1)',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)';
+              e.target.style.transform = 'translateY(-1px)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.1)' : 'rgba(252, 192, 203, 0.1)';
+              e.target.style.transform = 'translateY(0)';
+            }}
+          >
+            ✨ Não tem conta? Cadastre-se
+          </Link>
+          <br />
+          <Link 
+            to="/recuperar-senha"
+            style={{
+              color: theme.textSecondary,
+              textDecoration: 'none',
+              fontSize: '14px',
+              fontWeight: '500',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.color = theme.primary;
+              e.target.style.textDecoration = 'underline';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.color = theme.textSecondary;
+              e.target.style.textDecoration = 'none';
+            }}
+          >
+            🔑 Esqueci minha senha
+          </Link>
+        </div>
         
         {/* Adicionar estilos CSS para animações */}
         <style>{`

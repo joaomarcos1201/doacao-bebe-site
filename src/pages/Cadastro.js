@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useNotification } from '../hooks/useNotification';
+import Notification from '../components/Notification';
 
 function Cadastro() {
   const [nome, setNome] = useState('');
@@ -10,9 +12,54 @@ function Cadastro() {
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
+  const { notifications, showError, showSuccess: showSuccessNotification, removeNotification } = useNotification();
+
+  // Função para validar email real
+  const isValidEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  // Função para validar senha
+  const validatePassword = (password) => {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasNumber = /\d/.test(password);
+    
+    return {
+      isValid: hasUpperCase && hasSpecialChar && hasNumber,
+      hasUpperCase,
+      hasSpecialChar,
+      hasNumber
+    };
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validação de email
+    if (!isValidEmail(email)) {
+      showError('Por favor, insira um email válido (ex: usuario@exemplo.com)');
+      return;
+    }
+    
+    // Validação de senha
+    const passwordValidation = validatePassword(senha);
+    if (!passwordValidation.isValid) {
+      let errorMessage = 'A senha deve conter:';
+      if (!passwordValidation.hasUpperCase) {
+        errorMessage += '\n• Pelo menos uma letra maiúscula';
+      }
+      if (!passwordValidation.hasSpecialChar) {
+        errorMessage += '\n• Pelo menos um caractere especial (!@#$%^&*)';
+      }
+      if (!passwordValidation.hasNumber) {
+        errorMessage += '\n• Pelo menos um número';
+      }
+      showError(errorMessage);
+      return;
+    }
+    
     if (nome && email && senha) {
       try {
         const response = await fetch('http://localhost:8080/api/auth/cadastro', {
@@ -30,10 +77,10 @@ function Cadastro() {
           }, 3000);
         } else {
           const errorData = await response.text();
-          alert(errorData || 'Erro no cadastro');
+          showError(errorData || 'Erro no cadastro');
         }
       } catch (error) {
-        alert('Erro de conexão com o servidor');
+        showError('Erro de conexão com o servidor');
       }
     }
   };
@@ -199,6 +246,27 @@ function Cadastro() {
               }}
               required
             />
+            {senha && (
+              <div style={{ marginTop: '8px', fontSize: '12px' }}>
+                <div style={{ 
+                  color: validatePassword(senha).hasUpperCase ? '#28a745' : '#dc3545',
+                  marginBottom: '2px'
+                }}>
+                  {validatePassword(senha).hasUpperCase ? '✓' : '✗'} Pelo menos uma letra maiúscula
+                </div>
+                <div style={{ 
+                  color: validatePassword(senha).hasSpecialChar ? '#28a745' : '#dc3545',
+                  marginBottom: '2px'
+                }}>
+                  {validatePassword(senha).hasSpecialChar ? '✓' : '✗'} Pelo menos um caractere especial (!@#$%^&*)
+                </div>
+                <div style={{ 
+                  color: validatePassword(senha).hasNumber ? '#28a745' : '#dc3545'
+                }}>
+                  {validatePassword(senha).hasNumber ? '✓' : '✗'} Pelo menos um número
+                </div>
+              </div>
+            )}
           </div>
           <button 
             type="submit" 
@@ -221,6 +289,17 @@ function Cadastro() {
           <Link to="/login" style={{ color: theme.primary, textDecoration: 'none' }}>Já tem conta? Faça login</Link>
         </div>
       </div>
+      
+      {/* Notificações */}
+      {notifications.map(notification => (
+        <Notification
+          key={notification.id}
+          message={notification.message}
+          type={notification.type}
+          duration={notification.duration}
+          onClose={() => removeNotification(notification.id)}
+        />
+      ))}
     </div>
   );
 }

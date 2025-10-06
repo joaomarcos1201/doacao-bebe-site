@@ -93,17 +93,16 @@ public class UsuarioService {
     }
 
     public void redefinirSenha(String email, String novaSenha) {
-        System.out.println("DEBUG: Redefinindo senha para email: " + email);
+        System.out.println("DEBUG: Redefinindo senha para usuário");
         Usuario usuario = usuarioRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
-        System.out.println("DEBUG: Usuário encontrado: " + usuario.getNome());
+        System.out.println("DEBUG: Usuário encontrado");
         String senhaEncriptada = passwordEncoder.encode(novaSenha);
-        System.out.println("DEBUG: Nova senha encriptada: " + senhaEncriptada.substring(0, 10) + "...");
         
         usuario.setSenha(senhaEncriptada);
         usuarioRepository.save(usuario);
-        System.out.println("DEBUG: Senha salva no banco com sucesso");
+        System.out.println("DEBUG: Senha atualizada com sucesso");
     }
 
     public Usuario atualizarDados(Long id, Usuario usuarioAtualizado) {
@@ -129,17 +128,17 @@ public class UsuarioService {
     }
 
     public Usuario alterarPrivilegiosAdmin(Long id, Boolean isAdmin) {
-        System.out.println("DEBUG: Alterando privilégios - ID: " + id + ", isAdmin: " + isAdmin);
+        System.out.println("DEBUG: Alterando privilégios de usuário");
         
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
-        System.out.println("DEBUG: Usuário encontrado: " + usuario.getNome() + ", Admin atual: " + usuario.getIsAdmin());
+        System.out.println("DEBUG: Usuário encontrado, atualizando privilégios");
         
         usuario.setIsAdmin(isAdmin);
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         
-        System.out.println("DEBUG: Usuário salvo com isAdmin: " + usuarioSalvo.getIsAdmin());
+        System.out.println("DEBUG: Privilégios atualizados com sucesso");
         
         return usuarioSalvo;
     }

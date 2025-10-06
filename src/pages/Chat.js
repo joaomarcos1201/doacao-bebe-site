@@ -4,38 +4,71 @@ import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 
 function Chat() {
-  const { produtoId } = useParams();
-  const { produtos } = useProdutos();
+  const { chatId } = useParams();
   const { theme, isDark } = useTheme();
   const [mensagens, setMensagens] = useState([]);
   const [novaMensagem, setNovaMensagem] = useState('');
+  const [chatInfo, setChatInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [usuario] = useState(() => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
   const messagesEndRef = useRef(null);
 
-  const produto = produtos.find(p => p.id === parseInt(produtoId));
-
   useEffect(() => {
-    // Carregar mensagens do localStorage
-    const chatKey = `chat_${produtoId}`;
-    const savedMessages = localStorage.getItem(chatKey);
-    if (savedMessages) {
-      setMensagens(JSON.parse(savedMessages));
-    } else {
-      // Mensagem inicial do sistema
-      const mensagemInicial = {
-        id: 1,
-        texto: `Chat iniciado para o produto: ${produto?.nome || 'Produto'}`,
-        usuario: 'Sistema',
-        timestamp: new Date().toISOString(),
-        isSystem: true
-      };
-      setMensagens([mensagemInicial]);
-      localStorage.setItem(chatKey, JSON.stringify([mensagemInicial]));
+    carregarMensagens();
+    const interval = setInterval(carregarMensagens, 3000); // Atualizar a cada 3 segundos
+    return () => clearInterval(interval);
+  }, [chatId]);
+
+  const carregarMensagens = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const response = await fetch(`http://localhost:8080/api/chat/${chatId}/mensagens`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMensagens(data);
+        
+        // Se é a primeira vez carregando, buscar info do chat
+        if (loading && data.length > 0) {
+          await buscarInfoChat();
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao carregar mensagens:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [produtoId, produto]);
+  };
+
+  const buscarInfoChat = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:8080/api/chat/meus-chats', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const chats = await response.json();
+        const chat = chats.find(c => c.id === parseInt(chatId));
+        setChatInfo(chat);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar info do chat:', error);
+    }
+  };
 
   useEffect(() => {
     scrollToBottom();
@@ -45,25 +78,30 @@ function Chat() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const enviarMensagem = () => {
+  const enviarMensagem = async () => {
     if (!novaMensagem.trim() || !usuario) return;
 
-    const mensagem = {
-      id: Date.now(),
-      texto: novaMensagem,
-      usuario: usuario.nome,
-      timestamp: new Date().toISOString(),
-      isSystem: false
-    };
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:8080/api/chat/enviar-mensagem', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          chatId: parseInt(chatId),
+          conteudo: novaMensagem
+        })
+      });
 
-    const novasMensagens = [...mensagens, mensagem];
-    setMensagens(novasMensagens);
-    
-    // Salvar no localStorage
-    const chatKey = `chat_${produtoId}`;
-    localStorage.setItem(chatKey, JSON.stringify(novasMensagens));
-    
-    setNovaMensagem('');
+      if (response.ok) {
+        setNovaMensagem('');
+        carregarMensagens(); // Recarregar mensagens
+      }
+    } catch (error) {
+      console.error('Erro ao enviar mensagem:', error);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -80,7 +118,7 @@ function Chat() {
     });
   };
 
-  if (!produto) {
+  if (loading) {
     return (
       <div style={{
         minHeight: '100vh',
@@ -96,7 +134,7 @@ function Chat() {
           borderRadius: '15px',
           textAlign: 'center'
         }}>
-          <h3 style={{ color: theme.primary }}>Produto não encontrado</h3>
+          <h3 style={{ color: theme.primary }}>Carregando chat...</h3>
         </div>
       </div>
     );
@@ -129,7 +167,7 @@ function Chat() {
       <div style={{ maxWidth: '800px', margin: '0 auto', paddingTop: window.innerWidth < 768 ? '50px' : '60px' }}>
         <div style={{ marginBottom: '30px' }}>
           <Link 
-            to={`/produto/${produtoId}`}
+            to="/perfil"
             style={{ 
               color: theme.primary, 
               textDecoration: 'none',
@@ -141,7 +179,7 @@ function Chat() {
               transition: 'all 0.2s ease'
             }}
           >
-            ← Voltar ao Produto
+            ← Voltar aos Meus Chats
           </Link>
         </div>
         
@@ -168,14 +206,14 @@ function Chat() {
               fontSize: '20px',
               fontWeight: '700'
             }}>
-              {produto.nome}
+              {chatInfo?.produtoNome || 'Chat'}
             </h2>
             <p style={{ 
               color: theme.textSecondary, 
               margin: 0, 
               fontSize: '14px' 
             }}>
-              Chat com {produto.doador}
+              Chat com {chatInfo?.outroUsuarioNome || 'Usuário'}
             </p>
           </div>
 
@@ -191,59 +229,44 @@ function Chat() {
             style={{
               marginBottom: '15px',
               display: 'flex',
-              justifyContent: mensagem.isSystem ? 'center' : 
-                (mensagem.usuario === usuario?.nome ? 'flex-end' : 'flex-start')
+              justifyContent: mensagem.remetenteId === usuario?.id ? 'flex-end' : 'flex-start'
             }}
           >
-            {mensagem.isSystem ? (
+            <div style={{
+              maxWidth: '70%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: mensagem.remetenteId === usuario?.id ? 'flex-end' : 'flex-start'
+            }}>
               <div style={{
-                backgroundColor: isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)',
+                backgroundColor: mensagem.remetenteId === usuario?.id 
+                  ? theme.primary 
+                  : (isDark ? 'rgba(105, 72, 75, 0.8)' : 'rgba(255, 255, 255, 0.9)'),
+                color: mensagem.remetenteId === usuario?.id 
+                  ? 'white' 
+                  : theme.text,
+                padding: '12px 16px',
+                borderRadius: '18px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                wordWrap: 'break-word'
+              }}>
+                <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                  {mensagem.conteudo}
+                </div>
+              </div>
+              <div style={{
+                fontSize: '11px',
                 color: theme.textSecondary,
-                padding: '8px 15px',
-                borderRadius: '15px',
-                fontSize: '12px',
-                maxWidth: '80%',
-                textAlign: 'center'
-              }}>
-                {mensagem.texto}
-              </div>
-            ) : (
-              <div style={{
-                maxWidth: '70%',
+                marginTop: '4px',
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: mensagem.usuario === usuario?.nome ? 'flex-end' : 'flex-start'
+                alignItems: 'center',
+                gap: '5px'
               }}>
-                <div style={{
-                  backgroundColor: mensagem.usuario === usuario?.nome 
-                    ? theme.primary 
-                    : (isDark ? 'rgba(105, 72, 75, 0.8)' : 'rgba(255, 255, 255, 0.9)'),
-                  color: mensagem.usuario === usuario?.nome 
-                    ? 'white' 
-                    : theme.text,
-                  padding: '12px 16px',
-                  borderRadius: '18px',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  wordWrap: 'break-word'
-                }}>
-                  <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
-                    {mensagem.texto}
-                  </div>
-                </div>
-                <div style={{
-                  fontSize: '11px',
-                  color: theme.textSecondary,
-                  marginTop: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px'
-                }}>
-                  <span>{mensagem.usuario}</span>
-                  <span>•</span>
-                  <span>{formatarHora(mensagem.timestamp)}</span>
-                </div>
+                <span>{mensagem.remetenteNome}</span>
+                <span>•</span>
+                <span>{formatarHora(mensagem.dataEnvio)}</span>
               </div>
-            )}
+            </div>
           </div>
         ))}
             <div ref={messagesEndRef} />

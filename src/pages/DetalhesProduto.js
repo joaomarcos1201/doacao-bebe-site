@@ -270,67 +270,36 @@ function DetalhesProduto() {
               </div>
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth > 768 ? '1fr 1fr' : '1fr', gap: '15px' }}>
-              <button 
-                onClick={handleWhatsApp}
-                style={{ 
-                  padding: '16px 20px',
-                  background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  boxShadow: '0 6px 20px rgba(37, 211, 102, 0.3)',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 8px 25px rgba(37, 211, 102, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 6px 20px rgba(37, 211, 102, 0.3)';
-                }}
-              >
-                <span>WhatsApp</span>
-              </button>
-              
-              <button 
-                onClick={() => window.location.href = `/chat/${produto.id}`}
-                style={{ 
-                  padding: '16px 20px',
-                  background: `linear-gradient(135deg, ${theme.primary} 0%, #9a6b70 100%)`,
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '12px',
-                  fontSize: '16px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  boxShadow: '0 6px 20px rgba(173, 115, 120, 0.3)',
-                  transition: 'all 0.3s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 8px 25px rgba(173, 115, 120, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 6px 20px rgba(173, 115, 120, 0.3)';
-                }}
-              >
-                <span>Chat Interno</span>
-              </button>
-            </div>
+            <button 
+              onClick={handleWhatsApp}
+              style={{ 
+                width: '100%',
+                padding: '16px 20px',
+                background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                fontSize: '16px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                boxShadow: '0 6px 20px rgba(37, 211, 102, 0.3)',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 8px 25px rgba(37, 211, 102, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = '0 6px 20px rgba(37, 211, 102, 0.3)';
+              }}
+            >
+              <span>Entrar em Contato via WhatsApp</span>
+            </button>
           </div>
         </div>
       </div>

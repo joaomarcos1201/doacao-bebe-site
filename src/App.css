@@ -6,7 +6,8 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-color: hsla(295, 66%, 72%, 0.637);
+  background-color: #ffffff;
+  color: #2d2d2d;
 }
 
 .container {
@@ -31,9 +32,16 @@ body {
 .form-group input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 2px solid #dddddd;
   border-radius: 4px;
   font-size: 16px;
+  background-color: #ffffff;
+  color: #2d2d2d;
+}
+
+.form-group input::placeholder {
+  color: #999999;
+  opacity: 1;
 }
 
 .btn {

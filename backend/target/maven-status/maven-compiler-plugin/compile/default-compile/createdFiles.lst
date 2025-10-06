@@ -1,4 +1,5 @@
 com\doacaobebe\dto\RedefinirSenhaRequest.class
+com\doacaobebe\config\DataInitializer.class
 com\doacaobebe\service\EmailService.class
 com\doacaobebe\service\UsuarioService$CodigoRecuperacao.class
 com\doacaobebe\controller\AuthController.class

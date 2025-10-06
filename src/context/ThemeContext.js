@@ -18,15 +18,17 @@ export const ThemeProvider = ({ children }) => {
   };
 
   const theme = {
-    background: isDark ? '#454B60' : '#F7B6BA',
-    cardBackground: isDark ? '#69484B' : '#ffffff',
-    text: isDark ? '#F2A1A8' : '#454B60',
-    textSecondary: isDark ? '#B3787D' : '#69484B',
-    border: isDark ? '#AD7378' : '#B3747A',
-    primary: '#AD7378',
-    success: '#B3787D',
-    danger: '#B3747A',
-    whatsapp: '#25D366'
+    background: isDark ? '#0f1419' : '#ffffff',
+    cardBackground: isDark ? '#1e2328' : '#ffffff',
+    text: isDark ? '#e6e6e6' : '#2d2d2d',
+    textSecondary: isDark ? '#a0a0a0' : '#666666',
+    border: isDark ? '#3e4147' : '#dddddd',
+    primary: isDark ? '#ff6b9d' : '#AD7378',
+    success: '#28a745',
+    danger: '#dc3545',
+    whatsapp: '#25D366',
+    inputBg: isDark ? '#2a2d33' : '#ffffff',
+    inputBorder: isDark ? '#4a4d53' : '#dddddd'
   };
 
   return (

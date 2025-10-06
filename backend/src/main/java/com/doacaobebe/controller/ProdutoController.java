@@ -26,8 +26,9 @@ public class ProdutoController {
                 request.getDescricao(),
                 request.getEstado(),
                 request.getContato(),
+                request.getCpf(),
                 request.getImagem(),
-                "Usuário Logado"
+                request.getDoador() != null ? request.getDoador() : "Doador Anônimo"
             );
             
             produtoRepository.save(produto);
