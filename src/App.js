@@ -12,6 +12,8 @@ import SobreNos from './pages/SobreNos';
 import FaleConosco from './pages/FaleConosco';
 import FAQ from './pages/FAQ';
 import Chat from './pages/Chat';
+import TermosPrivacidade from './pages/TermosPrivacidade';
+import ManualSeguranca from './pages/ManualSeguranca';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ThemeProvider } from './context/ThemeContext';
 import './App.css';
@@ -77,6 +79,8 @@ function App() {
                 <Route path="/sobre-nos" element={user ? <SobreNos /> : <Navigate to="/login" />} />
                 <Route path="/fale-conosco" element={user ? <FaleConosco /> : <Navigate to="/login" />} />
                 <Route path="/faq" element={user ? <FAQ /> : <Navigate to="/login" />} />
+                <Route path="/termos-privacidade" element={user ? <TermosPrivacidade /> : <Navigate to="/login" />} />
+                <Route path="/manual-seguranca" element={user ? <ManualSeguranca /> : <Navigate to="/login" />} />
 
                 <Route path="/recuperar-senha" element={<RecuperarSenha />} />
                 <Route path="/" element={<Navigate to="/login" />} />

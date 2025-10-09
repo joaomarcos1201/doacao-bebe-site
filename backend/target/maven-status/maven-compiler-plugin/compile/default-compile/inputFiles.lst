@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\service\JwtService.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\service\UsuarioService.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\service\EmailService.java
@@ -5,11 +6,20 @@ d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\ProdutoRequest.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\UsuarioController.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\AuthController.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\entity\Produto.java
+=======
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\service\UsuarioService.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\service\EmailService.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\ProdutoRequest.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\TestController.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\AuthController.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\MensagemController.java
+>>>>>>> feature/fale-conosco-integration
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\CadastroRequest.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\repository\ProdutoRepository.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\config\DataInitializer.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\ProdutoController.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\LoginRequest.java
+<<<<<<< HEAD
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\config\SecurityConfig.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\AlterarSenhaRequest.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\repository\UsuarioRepository.java
@@ -19,3 +29,21 @@ d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\AuthResponse.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\entity\Usuario.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\TesteController.java
 d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\RedefinirSenhaRequest.java
+=======
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\DoacaoBebeApplication.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\AdminRequest.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\entity\Usuario.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\repository\MensagemRepository.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\FixController.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\RedefinirSenhaRequest.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\service\JwtService.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\UsuarioController.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\entity\Produto.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\config\SecurityConfig.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\AlterarSenhaRequest.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\repository\UsuarioRepository.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\AuthResponse.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\dto\MensagemRequest.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\controller\TesteController.java
+d:\doacao-bebe-site\backend\src\main\java\com\doacaobebe\entity\Mensagem.java
+>>>>>>> feature/fale-conosco-integration
