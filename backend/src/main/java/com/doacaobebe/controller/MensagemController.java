@@ -26,9 +26,8 @@ public class MensagemController {
             mensagemRepository.inserirMensagem(
                 request.getNome() != null ? request.getNome() : "Sem nome",
                 request.getEmail() != null ? request.getEmail() : "sem@email.com",
-                request.getAssunto() != null ? request.getAssunto() : "Sem assunto",
-                conteudoMsg,
-                conteudoMsg  // usando a mesma mensagem para conteudo
+                null, // telefone pode ser null
+                conteudoMsg
             );
             
             return ResponseEntity.ok().body("{\"message\": \"Mensagem enviada com sucesso!\"}");

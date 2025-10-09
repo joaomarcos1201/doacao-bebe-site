@@ -4,28 +4,28 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "mensagens")
+@Table(name = "Mensagem")
 public class Mensagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "dataMensagem")
+    @Column(name = "dataMensagem", nullable = false)
     private LocalDateTime dataMensagem;
     
-    @Column(name = "emissor")
+    @Column(name = "emissor", nullable = false, length = 100)
     private String emissor;
     
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, length = 100)
     private String email;
     
-    @Column(name = "telefone")
+    @Column(name = "telefone", length = 20)
     private String telefone;
     
-    @Column(name = "texto")
+    @Column(name = "texto", nullable = false, length = 400)
     private String texto;
     
-    @Column(name = "statusMensagem")
+    @Column(name = "statusMensagem", nullable = false, length = 10)
     private String statusMensagem;
     
 
