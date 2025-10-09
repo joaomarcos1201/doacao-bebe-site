@@ -67,6 +67,7 @@ public class UsuarioService {
         Usuario usuario = new Usuario();
         usuario.setNome(cadastroRequest.getNome());
         usuario.setEmail(cadastroRequest.getEmail());
+        usuario.setCpf(cadastroRequest.getCpf());
         usuario.setSenha(passwordEncoder.encode(cadastroRequest.getSenha()));
         
         usuario = usuarioRepository.save(usuario);
