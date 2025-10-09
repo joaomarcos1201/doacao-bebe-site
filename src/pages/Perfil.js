@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useNotification } from '../hooks/useNotification';
+import Notification from '../components/Notification';
 
 function Perfil({ user, setUser }) {
   const navigate = useNavigate();
@@ -12,12 +14,46 @@ function Perfil({ user, setUser }) {
   const [senhaAtual, setSenhaAtual] = useState('');
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
+  const { notifications, showError, removeNotification } = useNotification();
+
+  // Função para validar senha
+  const validatePassword = (password) => {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasNumber = /\d/.test(password);
+    
+    return {
+      isValid: hasUpperCase && hasSpecialChar && hasNumber,
+      hasUpperCase,
+      hasSpecialChar,
+      hasNumber
+    };
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (novaSenha && novaSenha !== confirmarSenha) {
-      alert('As senhas não coincidem!');
+      showError('As senhas não coincidem!');
       return;
+    }
+    
+    // Validar nova senha se fornecida
+    if (novaSenha) {
+      const passwordValidation = validatePassword(novaSenha);
+      if (!passwordValidation.isValid) {
+        let errorMessage = 'A nova senha deve conter:';
+        if (!passwordValidation.hasUpperCase) {
+          errorMessage += '\n• Pelo menos uma letra maiúscula';
+        }
+        if (!passwordValidation.hasSpecialChar) {
+          errorMessage += '\n• Pelo menos um caractere especial (!@#$%^&*)';
+        }
+        if (!passwordValidation.hasNumber) {
+          errorMessage += '\n• Pelo menos um número';
+        }
+        showError(errorMessage);
+        return;
+      }
     }
 
     try {
@@ -333,6 +369,27 @@ function Perfil({ user, setUser }) {
                     onFocus={(e) => e.target.style.borderColor = theme.primary}
                     onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
                   />
+                  {novaSenha && (
+                    <div style={{ marginTop: '8px', fontSize: '12px' }}>
+                      <div style={{ 
+                        color: validatePassword(novaSenha).hasUpperCase ? '#28a745' : '#dc3545',
+                        marginBottom: '2px'
+                      }}>
+                        {validatePassword(novaSenha).hasUpperCase ? '✓' : '✗'} Pelo menos uma letra maiúscula
+                      </div>
+                      <div style={{ 
+                        color: validatePassword(novaSenha).hasSpecialChar ? '#28a745' : '#dc3545',
+                        marginBottom: '2px'
+                      }}>
+                        {validatePassword(novaSenha).hasSpecialChar ? '✓' : '✗'} Pelo menos um caractere especial (!@#$%^&*)
+                      </div>
+                      <div style={{ 
+                        color: validatePassword(novaSenha).hasNumber ? '#28a745' : '#dc3545'
+                      }}>
+                        {validatePassword(novaSenha).hasNumber ? '✓' : '✗'} Pelo menos um número
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -465,6 +522,17 @@ function Perfil({ user, setUser }) {
           </div>
         </div>
       </div>
+      
+      {/* Notificações */}
+      {notifications.map(notification => (
+        <Notification
+          key={notification.id}
+          message={notification.message}
+          type={notification.type}
+          duration={notification.duration}
+          onClose={() => removeNotification(notification.id)}
+        />
+      ))}
     </div>
   );
 }

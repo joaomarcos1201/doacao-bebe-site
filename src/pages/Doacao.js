@@ -65,7 +65,7 @@ function Doacao() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: isDark ? 'linear-gradient(135deg, #0f1419 0%, #1e2328 50%, #2a2d33 100%)' : 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)', padding: window.innerWidth < 768 ? '15px' : '20px' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: window.innerWidth < 768 ? '15px' : '20px' }}>
       <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
         <button 
           onClick={toggleTheme}
@@ -373,7 +373,7 @@ function Doacao() {
                 color: theme.text,
                 fontWeight: '600',
                 fontSize: '14px'
-              }}>📷 Imagem do Produto (opcional)</label>
+              }}> Imagem do Produto (opcional)</label>
               <input
                 type="file"
                 accept="image/*"
@@ -452,7 +452,7 @@ function Doacao() {
                 e.target.style.boxShadow = '0 4px 15px rgba(173, 115, 120, 0.3)';
               }}
             >
-              🎁 Cadastrar Doação
+              Cadastrar Doação
             </button>
           </form>
 
@@ -473,7 +473,7 @@ function Doacao() {
               alignItems: 'center',
               gap: '8px'
             }}>
-              ✨ Como funciona?
+               Como funciona?
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

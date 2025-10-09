@@ -68,13 +68,13 @@ function SobreNos() {
           border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(179, 116, 122, 0.3)'}`
         }}>
           <h1 style={{ textAlign: 'center', marginBottom: '30px', color: theme.primary, fontSize: '2.5rem' }}>
-            💝 Sobre Nós
+            Sobre Nós
           </h1>
           
           <div style={{ lineHeight: '1.8', fontSize: '16px', color: theme.text }}>
             <section style={{ marginBottom: '30px' }}>
               <h2 style={{ color: theme.primary, marginBottom: '15px', fontSize: '1.5rem' }}>
-                🌟 Nossa História
+                Nossa História
               </h2>
               <p style={{ marginBottom: '15px' }}>
                 O <strong>Além do Positivo</strong> nasceu da necessidade de conectar famílias que precisam de apoio durante a gravidez e primeiros anos de vida do bebê com pessoas dispostas a ajudar através de doações.
@@ -86,22 +86,22 @@ function SobreNos() {
 
             <section style={{ marginBottom: '30px' }}>
               <h2 style={{ color: theme.primary, marginBottom: '15px', fontSize: '1.5rem' }}>
-                🎯 Nosso Objetivo
+                Nosso Objetivo
               </h2>
               <p style={{ marginBottom: '15px' }}>
                 Nosso principal objetivo é <strong>criar uma ponte solidária</strong> entre quem pode doar e quem precisa receber, promovendo:
               </p>
               <ul style={{ marginLeft: '20px', marginBottom: '15px' }}>
-                <li style={{ marginBottom: '8px' }}>🤝 <strong>Solidariedade comunitária</strong> - Fortalecer laços entre famílias</li>
-                <li style={{ marginBottom: '8px' }}>♻️ <strong>Sustentabilidade</strong> - Dar nova vida a produtos em bom estado</li>
-                <li style={{ marginBottom: '8px' }}>👶 <strong>Apoio à maternidade</strong> - Facilitar o acesso a itens essenciais para bebês</li>
-                <li style={{ marginBottom: '8px' }}>💚 <strong>Impacto social</strong> - Reduzir desigualdades e promover bem-estar</li>
+                <li style={{ marginBottom: '8px' }}><strong>Solidariedade comunitária</strong> - Fortalecer laços entre famílias</li>
+                <li style={{ marginBottom: '8px' }}><strong>Sustentabilidade</strong> - Dar nova vida a produtos em bom estado</li>
+                <li style={{ marginBottom: '8px' }}><strong>Apoio à maternidade</strong> - Facilitar o acesso a itens essenciais para bebês</li>
+                <li style={{ marginBottom: '8px' }}><strong>Impacto social</strong> - Reduzir desigualdades e promover bem-estar</li>
               </ul>
             </section>
 
             <section style={{ marginBottom: '30px' }}>
               <h2 style={{ color: theme.primary, marginBottom: '15px', fontSize: '1.5rem' }}>
-                🚀 Como Funciona
+                Como Funciona
               </h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
                 <div style={{ 
@@ -110,7 +110,7 @@ function SobreNos() {
                   borderRadius: '8px',
                   border: `1px solid ${theme.border}`
                 }}>
-                  <h3 style={{ color: theme.primary, marginBottom: '10px' }}>1. 🎁 Doar</h3>
+                  <h3 style={{ color: theme.primary, marginBottom: '10px' }}>1. Doar</h3>
                   <p style={{ fontSize: '14px' }}>Cadastre produtos que não usa mais e ajude outras famílias</p>
                 </div>
                 <div style={{ 
@@ -119,7 +119,7 @@ function SobreNos() {
                   borderRadius: '8px',
                   border: `1px solid ${theme.border}`
                 }}>
-                  <h3 style={{ color: theme.primary, marginBottom: '10px' }}>2. 🔍 Buscar</h3>
+                  <h3 style={{ color: theme.primary, marginBottom: '10px' }}>2. Buscar</h3>
                   <p style={{ fontSize: '14px' }}>Encontre produtos que precisa através da nossa busca</p>
                 </div>
                 <div style={{ 
@@ -128,7 +128,7 @@ function SobreNos() {
                   borderRadius: '8px',
                   border: `1px solid ${theme.border}`
                 }}>
-                  <h3 style={{ color: theme.primary, marginBottom: '10px' }}>3. 🤝 Conectar</h3>
+                  <h3 style={{ color: theme.primary, marginBottom: '10px' }}>3. Conectar</h3>
                   <p style={{ fontSize: '14px' }}>Entre em contato direto com o doador via WhatsApp</p>
                 </div>
               </div>
@@ -136,7 +136,7 @@ function SobreNos() {
 
             <section style={{ marginBottom: '30px' }}>
               <h2 style={{ color: theme.primary, marginBottom: '15px', fontSize: '1.5rem' }}>
-                💡 Nossa Visão
+                Nossa Visão
               </h2>
               <p style={{ marginBottom: '15px' }}>
                 Acreditamos que <strong>pequenos gestos podem transformar vidas</strong>. Cada produto doado representa não apenas um item material, mas um ato de amor, cuidado e esperança para uma família que está começando ou expandindo.
@@ -154,7 +154,7 @@ function SobreNos() {
               border: `1px solid ${theme.primary}`
             }}>
               <h3 style={{ color: theme.primary, marginBottom: '15px' }}>
-                ✨ Junte-se à Nossa Missão
+                Junte-se à Nossa Missão
               </h3>
               <p style={{ marginBottom: '20px', fontStyle: 'italic' }}>
                 "Juntos, podemos ir além do positivo e criar um mundo mais solidário para nossas famílias."

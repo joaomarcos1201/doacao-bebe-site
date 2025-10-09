@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
@@ -289,8 +289,7 @@ function Home({ user, setUser }) {
               onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
             >
-              <span style={{ fontSize: '20px' }}>🎁</span>
-              <span>Doar Produto</span>
+              <span style={{ fontWeight: 'bold' }}>Doar Produto</span>
             </div>
             <div 
               onClick={() => { navigate('/perfil'); setMenuAberto(false); }}
@@ -308,8 +307,7 @@ function Home({ user, setUser }) {
               onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
             >
-              <span style={{ fontSize: '20px' }}>👤</span>
-              <span>Meu Perfil</span>
+              <span style={{ fontWeight: 'bold' }}>Meu Perfil</span>
             </div>
 
             <div 
@@ -328,8 +326,7 @@ function Home({ user, setUser }) {
               onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
             >
-              <span style={{ fontSize: '20px' }}>📜</span>
-              <span>Sobre Nós</span>
+              <span style={{ fontWeight: 'bold' }}>Sobre Nós</span>
             </div>
             <div 
               onClick={() => { navigate('/fale-conosco'); setMenuAberto(false); }}
@@ -347,8 +344,7 @@ function Home({ user, setUser }) {
               onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
             >
-              <span style={{ fontSize: '20px' }}>📞</span>
-              <span>Fale Conosco</span>
+              <span style={{ fontWeight: 'bold' }}>Fale Conosco</span>
             </div>
             <div 
               onClick={() => { navigate('/faq'); setMenuAberto(false); }}
@@ -366,8 +362,7 @@ function Home({ user, setUser }) {
               onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
               onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
             >
-              <span style={{ fontSize: '20px' }}>❓</span>
-              <span>FAQ</span>
+              <span style={{ fontWeight: 'bold' }}>FAQ</span>
             </div>
             {user.isAdmin && (
               <div 
@@ -385,8 +380,7 @@ function Home({ user, setUser }) {
                 onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
                 onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
               >
-                <span style={{ fontSize: '20px' }}>⚙️</span>
-                <span>Administração</span>
+                <span style={{ fontWeight: 'bold' }}>Administração</span>
               </div>
             )}
           </div>
@@ -398,35 +392,8 @@ function Home({ user, setUser }) {
         maxWidth: '1200px', 
         margin: '0 auto' 
       }}>
-        <div style={{
-          textAlign: 'center',
-          marginBottom: window.innerWidth < 768 ? '30px' : '50px',
-          padding: window.innerWidth < 768 ? '30px 15px' : '40px 20px',
-          background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.3) 0%, rgba(173, 115, 120, 0.2) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(252, 192, 203, 0.3) 100%)',
-          borderRadius: '20px',
-          backdropFilter: 'blur(10px)',
-          border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.3)'}`
-        }}>
-          <h2 style={{
-            fontSize: window.innerWidth < 768 ? '28px' : '36px',
-            fontWeight: '700',
-            color: theme.primary,
-            marginBottom: '16px',
-            letterSpacing: '-1px',
-            fontFamily: 'system-ui, -apple-system, sans-serif'
-          }}>
-            Doações Disponíveis
-          </h2>
-          <p style={{
-            fontSize: '18px',
-            color: theme.textSecondary,
-            margin: 0,
-            fontWeight: '400',
-            lineHeight: '1.6'
-          }}>
-            Encontre produtos para bebês e gestantes doados por famílias solidárias
-          </p>
-        </div>
+        {/* Carrossel de Produtos Principais */}
+        <ProductCarousel produtos={produtosFiltrados.slice(0, 5)} theme={theme} isDark={isDark} handleContact={handleContact} />
         
         <div style={{ padding: '0 0 30px' }}>
           <div style={{
@@ -610,6 +577,246 @@ function Home({ user, setUser }) {
           </div>
         )}
         </div>
+      </div>
+      
+      {/* Footer */}
+      <footer style={{
+        marginTop: '50px',
+        padding: '30px 20px',
+        background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.95) 0%, rgba(173, 115, 120, 0.95) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 192, 203, 0.7) 100%)',
+        backdropFilter: 'blur(25px)',
+        borderTop: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`
+      }}>
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          textAlign: 'center'
+        }}>
+          <p style={{
+            color: theme.textSecondary,
+            fontSize: '14px',
+            margin: '0 0 10px 0'
+          }}>
+            © 2024 Além do Positivo. Todos os direitos reservados.
+          </p>
+          <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link
+              to="/termos-privacidade"
+              style={{
+                color: theme.primary,
+                textDecoration: 'none',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.textDecoration = 'underline';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.textDecoration = 'none';
+              }}
+            >
+              Termos de Privacidade
+            </Link>
+            <Link
+              to="/manual-seguranca"
+              style={{
+                color: theme.primary,
+                textDecoration: 'none',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.textDecoration = 'underline';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.textDecoration = 'none';
+              }}
+            >
+              Manual de Segurança
+            </Link>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+// Componente do Carrossel
+function ProductCarousel({ produtos, theme, isDark, handleContact }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (produtos.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => 
+          prevIndex === produtos.length - 1 ? 0 : prevIndex + 1
+        );
+      }, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [produtos.length]);
+
+  if (produtos.length === 0) {
+    return (
+      <div style={{
+        textAlign: 'center',
+        marginBottom: window.innerWidth < 768 ? '30px' : '50px',
+        padding: window.innerWidth < 768 ? '30px 15px' : '40px 20px',
+        background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.3) 0%, rgba(173, 115, 120, 0.2) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(252, 192, 203, 0.3) 100%)',
+        borderRadius: '20px',
+        backdropFilter: 'blur(10px)',
+        border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.3)'}`
+      }}>
+        <h2 style={{
+          fontSize: window.innerWidth < 768 ? '28px' : '36px',
+          fontWeight: '700',
+          color: theme.primary,
+          marginBottom: '16px'
+        }}>
+          Doações Disponíveis
+        </h2>
+        <p style={{
+          fontSize: '18px',
+          color: theme.textSecondary,
+          margin: 0
+        }}>
+          Nenhum produto disponível no momento
+        </p>
+      </div>
+    );
+  }
+
+  const currentProduct = produtos[currentIndex];
+
+  return (
+    <div style={{
+      marginBottom: window.innerWidth < 768 ? '30px' : '50px',
+      position: 'relative',
+      overflow: 'hidden',
+      borderRadius: '20px',
+      background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.3) 0%, rgba(173, 115, 120, 0.2) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(252, 192, 203, 0.3) 100%)',
+      backdropFilter: 'blur(10px)',
+      border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.3)'}`
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: window.innerWidth < 768 ? '30px 20px' : '40px 30px',
+        gap: '30px',
+        flexDirection: window.innerWidth < 768 ? 'column' : 'row'
+      }}>
+        <div style={{ flex: 1, textAlign: window.innerWidth < 768 ? 'center' : 'left' }}>
+          <h2 style={{
+            fontSize: window.innerWidth < 768 ? '24px' : '32px',
+            fontWeight: '700',
+            color: theme.primary,
+            marginBottom: '12px'
+          }}>
+            {currentProduct.nome}
+          </h2>
+          <p style={{
+            fontSize: '16px',
+            color: theme.textSecondary,
+            marginBottom: '20px',
+            lineHeight: '1.5'
+          }}>
+            {currentProduct.descricao}
+          </p>
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', justifyContent: window.innerWidth < 768 ? 'center' : 'flex-start' }}>
+            <span style={{
+              backgroundColor: isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)',
+              color: theme.text,
+              padding: '6px 12px',
+              borderRadius: '12px',
+              fontSize: '12px',
+              fontWeight: '600'
+            }}>
+              {currentProduct.categoria}
+            </span>
+            <span style={{
+              backgroundColor: currentProduct.estado === 'novo' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(59, 130, 246, 0.2)',
+              color: currentProduct.estado === 'novo' ? '#059669' : '#2563eb',
+              padding: '6px 12px',
+              borderRadius: '12px',
+              fontSize: '12px',
+              fontWeight: '600'
+            }}>
+              {currentProduct.estado}
+            </span>
+          </div>
+          <button
+            onClick={() => handleContact(currentProduct.id)}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: theme.primary,
+              color: 'white',
+              border: 'none',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            Ver Detalhes
+          </button>
+        </div>
+        
+        <div style={{ position: 'relative' }}>
+          {currentProduct.imagem ? (
+            <img
+              src={currentProduct.imagem}
+              alt={currentProduct.nome}
+              style={{
+                width: window.innerWidth < 768 ? '200px' : '250px',
+                height: window.innerWidth < 768 ? '150px' : '180px',
+                objectFit: 'cover',
+                borderRadius: '12px',
+                boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+              }}
+            />
+          ) : (
+            <div style={{
+              width: window.innerWidth < 768 ? '200px' : '250px',
+              height: window.innerWidth < 768 ? '150px' : '180px',
+              backgroundColor: isDark ? 'rgba(69, 75, 96, 0.6)' : 'rgba(247, 182, 186, 0.6)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '12px',
+              color: theme.textSecondary,
+              fontSize: '14px'
+            }}>
+              Sem imagem
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Indicadores */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '8px',
+        paddingBottom: '20px'
+      }}>
+        {produtos.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            style={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '50%',
+              border: 'none',
+              backgroundColor: index === currentIndex ? theme.primary : (isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'),
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          />
+        ))}
       </div>
     </div>
   );
