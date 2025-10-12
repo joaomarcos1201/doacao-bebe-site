@@ -122,7 +122,7 @@ function Login({ setUser }) {
             e.target.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
           }}
         >
-          {isDark ? '☀️' : '🌙'}
+          {isDark ? 'Sol' : 'Lua'}
         </button>
       </div>
       
@@ -178,7 +178,7 @@ function Login({ setUser }) {
             boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
             border: `3px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`
           }}>
-            💝
+            ❤
           </div>
           <h1 style={{ 
             color: theme.primary, 
@@ -209,7 +209,7 @@ function Login({ setUser }) {
               color: theme.text,
               fontSize: '14px',
               fontWeight: '600'
-            }}>📧 Email</label>
+            }}>Email</label>
             <input
               type="email"
               value={email}
@@ -245,7 +245,7 @@ function Login({ setUser }) {
               color: theme.text,
               fontSize: '14px',
               fontWeight: '600'
-            }}>🔒 Senha</label>
+            }}>Senha</label>
             <input
               type="password"
               value={senha}
@@ -326,7 +326,7 @@ function Login({ setUser }) {
               </>
             ) : (
               <>
-                🚀 Entrar
+                Entrar
               </>
             )}
           </button>
@@ -356,7 +356,7 @@ function Login({ setUser }) {
               e.target.style.transform = 'translateY(0)';
             }}
           >
-            ✨ Não tem conta? Cadastre-se
+            Não tem conta? Cadastre-se
           </Link>
           <br />
           <Link 
@@ -377,7 +377,7 @@ function Login({ setUser }) {
               e.target.style.textDecoration = 'none';
             }}
           >
-            🔑 Esqueci minha senha
+            Esqueci minha senha
           </Link>
         </div>
         

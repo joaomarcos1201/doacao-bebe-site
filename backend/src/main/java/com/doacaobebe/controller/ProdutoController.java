@@ -1,6 +1,5 @@
 package com.doacaobebe.controller;
 
-import com.doacaobebe.dto.ProdutoRequest;
 import com.doacaobebe.entity.Produto;
 import com.doacaobebe.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
