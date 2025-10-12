@@ -25,21 +25,22 @@ function Doacao() {
     e.preventDefault();
     if (produto && categoria && descricao && estado && contato && cpf && nomeDoador) {
       try {
+        const formData = new FormData();
+        formData.append('nome', produto);
+        formData.append('categoria', categoria);
+        formData.append('descricao', descricao);
+        formData.append('estado', estado);
+        formData.append('contato', contato);
+        formData.append('cpf', cpf);
+        formData.append('doador', nomeDoador);
+        
+        if (imagemArquivo) {
+          formData.append('imagem', imagemArquivo);
+        }
+
         const response = await fetch('http://localhost:8080/api/produtos', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            nome: produto,
-            categoria,
-            descricao,
-            estado,
-            contato,
-            cpf,
-            imagem,
-            doador: nomeDoador
-          }),
+          body: formData
         });
 
         if (response.ok) {
@@ -381,6 +382,8 @@ function Doacao() {
                   const file = e.target.files[0];
                   if (file) {
                     setImagemArquivo(file);
+                    
+                    // Criar preview da imagem
                     const reader = new FileReader();
                     reader.onload = (event) => setImagem(event.target.result);
                     reader.readAsDataURL(file);

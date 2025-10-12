@@ -6,6 +6,7 @@ import com.doacaobebe.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,17 +19,32 @@ public class ProdutoController {
     private ProdutoRepository produtoRepository;
 
     @PostMapping
-    public ResponseEntity<String> cadastrarProduto(@RequestBody ProdutoRequest request) {
+    public ResponseEntity<String> cadastrarProduto(
+            @RequestParam("nome") String nome,
+            @RequestParam("categoria") String categoria,
+            @RequestParam("descricao") String descricao,
+            @RequestParam("estado") String estado,
+            @RequestParam("contato") String contato,
+            @RequestParam("cpf") String cpf,
+            @RequestParam("doador") String doador,
+            @RequestParam(value = "imagem", required = false) MultipartFile imagem) {
         try {
+            String imagemBase64 = null;
+            if (imagem != null && !imagem.isEmpty()) {
+                byte[] imagemBytes = imagem.getBytes();
+                imagemBase64 = "data:" + imagem.getContentType() + ";base64," + 
+                              java.util.Base64.getEncoder().encodeToString(imagemBytes);
+            }
+
             Produto produto = new Produto(
-                request.getNome(),
-                request.getCategoria(),
-                request.getDescricao(),
-                request.getEstado(),
-                request.getContato(),
-                request.getCpf(),
-                request.getImagem(),
-                request.getDoador() != null ? request.getDoador() : "Doador Anônimo"
+                nome,
+                categoria,
+                descricao,
+                estado,
+                contato,
+                cpf,
+                imagemBase64,
+                doador != null ? doador : "Doador Anônimo"
             );
             
             produtoRepository.save(produto);
@@ -78,6 +94,19 @@ public class ProdutoController {
             return ResponseEntity.ok("Produto removido com sucesso!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao remover produto: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/imagem")
+    public ResponseEntity<String> obterImagem(@PathVariable Long id) {
+        try {
+            Produto produto = produtoRepository.findById(id).orElse(null);
+            if (produto != null && produto.getImagem() != null) {
+                return ResponseEntity.ok(produto.getImagem());
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

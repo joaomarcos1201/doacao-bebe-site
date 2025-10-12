@@ -10,9 +10,4 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface MensagemRepository extends JpaRepository<Mensagem, Long> {
-    
-    @Modifying
-    @Transactional
-    @Query(value = "INSERT INTO Mensagem (dataMensagem, emissor, email, telefone, texto, statusMensagem) VALUES (GETDATE(), :emissor, :email, :telefone, :texto, 'ATIVO')", nativeQuery = true)
-    void inserirMensagem(@Param("emissor") String emissor, @Param("email") String email, @Param("telefone") String telefone, @Param("texto") String texto);
 }
