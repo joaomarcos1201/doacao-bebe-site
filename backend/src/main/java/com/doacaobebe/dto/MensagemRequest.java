@@ -3,6 +3,7 @@ package com.doacaobebe.dto;
 public class MensagemRequest {
     private String nome;
     private String email;
+    private String telefone;
     private String assunto;
     private String mensagem;
     
@@ -12,6 +13,9 @@ public class MensagemRequest {
     
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+    
+    public String getTelefone() { return telefone; }
+    public void setTelefone(String telefone) { this.telefone = telefone; }
     
     public String getAssunto() { return assunto; }
     public void setAssunto(String assunto) { this.assunto = assunto; }

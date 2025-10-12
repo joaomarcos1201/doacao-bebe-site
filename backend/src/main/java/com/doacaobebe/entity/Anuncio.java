@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "produtos")
-public class Produto {
+@Table(name = "Anuncio")
+public class Anuncio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,8 +28,8 @@ public class Produto {
     @Column(nullable = true)
     private String cpf;
 
-    @Column(name = "imagem")
-    private String imagem;
+    @Column(name = "foto")
+    private String foto;
 
     @Column(nullable = false)
     private String doador;
@@ -41,16 +41,16 @@ public class Produto {
     private LocalDateTime dataCriacao = LocalDateTime.now();
 
     // Construtores
-    public Produto() {}
+    public Anuncio() {}
 
-    public Produto(String nome, String categoria, String descricao, String estado, String contato, String cpf, String imagem, String doador) {
+    public Anuncio(String nome, String categoria, String descricao, String estado, String contato, String cpf, String foto, String doador) {
         this.nome = nome;
         this.categoria = categoria;
         this.descricao = descricao;
         this.estado = estado;
         this.contato = contato;
         this.cpf = cpf;
-        this.imagem = imagem;
+        this.foto = foto;
         this.doador = doador;
     }
 
@@ -76,8 +76,8 @@ public class Produto {
     public String getCpf() { return cpf; }
     public void setCpf(String cpf) { this.cpf = cpf; }
 
-    public String getImagem() { return imagem; }
-    public void setImagem(String imagem) { this.imagem = imagem; }
+    public String getFoto() { return foto; }
+    public void setFoto(String foto) { this.foto = foto; }
 
     public String getDoador() { return doador; }
     public void setDoador(String doador) { this.doador = doador; }
