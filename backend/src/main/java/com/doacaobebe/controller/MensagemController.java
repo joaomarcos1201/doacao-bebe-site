@@ -31,7 +31,6 @@ public class MensagemController {
             msg.setTelefone(request.getTelefone() != null ? request.getTelefone() : "Não informado");
             msg.setTexto(mensagemTexto);
             msg.setStatusMensagem("ATIVO");
-            msg.setConteudo(mensagemTexto);
             msg.setChatId(1L);
 
             mensagemRepository.save(msg);

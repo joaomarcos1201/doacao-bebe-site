@@ -7,6 +7,7 @@ import Notification from '../components/Notification';
 function Cadastro() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
+  const [cpf, setCpf] = useState('');
   const [senha, setSenha] = useState('');
   const [telefone, setTelefone] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
@@ -67,7 +68,7 @@ function Cadastro() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ nome, email, senha }),
+          body: JSON.stringify({ nome, email, cpf, senha }),
         });
 
         if (response.ok) {
@@ -202,6 +203,23 @@ function Cadastro() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '12px',
+                border: `1px solid ${theme.border}`,
+                borderRadius: '5px',
+                backgroundColor: theme.background,
+                color: theme.text
+              }}
+              required
+            />
+          </div>
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', color: theme.text }}>CPF:</label>
+            <input
+              type="text"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
               style={{
                 width: '100%',
                 padding: '12px',

@@ -85,7 +85,7 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
-        usuario.setStatus(usuario.getStatus().equals("ativo") ? "inativo" : "ativo");
+        usuario.setStatusUsuario(usuario.getStatusUsuario().equals("ATIVO") ? "INATIVO" : "ATIVO");
         return usuarioRepository.save(usuario);
     }
 
@@ -136,7 +136,7 @@ public class UsuarioService {
         
         System.out.println("DEBUG: Usuário encontrado, atualizando privilégios");
         
-        usuario.setIsAdmin(isAdmin);
+        usuario.setNivelAcesso(isAdmin ? "ADMIN" : "USER");
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
         
         System.out.println("DEBUG: Privilégios atualizados com sucesso");

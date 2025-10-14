@@ -24,8 +24,8 @@ public class DataInitializer implements CommandLineRunner {
             admin.setNome("Administrador");
             admin.setEmail("admin@alemdopositivo.com");
             admin.setSenha(passwordEncoder.encode("Admin@123"));
-            admin.setIsAdmin(true);
-            admin.setStatus("ativo");
+            admin.setNivelAcesso("ADMIN");
+            admin.setStatusUsuario("ATIVO");
             
             usuarioRepository.save(admin);
             System.out.println("Usuário administrador criado com sucesso!");

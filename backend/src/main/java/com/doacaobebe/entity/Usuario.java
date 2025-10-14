@@ -2,6 +2,7 @@ package com.doacaobebe.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "usuarios")
@@ -19,17 +20,23 @@ public class Usuario {
     @Column(nullable = false, length = 11)
     private String cpf;
     
+    @Column(name = "dataNascimento")
+    private LocalDate dataNascimento;
+    
     @Column(nullable = false)
     private String senha;
     
-    @Column(nullable = false)
-    private String status = "ativo";
+    @Column(name = "nivelAcesso")
+    private String nivelAcesso = "USER";
     
-    @Column(name = "data_criacao")
-    private LocalDateTime dataCriacao = LocalDateTime.now();
+    @Column(name = "foto")
+    private byte[] foto;
     
-    @Column(name = "is_admin")
-    private Boolean isAdmin = false;
+    @Column(name = "dataCadastro")
+    private LocalDateTime dataCadastro = LocalDateTime.now();
+    
+    @Column(name = "statusUsuario")
+    private String statusUsuario = "ATIVO";
 
     // Construtores
     public Usuario() {}
@@ -54,15 +61,23 @@ public class Usuario {
     public String getCpf() { return cpf; }
     public void setCpf(String cpf) { this.cpf = cpf; }
     
+    public LocalDate getDataNascimento() { return dataNascimento; }
+    public void setDataNascimento(LocalDate dataNascimento) { this.dataNascimento = dataNascimento; }
+
     public String getSenha() { return senha; }
     public void setSenha(String senha) { this.senha = senha; }
     
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public String getNivelAcesso() { return nivelAcesso; }
+    public void setNivelAcesso(String nivelAcesso) { this.nivelAcesso = nivelAcesso; }
     
-    public LocalDateTime getDataCriacao() { return dataCriacao; }
-    public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
+    public byte[] getFoto() { return foto; }
+    public void setFoto(byte[] foto) { this.foto = foto; }
     
-    public Boolean getIsAdmin() { return isAdmin; }
-    public void setIsAdmin(Boolean isAdmin) { this.isAdmin = isAdmin; }
+    public LocalDateTime getDataCadastro() { return dataCadastro; }
+    public void setDataCadastro(LocalDateTime dataCadastro) { this.dataCadastro = dataCadastro; }
+    
+    public String getStatusUsuario() { return statusUsuario; }
+    public void setStatusUsuario(String statusUsuario) { this.statusUsuario = statusUsuario; }
+    
+    public Boolean getIsAdmin() { return "ADMIN".equals(nivelAcesso); }
 }
