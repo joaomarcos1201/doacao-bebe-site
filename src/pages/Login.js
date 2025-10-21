@@ -14,7 +14,6 @@ function Login({ setUser }) {
   // Limpar estado quando acessar a página de login
   useEffect(() => {
     setUser(null);
-    localStorage.removeItem('user');
     localStorage.removeItem('token');
   }, [setUser]);
 
@@ -178,7 +177,7 @@ function Login({ setUser }) {
             boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
             border: `3px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`
           }}>
-            ❤
+            
           </div>
           <h1 style={{ 
             color: theme.primary, 

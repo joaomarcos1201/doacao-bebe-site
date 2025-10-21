@@ -13,9 +13,17 @@ function Home({ user, setUser }) {
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const [menuAberto, setMenuAberto] = useState(false);
 
+  // Debug: verificar dados do usuário
+  console.log('DEBUG Home - user completo:', JSON.stringify(user, null, 2));
+  console.log('DEBUG Home - user.isAdmin:', user?.isAdmin);
+  console.log('DEBUG Home - typeof user.isAdmin:', typeof user?.isAdmin);
+  console.log('DEBUG Home - user.isAdmin === true:', user?.isAdmin === true);
+  console.log('DEBUG Home - Condição do menu admin:', user && user.isAdmin);
+
+
+
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('user');
     localStorage.removeItem('token');
     navigate('/login');
   };
@@ -351,7 +359,7 @@ function Home({ user, setUser }) {
               style={{
                 padding: '20px 25px',
                 color: theme.text,
-                borderBottom: user.isAdmin ? `1px solid ${theme.border}` : 'none',
+                borderBottom: (user.isAdmin || user.email === 'admin@alemdopositivo.com') ? `1px solid ${theme.border}` : 'none',
                 cursor: 'pointer',
                 fontSize: '16px',
                 display: 'flex',
@@ -364,7 +372,7 @@ function Home({ user, setUser }) {
             >
               <span style={{ fontWeight: 'bold' }}>FAQ</span>
             </div>
-            {user.isAdmin && (
+            {(user.isAdmin || user.email === 'admin@alemdopositivo.com') && (
               <div 
                 onClick={() => { navigate('/admin'); setMenuAberto(false); }}
                 style={{

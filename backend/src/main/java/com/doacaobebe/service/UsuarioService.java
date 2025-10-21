@@ -85,12 +85,25 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
-        usuario.setStatusUsuario(usuario.getStatusUsuario().equals("ATIVO") ? "INATIVO" : "ATIVO");
+        String statusAtual = usuario.getStatusUsuario();
+        if (statusAtual == null || statusAtual.equals("ATIVO")) {
+            usuario.setStatusUsuario("INATIVO");
+        } else {
+            usuario.setStatusUsuario("ATIVO");
+        }
         return usuarioRepository.save(usuario);
     }
 
     public void remover(Long id) {
-        usuarioRepository.deleteById(id);
+        try {
+            if (!usuarioRepository.existsById(id)) {
+                throw new RuntimeException("Usuário não encontrado");
+            }
+            usuarioRepository.deleteUsuarioById(id);
+        } catch (Exception e) {
+            System.err.println("Erro ao remover usuário: " + e.getMessage());
+            throw new RuntimeException("Erro ao remover usuário: " + e.getMessage());
+        }
     }
 
     public void redefinirSenha(String email, String novaSenha) {
@@ -159,5 +172,45 @@ public class UsuarioService {
             return true;
         }
         return false;
+    }
+
+    public AuthResponse getUserByEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        System.out.println("DEBUG - Usuario encontrado: " + usuario.getNome());
+        System.out.println("DEBUG - NivelAcesso: " + usuario.getNivelAcesso());
+        System.out.println("DEBUG - IsAdmin: " + usuario.getIsAdmin());
+        
+        String token = jwtService.generateToken(usuario.getEmail());
+        AuthResponse response = new AuthResponse(token, usuario.getId(), usuario.getNome(), 
+                              usuario.getEmail(), usuario.getIsAdmin());
+        
+        System.out.println("DEBUG - AuthResponse isAdmin: " + response.getIsAdmin());
+        return response;
+    }
+
+    public void criarUsuarioAdmin() {
+        String email = "admin@alemdopositivo.com";
+        if (!usuarioRepository.existsByEmail(email)) {
+            Usuario admin = new Usuario();
+            admin.setNome("Administrador");
+            admin.setEmail(email);
+            admin.setCpf("00000000000");
+            admin.setSenha(passwordEncoder.encode("admin123"));
+            admin.setNivelAcesso("ADMIN");
+            admin.setStatusUsuario("ATIVO");
+            usuarioRepository.save(admin);
+            System.out.println("Usuário admin criado com sucesso!");
+        } else {
+            // Atualizar usuário existente para garantir que tenha CPF
+            Usuario admin = usuarioRepository.findByEmail(email).orElse(null);
+            if (admin != null && admin.getCpf() == null) {
+                admin.setCpf("00000000000");
+                usuarioRepository.save(admin);
+                System.out.println("CPF do admin atualizado!");
+            }
+            System.out.println("Usuário admin já existe!");
+        }
     }
 }

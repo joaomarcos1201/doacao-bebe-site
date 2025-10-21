@@ -4,7 +4,6 @@ public class MensagemRequest {
     private String nome;
     private String email;
     private String telefone;
-    private String assunto;
     private String mensagem;
     
     // Getters e Setters
@@ -16,9 +15,6 @@ public class MensagemRequest {
     
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
-    
-    public String getAssunto() { return assunto; }
-    public void setAssunto(String assunto) { this.assunto = assunto; }
     
     public String getMensagem() { return mensagem; }
     public void setMensagem(String mensagem) { this.mensagem = mensagem; }

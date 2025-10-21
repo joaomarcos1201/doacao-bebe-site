@@ -8,7 +8,7 @@ function FaleConosco() {
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
-    assunto: '',
+    telefone: '',
     mensagem: ''
   });
   const [enviado, setEnviado] = useState(false);
@@ -221,13 +221,13 @@ function FaleConosco() {
                 color: theme.text,
                 fontWeight: '600',
                 fontSize: '14px'
-              }}>Assunto *</label>
+              }}>Telefone</label>
               <input
-                type="text"
-                name="assunto"
-                value={formData.assunto}
+                type="tel"
+                name="telefone"
+                value={formData.telefone}
                 onChange={handleChange}
-                placeholder="Qual o motivo do seu contato?"
+                placeholder="(11) 99999-9999"
                 style={{
                   width: '100%',
                   padding: '14px 16px',
@@ -241,7 +241,6 @@ function FaleConosco() {
                 }}
                 onFocus={(e) => e.target.style.borderColor = theme.primary}
                 onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                required
               />
             </div>
 
@@ -327,15 +326,15 @@ function FaleConosco() {
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '16px' }}>📧</span>
-                <span style={{ color: theme.text, fontSize: '14px' }}>contato@alemdopositivo.com</span>
+                <span style={{ fontSize: '16px' }}></span>
+                <span style={{ color: theme.text, fontSize: '14px' }}>alemdopositivo0225@gmail.com</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '16px' }}>📱</span>
-                <span style={{ color: theme.text, fontSize: '14px' }}>WhatsApp: (11) 99999-9999</span>
+                <span style={{ fontSize: '16px' }}></span>
+                <span style={{ color: theme.text, fontSize: '14px' }}></span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '16px' }}>🕒</span>
+                <span style={{ fontSize: '16px' }}></span>
                 <span style={{ color: theme.text, fontSize: '14px' }}>Horário de atendimento: Segunda a Sexta, 9h às 18h</span>
               </div>
             </div>

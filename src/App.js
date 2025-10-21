@@ -23,27 +23,44 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Carregar usuário do localStorage ao iniciar
+  // Carregar usuário do backend ao iniciar
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetch('http://localhost:8080/api/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Token inválido');
+        }
+      })
+      .then(data => {
+        console.log('DEBUG App - dados recebidos do backend:', data);
+        const userData = {
+          id: data.id,
+          nome: data.nome,
+          email: data.email,
+          isAdmin: data.isAdmin
+        };
+        console.log('DEBUG App - userData criado:', userData);
+        setUser(userData);
+      })
+      .catch(error => {
+        console.error('Erro ao carregar usuário:', error);
+        localStorage.removeItem('token');
         localStorage.removeItem('user');
-      }
+      });
     }
     setLoading(false);
   }, []);
 
-  // Salvar usuário no localStorage quando mudar
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }, [user]);
+
 
   if (loading) {
     return (
@@ -71,7 +88,7 @@ function App() {
                 <Route path="/login" element={<Login setUser={setUser} />} />
                 <Route path="/cadastro" element={<Cadastro />} />
                 <Route path="/home" element={user ? <Home user={user} setUser={setUser} /> : <Navigate to="/login" />} />
-                <Route path="/admin" element={user && user.isAdmin ? <Admin /> : <Navigate to="/login" />} />
+                <Route path="/admin" element={user && (user.isAdmin || user.email === 'admin@alemdopositivo.com') ? <Admin /> : <Navigate to="/login" />} />
                 <Route path="/doacao" element={user ? <Doacao /> : <Navigate to="/login" />} />
                 <Route path="/produto/:id" element={user ? <DetalhesProduto /> : <Navigate to="/login" />} />
                 <Route path="/perfil" element={user ? <Perfil user={user} setUser={setUser} /> : <Navigate to="/login" />} />

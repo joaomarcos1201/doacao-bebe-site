@@ -6,6 +6,8 @@ import com.doacaobebe.dto.LoginRequest;
 import com.doacaobebe.dto.RedefinirSenhaRequest;
 import com.doacaobebe.service.UsuarioService;
 import com.doacaobebe.service.EmailService;
+import com.doacaobebe.service.JwtService;
+import com.doacaobebe.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,9 @@ public class AuthController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -105,6 +110,27 @@ public class AuthController {
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao verificar código: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
+        try {
+            String email = jwtService.extractEmail(token.replace("Bearer ", ""));
+            AuthResponse response = usuarioService.getUserByEmail(email);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Token inválido");
+        }
+    }
+
+    @PostMapping("/criar-admin")
+    public ResponseEntity<?> criarAdmin() {
+        try {
+            usuarioService.criarUsuarioAdmin();
+            return ResponseEntity.ok("Usuário admin criado com sucesso");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao criar admin: " + e.getMessage());
         }
     }
 }

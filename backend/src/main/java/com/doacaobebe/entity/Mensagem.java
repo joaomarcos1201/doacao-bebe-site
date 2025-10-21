@@ -28,12 +28,6 @@ public class Mensagem {
     @Column(name = "statusMensagem", nullable = false, length = 10)
     private String statusMensagem;
     
-    @Column(name = "conteudo")
-    private String conteudo;
-    
-    @Column(name = "chat_id")
-    private Long chatId;
-    
     // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -55,10 +49,4 @@ public class Mensagem {
     
     public String getStatusMensagem() { return statusMensagem; }
     public void setStatusMensagem(String statusMensagem) { this.statusMensagem = statusMensagem; }
-    
-    public String getConteudo() { return conteudo; }
-    public void setConteudo(String conteudo) { this.conteudo = conteudo; }
-    
-    public Long getChatId() { return chatId; }
-    public void setChatId(Long chatId) { this.chatId = chatId; }
 }

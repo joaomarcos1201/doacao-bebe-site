@@ -14,6 +14,7 @@ function Admin() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ total: 0, ativos: 0, inativos: 0, admins: 0 });
   const [abaSelecionada, setAbaSelecionada] = useState('usuarios');
+  const [mensagens, setMensagens] = useState([]);
   const { produtos, aprovarProduto, rejeitarProduto, removerProduto } = useProdutos();
   const { notifications, showSuccess, showError, removeNotification } = useNotification();
   const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirm();
@@ -23,20 +24,38 @@ function Admin() {
 
   useEffect(() => {
     carregarUsuarios();
+    carregarMensagens();
   }, []);
+
+  const carregarMensagens = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/contato');
+      if (response.ok) {
+        const data = await response.json();
+        setMensagens(data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar mensagens:', error);
+    }
+  };
+
+
 
   const carregarUsuarios = async () => {
     try {
       const response = await fetch('http://localhost:8080/api/usuarios');
       if (response.ok) {
         const data = await response.json();
+        console.log('DEBUG - Dados dos usuários:', data);
+        console.log('DEBUG - Primeiro usuário:', data[0]);
         setUsuarios(data);
         
         // Calcular estatísticas
         const total = data.length;
-        const ativos = data.filter(u => u.status === 'ativo').length;
-        const inativos = data.filter(u => u.status === 'inativo').length;
-        const admins = data.filter(u => u.isAdmin).length;
+        const ativos = data.filter(u => u.statusUsuario === 'ATIVO' || u.statusUsuario === null).length;
+        const inativos = data.filter(u => u.statusUsuario === 'INATIVO').length;
+        const admins = data.filter(u => u.nivelAcesso === 'ADMIN').length;
+        console.log('DEBUG - Stats:', { total, ativos, inativos, admins });
         setStats({ total, ativos, inativos, admins });
       } else {
         showError('Não foi possível carregar a lista de usuários.');
@@ -70,16 +89,22 @@ function Admin() {
       'Esta ação não pode ser desfeita. Tem certeza que deseja remover este usuário?',
       async () => {
         try {
+          console.log('DEBUG - Tentando remover usuário ID:', id);
           const response = await fetch(`http://localhost:8080/api/usuarios/${id}`, {
             method: 'DELETE',
           });
+          console.log('DEBUG - Status da resposta:', response.status);
+          
           if (response.ok) {
             showSuccess('Usuário removido com sucesso!');
             carregarUsuarios();
           } else {
-            showError('Não foi possível remover o usuário.');
+            const errorText = await response.text();
+            console.log('DEBUG - Erro do servidor:', errorText);
+            showError(`Não foi possível remover o usuário: ${errorText}`);
           }
         } catch (error) {
+          console.error('DEBUG - Erro de conexão:', error);
           showError('Erro de conexão. Verifique sua internet e tente novamente.');
         }
       },
@@ -208,6 +233,20 @@ function Admin() {
           >
             Produtos ({produtosPendentes.length} pendentes)
           </button>
+          <button
+            onClick={() => setAbaSelecionada('mensagens')}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: abaSelecionada === 'mensagens' ? theme.primary : theme.background,
+              color: abaSelecionada === 'mensagens' ? 'white' : theme.text,
+              border: `1px solid ${theme.border}`,
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '16px'
+            }}
+          >
+            Mensagens ({mensagens.length})
+          </button>
         </div>
 
         {abaSelecionada === 'usuarios' && (
@@ -322,15 +361,15 @@ function Admin() {
                         borderRadius: '20px',
                         fontSize: '12px',
                         fontWeight: 'bold',
-                        backgroundColor: usuario.status === 'ativo' ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)',
-                        color: usuario.status === 'ativo' ? '#4CAF50' : '#F44336',
-                        border: `1px solid ${usuario.status === 'ativo' ? '#4CAF50' : '#F44336'}`
+                        backgroundColor: (usuario.statusUsuario === 'ATIVO' || usuario.statusUsuario === null) ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)',
+                        color: (usuario.statusUsuario === 'ATIVO' || usuario.statusUsuario === null) ? '#4CAF50' : '#F44336',
+                        border: `1px solid ${(usuario.statusUsuario === 'ATIVO' || usuario.statusUsuario === null) ? '#4CAF50' : '#F44336'}`
                       }}>
-                        {usuario.status === 'ativo' ? 'ATIVO' : 'INATIVO'}
+                        {(usuario.statusUsuario === 'ATIVO' || usuario.statusUsuario === null) ? 'ATIVO' : 'INATIVO'}
                       </span>
                     </td>
                     <td style={{ padding: '15px', textAlign: 'center' }}>
-                      {usuario.isAdmin ? (
+                      {usuario.nivelAcesso === 'ADMIN' ? (
                         <span style={{ color: theme.primary, fontSize: '16px', fontWeight: 'bold' }}>★</span>
                       ) : (
                         <span style={{ color: theme.textSecondary, fontSize: '14px' }}>—</span>
@@ -342,7 +381,7 @@ function Admin() {
                           onClick={() => toggleStatus(usuario.id)}
                           style={{ 
                             padding: '6px 12px',
-                            backgroundColor: usuario.status === 'ativo' ? '#FF9800' : '#4CAF50',
+                            backgroundColor: (usuario.statusUsuario === 'ATIVO' || usuario.statusUsuario === null) ? '#FF9800' : '#4CAF50',
                             color: 'white',
                             border: 'none',
                             borderRadius: '5px',
@@ -354,13 +393,13 @@ function Admin() {
                           onMouseOver={(e) => e.target.style.opacity = '0.8'}
                           onMouseOut={(e) => e.target.style.opacity = '1'}
                         >
-                          {usuario.status === 'ativo' ? 'Pausar' : 'Ativar'}
+                          {usuario.statusUsuario === 'ATIVO' ? 'Pausar' : 'Ativar'}
                         </button>
                         <button 
-                          onClick={() => toggleAdmin(usuario.id, usuario.isAdmin)}
+                          onClick={() => toggleAdmin(usuario.id, usuario.nivelAcesso === 'ADMIN')}
                           style={{ 
                             padding: '6px 12px',
-                            backgroundColor: usuario.isAdmin ? '#9C27B0' : '#2196F3',
+                            backgroundColor: usuario.nivelAcesso === 'ADMIN' ? '#9C27B0' : '#2196F3',
                             color: 'white',
                             border: 'none',
                             borderRadius: '5px',
@@ -371,9 +410,9 @@ function Admin() {
                           }}
                           onMouseOver={(e) => e.target.style.opacity = '0.8'}
                           onMouseOut={(e) => e.target.style.opacity = '1'}
-                          title={usuario.isAdmin ? 'Remover Admin' : 'Promover Admin'}
+                          title={usuario.nivelAcesso === 'ADMIN' ? 'Remover Admin' : 'Promover Admin'}
                         >
-                          {usuario.isAdmin ? 'Admin-' : 'Admin+'}
+                          {usuario.nivelAcesso === 'ADMIN' ? 'Admin-' : 'Admin+'}
                         </button>
                         <button 
                           onClick={() => removerUsuario(usuario.id)}
@@ -585,6 +624,99 @@ function Admin() {
           </div>
         </div>
         </>
+        )}
+
+        {abaSelecionada === 'mensagens' && (
+        <div style={{
+          backgroundColor: theme.cardBackground,
+          borderRadius: '12px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+          border: `1px solid ${theme.border}`,
+          overflow: 'hidden'
+        }}>
+          <div style={{ padding: '25px 30px', borderBottom: `1px solid ${theme.border}` }}>
+            <h2 style={{ color: theme.text, margin: 0, fontSize: '22px' }}>Mensagens de Contato ({mensagens.length})</h2>
+          </div>
+          <div style={{ padding: '20px' }}>
+            {mensagens.length === 0 ? (
+              <p style={{ color: theme.textSecondary, textAlign: 'center', padding: '20px' }}>Nenhuma mensagem recebida ainda.</p>
+            ) : (
+              <div style={{ display: 'grid', gap: '20px' }}>
+                {mensagens.map(mensagem => (
+                  <div key={mensagem.id} style={{
+                    border: `1px solid ${theme.border}`,
+                    borderRadius: '8px',
+                    padding: '20px',
+                    background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
+                      <div>
+                        <h3 style={{ color: theme.text, margin: '0 0 5px 0', fontSize: '18px' }}>{mensagem.emissor}</h3>
+                        <p style={{ color: theme.textSecondary, margin: '0 0 5px 0', fontSize: '14px' }}>
+                          📧 {mensagem.email}
+                        </p>
+                        {mensagem.telefone && (
+                          <p style={{ color: theme.textSecondary, margin: '0 0 5px 0', fontSize: '14px' }}>
+                            📱 {mensagem.telefone}
+                          </p>
+                        )}
+                      </div>
+                      <span style={{ 
+                        color: theme.textSecondary, 
+                        fontSize: '12px',
+                        backgroundColor: theme.background,
+                        padding: '4px 8px',
+                        borderRadius: '4px'
+                      }}>
+                        {new Date(mensagem.dataMensagem).toLocaleString('pt-BR')}
+                      </span>
+                    </div>
+                    <div style={{
+                      backgroundColor: theme.background,
+                      padding: '15px',
+                      borderRadius: '8px',
+                      marginBottom: '15px'
+                    }}>
+                      <p style={{ color: theme.text, margin: 0, lineHeight: '1.5' }}>{mensagem.texto}</p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <button
+                        onClick={() => window.open(`mailto:${mensagem.email}?subject=Re: Sua mensagem&body=Olá ${mensagem.emissor},%0D%0A%0D%0AObrigado por entrar em contato conosco.%0D%0A%0D%0A`)}
+                        style={{
+                          padding: '8px 16px',
+                          backgroundColor: theme.primary,
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '5px',
+                          cursor: 'pointer',
+                          fontSize: '14px'
+                        }}
+                      >
+                        📧 Responder por Email
+                      </button>
+                      {mensagem.telefone && (
+                        <button
+                          onClick={() => window.open(`https://wa.me/${mensagem.telefone.replace(/\D/g, '')}?text=Olá ${mensagem.emissor}, obrigado por entrar em contato conosco.`)}
+                          style={{
+                            padding: '8px 16px',
+                            backgroundColor: '#25D366',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '14px'
+                          }}
+                        >
+                          📱 WhatsApp
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
         )}
       </div>
 

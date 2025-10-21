@@ -17,7 +17,7 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
     
-    @Column(nullable = false, length = 11)
+    @Column(nullable = true, length = 11)
     private String cpf;
     
     @Column(name = "dataNascimento")

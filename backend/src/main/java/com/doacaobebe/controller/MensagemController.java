@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/contato")
@@ -16,22 +17,36 @@ public class MensagemController {
     @Autowired
     private MensagemRepository mensagemRepository;
     
+    @GetMapping
+    public ResponseEntity<List<Mensagem>> listarMensagens() {
+        try {
+            List<Mensagem> mensagens = mensagemRepository.findByStatusMensagemOrderByDataMensagemDesc("ATIVO");
+            return ResponseEntity.ok(mensagens);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    
     @PostMapping
     public ResponseEntity<?> enviarMensagem(@RequestBody MensagemRequest request) {
         try {
-            String mensagemTexto = request.getMensagem();
-            if (mensagemTexto == null || mensagemTexto.trim().isEmpty()) {
-                mensagemTexto = "Mensagem vazia";
+            if (request.getMensagem() == null || request.getMensagem().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Mensagem não pode estar vazia\"}");
+            }
+            if (request.getNome() == null || request.getNome().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Nome é obrigatório\"}");
+            }
+            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Email é obrigatório\"}");
             }
 
             Mensagem msg = new Mensagem();
             msg.setDataMensagem(LocalDateTime.now());
-            msg.setEmissor(request.getNome() != null ? request.getNome() : "Sem nome");
-            msg.setEmail(request.getEmail() != null ? request.getEmail() : "sem@email.com");
-            msg.setTelefone(request.getTelefone() != null ? request.getTelefone() : "Não informado");
-            msg.setTexto(mensagemTexto);
+            msg.setEmissor(request.getNome());
+            msg.setEmail(request.getEmail());
+            msg.setTelefone(request.getTelefone());
+            msg.setTexto(request.getMensagem());
             msg.setStatusMensagem("ATIVO");
-            msg.setChatId(1L);
 
             mensagemRepository.save(msg);
             
@@ -41,4 +56,6 @@ public class MensagemController {
             return ResponseEntity.badRequest().body("{\"error\": \"Erro ao enviar mensagem: " + e.getMessage() + "\"}");
         }
     }
+    
+
 }
