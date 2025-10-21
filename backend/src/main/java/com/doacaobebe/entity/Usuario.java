@@ -35,7 +35,7 @@ public class Usuario {
     @Column(name = "dataCadastro")
     private LocalDateTime dataCadastro = LocalDateTime.now();
     
-    @Column(name = "statusUsuario")
+    @Column(name = "status")
     private String statusUsuario = "ATIVO";
 
     // Construtores

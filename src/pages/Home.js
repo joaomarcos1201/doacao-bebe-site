@@ -4,6 +4,8 @@ import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 
 
+
+
 function Home({ user, setUser }) {
   const navigate = useNavigate();
   const { produtos, removerProduto } = useProdutos();
@@ -400,8 +402,8 @@ function Home({ user, setUser }) {
         maxWidth: '1200px', 
         margin: '0 auto' 
       }}>
-        {/* Carrossel de Produtos Principais */}
-        <ProductCarousel produtos={produtosFiltrados.slice(0, 5)} theme={theme} isDark={isDark} handleContact={handleContact} />
+        {/* Carrossel de Imagens de Gravidez */}
+        <PregnancyCarousel theme={theme} isDark={isDark} />
         
         <div style={{ padding: '0 0 30px' }}>
           <div style={{
@@ -651,52 +653,25 @@ function Home({ user, setUser }) {
   );
 }
 
-// Componente do Carrossel
-function ProductCarousel({ produtos, theme, isDark, handleContact }) {
+// Componente do Carrossel de Gravidez
+function PregnancyCarousel({ theme, isDark }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const images = [
+    'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&h=300&fit=crop&crop=center',
+    'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&crop=center',
+    'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&h=300&fit=crop&crop=center',
+    'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&crop=center',
+    'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&h=300&fit=crop&crop=center'
+  ];
 
   useEffect(() => {
-    if (produtos.length > 0) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => 
-          prevIndex === produtos.length - 1 ? 0 : prevIndex + 1
-        );
-      }, 4000);
-      return () => clearInterval(interval);
-    }
-  }, [produtos.length]);
-
-  if (produtos.length === 0) {
-    return (
-      <div style={{
-        textAlign: 'center',
-        marginBottom: window.innerWidth < 768 ? '30px' : '50px',
-        padding: window.innerWidth < 768 ? '30px 15px' : '40px 20px',
-        background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.3) 0%, rgba(173, 115, 120, 0.2) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(252, 192, 203, 0.3) 100%)',
-        borderRadius: '20px',
-        backdropFilter: 'blur(10px)',
-        border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.3)'}`
-      }}>
-        <h2 style={{
-          fontSize: window.innerWidth < 768 ? '28px' : '36px',
-          fontWeight: '700',
-          color: theme.primary,
-          marginBottom: '16px'
-        }}>
-          Doações Disponíveis
-        </h2>
-        <p style={{
-          fontSize: '18px',
-          color: theme.textSecondary,
-          margin: 0
-        }}>
-          Nenhum produto disponível no momento
-        </p>
-      </div>
-    );
-  }
-
-  const currentProduct = produtos[currentIndex];
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => 
+        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   return (
     <div style={{
@@ -722,7 +697,7 @@ function ProductCarousel({ produtos, theme, isDark, handleContact }) {
             color: theme.primary,
             marginBottom: '12px'
           }}>
-            {currentProduct.nome}
+            Bem-vinda ao Além do Positivo
           </h2>
           <p style={{
             fontSize: '16px',
@@ -730,76 +705,39 @@ function ProductCarousel({ produtos, theme, isDark, handleContact }) {
             marginBottom: '20px',
             lineHeight: '1.5'
           }}>
-            {currentProduct.descricao}
+            Um espaço dedicado ao apoio e cuidado durante a jornada da maternidade. Encontre produtos e suporte para você e seu bebê.
           </p>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', justifyContent: window.innerWidth < 768 ? 'center' : 'flex-start' }}>
-            <span style={{
-              backgroundColor: isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)',
-              color: theme.text,
-              padding: '6px 12px',
-              borderRadius: '12px',
-              fontSize: '12px',
-              fontWeight: '600'
-            }}>
-              {currentProduct.categoria}
-            </span>
-            <span style={{
-              backgroundColor: currentProduct.estado === 'novo' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(59, 130, 246, 0.2)',
-              color: currentProduct.estado === 'novo' ? '#059669' : '#2563eb',
-              padding: '6px 12px',
-              borderRadius: '12px',
-              fontSize: '12px',
-              fontWeight: '600'
-            }}>
-              {currentProduct.estado}
-            </span>
-          </div>
-          <button
-            onClick={() => handleContact(currentProduct.id)}
-            style={{
-              padding: '12px 24px',
-              backgroundColor: theme.primary,
-              color: 'white',
-              border: 'none',
-              borderRadius: '10px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '14px',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            Ver Detalhes
-          </button>
         </div>
         
         <div style={{ position: 'relative' }}>
-          {currentProduct.imagem ? (
-            <img
-              src={currentProduct.imagem}
-              alt={currentProduct.nome}
-              style={{
-                width: window.innerWidth < 768 ? '200px' : '250px',
-                height: window.innerWidth < 768 ? '150px' : '180px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
-              }}
-            />
-          ) : (
-            <div style={{
+          <img
+            src={images[currentIndex]}
+            alt="Imagem relacionada à gravidez"
+            style={{
               width: window.innerWidth < 768 ? '200px' : '250px',
               height: window.innerWidth < 768 ? '150px' : '180px',
-              backgroundColor: isDark ? 'rgba(69, 75, 96, 0.6)' : 'rgba(247, 182, 186, 0.6)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              objectFit: 'cover',
               borderRadius: '12px',
-              color: theme.textSecondary,
-              fontSize: '14px'
-            }}>
-              Sem imagem
-            </div>
-          )}
+              boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
+            }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+          <div style={{
+            width: window.innerWidth < 768 ? '200px' : '250px',
+            height: window.innerWidth < 768 ? '150px' : '180px',
+            backgroundColor: isDark ? 'rgba(69, 75, 96, 0.6)' : 'rgba(247, 182, 186, 0.6)',
+            display: 'none',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '12px',
+            color: theme.textSecondary,
+            fontSize: '14px'
+          }}>
+            Imagem não disponível
+          </div>
         </div>
       </div>
       
@@ -810,7 +748,7 @@ function ProductCarousel({ produtos, theme, isDark, handleContact }) {
         gap: '8px',
         paddingBottom: '20px'
       }}>
-        {produtos.map((_, index) => (
+        {images.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}

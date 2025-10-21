@@ -15,6 +15,7 @@ function Admin() {
   const [stats, setStats] = useState({ total: 0, ativos: 0, inativos: 0, admins: 0 });
   const [abaSelecionada, setAbaSelecionada] = useState('usuarios');
   const [mensagens, setMensagens] = useState([]);
+  const [menuAberto, setMenuAberto] = useState(null);
   const { produtos, aprovarProduto, rejeitarProduto, removerProduto } = useProdutos();
   const { notifications, showSuccess, showError, removeNotification } = useNotification();
   const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirm();
@@ -26,6 +27,18 @@ function Admin() {
     carregarUsuarios();
     carregarMensagens();
   }, []);
+
+  // Fechar menu ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuAberto && !event.target.closest('td')) {
+        setMenuAberto(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [menuAberto]);
 
   const carregarMensagens = async () => {
     try {
@@ -375,64 +388,105 @@ function Admin() {
                         <span style={{ color: theme.textSecondary, fontSize: '14px' }}>—</span>
                       )}
                     </td>
-                    <td style={{ padding: '15px', textAlign: 'center' }}>
-                      <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <button 
-                          onClick={() => toggleStatus(usuario.id)}
-                          style={{ 
-                            padding: '6px 12px',
-                            backgroundColor: (usuario.statusUsuario === 'ATIVO' || usuario.statusUsuario === null) ? '#FF9800' : '#4CAF50',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '11px',
-                            fontWeight: '600',
-                            transition: 'all 0.2s'
-                          }}
-                          onMouseOver={(e) => e.target.style.opacity = '0.8'}
-                          onMouseOut={(e) => e.target.style.opacity = '1'}
-                        >
-                          {usuario.statusUsuario === 'ATIVO' ? 'Pausar' : 'Ativar'}
-                        </button>
-                        <button 
-                          onClick={() => toggleAdmin(usuario.id, usuario.nivelAcesso === 'ADMIN')}
-                          style={{ 
-                            padding: '6px 12px',
-                            backgroundColor: usuario.nivelAcesso === 'ADMIN' ? '#9C27B0' : '#2196F3',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '11px',
-                            fontWeight: '600',
-                            transition: 'all 0.2s'
-                          }}
-                          onMouseOver={(e) => e.target.style.opacity = '0.8'}
-                          onMouseOut={(e) => e.target.style.opacity = '1'}
-                          title={usuario.nivelAcesso === 'ADMIN' ? 'Remover Admin' : 'Promover Admin'}
-                        >
-                          {usuario.nivelAcesso === 'ADMIN' ? 'Admin-' : 'Admin+'}
-                        </button>
-                        <button 
-                          onClick={() => removerUsuario(usuario.id)}
-                          style={{ 
-                            padding: '6px 12px',
-                            backgroundColor: '#F44336',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '5px',
-                            cursor: 'pointer',
-                            fontSize: '11px',
-                            fontWeight: '600',
-                            transition: 'all 0.2s'
-                          }}
-                          onMouseOver={(e) => e.target.style.opacity = '0.8'}
-                          onMouseOut={(e) => e.target.style.opacity = '1'}
-                        >
-                          Excluir
-                        </button>
-                      </div>
+                    <td style={{ padding: '15px', textAlign: 'center', position: 'relative' }}>
+                      <button
+                        onClick={() => setMenuAberto(menuAberto === usuario.id ? null : usuario.id)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          padding: '8px',
+                          borderRadius: '4px',
+                          color: theme.text,
+                          fontSize: '16px',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = theme.border}
+                        onMouseOut={(e) => e.target.style.backgroundColor = 'transparent'}
+                      >
+                        ⋯
+                      </button>
+                      
+                      {menuAberto === usuario.id && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '100%',
+                          right: '10px',
+                          backgroundColor: theme.cardBackground,
+                          border: `1px solid ${theme.border}`,
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                          zIndex: 1000,
+                          minWidth: '150px',
+                          overflow: 'hidden'
+                        }}>
+                          <button
+                            onClick={() => {
+                              toggleStatus(usuario.id);
+                              setMenuAberto(null);
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '12px 16px',
+                              border: 'none',
+                              background: 'none',
+                              textAlign: 'left',
+                              cursor: 'pointer',
+                              color: theme.text,
+                              fontSize: '14px',
+                              transition: 'background-color 0.2s'
+                            }}
+                            onMouseOver={(e) => e.target.style.backgroundColor = theme.border}
+                            onMouseOut={(e) => e.target.style.backgroundColor = 'transparent'}
+                          >
+                            {(usuario.statusUsuario === 'ATIVO' || usuario.statusUsuario === null) ? 'Pausar' : 'Ativar'}
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              toggleAdmin(usuario.id, usuario.nivelAcesso === 'ADMIN');
+                              setMenuAberto(null);
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '12px 16px',
+                              border: 'none',
+                              background: 'none',
+                              textAlign: 'left',
+                              cursor: 'pointer',
+                              color: theme.text,
+                              fontSize: '14px',
+                              transition: 'background-color 0.2s'
+                            }}
+                            onMouseOver={(e) => e.target.style.backgroundColor = theme.border}
+                            onMouseOut={(e) => e.target.style.backgroundColor = 'transparent'}
+                          >
+                            {usuario.nivelAcesso === 'ADMIN' ? 'Remover Admin' : 'Promover Admin'}
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              removerUsuario(usuario.id);
+                              setMenuAberto(null);
+                            }}
+                            style={{
+                              width: '100%',
+                              padding: '12px 16px',
+                              border: 'none',
+                              background: 'none',
+                              textAlign: 'left',
+                              cursor: 'pointer',
+                              color: '#F44336',
+                              fontSize: '14px',
+                              transition: 'background-color 0.2s'
+                            }}
+                            onMouseOver={(e) => e.target.style.backgroundColor = 'rgba(244, 67, 54, 0.1)'}
+                            onMouseOut={(e) => e.target.style.backgroundColor = 'transparent'}
+                          >
+                            Excluir
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}
