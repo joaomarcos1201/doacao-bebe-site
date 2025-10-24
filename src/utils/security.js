@@ -38,4 +38,4 @@ export const getSecureHeaders = () => {
 // URL base segura
 export const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://seu-dominio.com/api' 
-  : 'http://localhost:8080/api';
+  : 'http://localhost:7979/api';

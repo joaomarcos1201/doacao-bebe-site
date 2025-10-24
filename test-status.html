@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Status Usuário</title>
+</head>
+<body>
+    <h1>Teste Status Usuário</h1>
+    
+    <button onclick="debugStatus()">Debug Status</button>
+    <button onclick="forceInactive()">Forçar INATIVO</button>
+    <button onclick="testLogin()">Testar Login</button>
+    
+    <div id="result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:7979/api/auth';
+        const EMAIL = 'joao@gmail.com';
+
+        async function debugStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/debug-status/${EMAIL}`);
+                const result = await response.text();
+                document.getElementById('result').innerHTML = `<pre>${result}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Erro: ${error.message}`;
+            }
+        }
+
+        async function forceInactive() {
+            try {
+                const response = await fetch(`${API_BASE}/force-inactive/${EMAIL}`, {
+                    method: 'POST'
+                });
+                const result = await response.text();
+                document.getElementById('result').innerHTML = `<pre>${result}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Erro: ${error.message}`;
+            }
+        }
+
+        async function testLogin() {
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: EMAIL,
+                        senha: 'senha123'
+                    })
+                });
+                
+                const result = await response.text();
+                document.getElementById('result').innerHTML = `<pre>Status: ${response.status}\nResposta: ${result}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Erro: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

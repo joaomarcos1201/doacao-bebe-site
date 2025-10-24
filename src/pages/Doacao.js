@@ -38,7 +38,7 @@ function Doacao() {
           formData.append('imagem', imagemArquivo);
         }
 
-        const response = await fetch('http://localhost:8080/api/produtos', {
+        const response = await fetch('http://localhost:7979/api/produtos', {
           method: 'POST',
           body: formData
         });
@@ -66,7 +66,7 @@ function Doacao() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: window.innerWidth < 768 ? '15px' : '20px' }}>
+    <div style={{ minHeight: '100vh', background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: window.innerWidth < 768 ? '15px' : '20px' }}>
       <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
         <button 
           onClick={toggleTheme}

@@ -77,10 +77,10 @@ public class TesteController {
             }
             
             // Corrigir produtos com doador "Usuário Logado"
-            var produtos = produtoRepository.findAll();
+            java.util.List<Produto> produtos = produtoRepository.findAll();
             int corrigidos = 0;
             
-            for (var produto : produtos) {
+            for (Produto produto : produtos) {
                 if ("Usuário Logado".equals(produto.getDoador())) {
                     produto.setDoador(admin.getEmail());
                     produtoRepository.save(produto);

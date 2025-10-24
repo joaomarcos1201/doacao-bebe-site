@@ -28,27 +28,37 @@ public class ProdutoController {
             @RequestParam("doador") String doador,
             @RequestParam(value = "imagem", required = false) MultipartFile imagem) {
         try {
-            String imagemBase64 = null;
-            if (imagem != null && !imagem.isEmpty()) {
-                byte[] imagemBytes = imagem.getBytes();
-                imagemBase64 = "data:" + imagem.getContentType() + ";base64," + 
-                              java.util.Base64.getEncoder().encodeToString(imagemBytes);
-            }
-
-            Produto produto = new Produto(
-                nome,
-                categoria,
-                descricao,
-                estado,
-                contato,
-                cpf,
-                imagemBase64,
-                doador != null ? doador : "Doador Anônimo"
-            );
+            System.out.println("=== DEBUG CADASTRO PRODUTO ===");
+            System.out.println("Nome: " + nome);
+            System.out.println("Categoria: " + categoria);
+            System.out.println("Descricao: " + descricao);
+            System.out.println("Estado: " + estado);
+            System.out.println("Contato: " + contato);
+            System.out.println("CPF: " + cpf);
+            System.out.println("Doador: " + doador);
             
+            Produto produto = new Produto();
+            produto.setNome(nome);
+            produto.setDescricao(descricao.length() > 400 ? descricao.substring(0, 400) : descricao);
+            produto.setCondicao(estado);
+            produto.setTelefone(contato != null && !contato.trim().isEmpty() ? contato : "(11) 99999-9999");
+            produto.setContato(contato != null && !contato.trim().isEmpty() ? contato : "(11) 99999-9999");
+            produto.setStatusAnuncio("INATIVO");
+            
+            // Campos adicionais
+            produto.setCategoria(categoria);
+            produto.setCpf(cpf);
+            produto.setDoador(doador != null ? doador : "Doador Anônimo");
+            produto.setEstado(estado);
+            produto.setStatus("INATIVO");
+            
+            System.out.println("Tentando salvar produto...");
             produtoRepository.save(produto);
+            System.out.println("Produto salvo com sucesso!");
             return ResponseEntity.ok("Produto cadastrado com sucesso!");
         } catch (Exception e) {
+            System.err.println("ERRO ao cadastrar produto: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao cadastrar produto: " + e.getMessage());
         }
     }
@@ -61,13 +71,13 @@ public class ProdutoController {
 
     @GetMapping("/aprovados")
     public ResponseEntity<List<Produto>> listarProdutosAprovados() {
-        List<Produto> produtos = produtoRepository.findByStatusOrderByDataCriacaoDesc("aprovado");
+        List<Produto> produtos = produtoRepository.findByStatusAnuncioOrderByDataAnuncioDesc("ATIVO");
         return ResponseEntity.ok(produtos);
     }
 
     @GetMapping("/pendentes")
     public ResponseEntity<List<Produto>> listarProdutosPendentes() {
-        List<Produto> produtos = produtoRepository.findByStatusOrderByDataCriacaoDesc("pendente");
+        List<Produto> produtos = produtoRepository.findByStatusAnuncioOrderByDataAnuncioDesc("INATIVO");
         return ResponseEntity.ok(produtos);
     }
 
@@ -76,7 +86,8 @@ public class ProdutoController {
         try {
             Produto produto = produtoRepository.findById(id).orElse(null);
             if (produto != null) {
-                produto.setStatus("aprovado");
+                produto.setStatusAnuncio("ATIVO");
+                produto.setStatus("ATIVO");
                 produtoRepository.save(produto);
                 return ResponseEntity.ok("Produto aprovado com sucesso!");
             }
@@ -96,12 +107,17 @@ public class ProdutoController {
         }
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("API Produtos funcionando na porta 7979!");
+    }
+    
     @GetMapping("/{id}/imagem")
     public ResponseEntity<String> obterImagem(@PathVariable Long id) {
         try {
             Produto produto = produtoRepository.findById(id).orElse(null);
-            if (produto != null && produto.getImagem() != null) {
-                return ResponseEntity.ok(produto.getImagem());
+            if (produto != null && produto.getFoto() != null) {
+                return ResponseEntity.ok("Imagem encontrada");
             }
             return ResponseEntity.notFound().build();
         } catch (Exception e) {

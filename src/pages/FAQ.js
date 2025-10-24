@@ -66,7 +66,7 @@ function FAQ() {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
+      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
       padding: window.innerWidth < 768 ? '15px' : '20px'
     }}>
       <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
@@ -74,7 +74,7 @@ function FAQ() {
           onClick={toggleTheme}
           style={{
             padding: '12px',
-            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: isDark ? '#2a2d33' : 'rgba(255, 255, 255, 0.9)',
             color: theme.text,
             border: `1px solid ${theme.border}`,
             borderRadius: '10px',
@@ -107,7 +107,7 @@ function FAQ() {
         </div>
         
         <div style={{
-          background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.95) 0%, rgba(173, 115, 120, 0.95) 100%)' : 'linear-gradient(135deg, white 0%, #ffc0cb 100%)',
+          background: isDark ? 'linear-gradient(135deg, #1e2328 0%, #2a2d33 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
           backdropFilter: 'blur(15px)',
           padding: window.innerWidth < 768 ? '25px' : '40px',
           borderRadius: '20px',
@@ -138,7 +138,7 @@ function FAQ() {
               <div 
                 key={item.id}
                 style={{
-                  background: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)',
+                  background: isDark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(252, 192, 203, 0.2)',
                   borderRadius: '12px',
                   border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`,
                   overflow: 'hidden',
@@ -211,7 +211,7 @@ function FAQ() {
           <div style={{ 
             marginTop: '40px', 
             padding: '25px', 
-            background: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)', 
+            background: isDark ? 'linear-gradient(135deg, #2a2d33 0%, #3e4147 100%)' : 'rgba(252, 192, 203, 0.2)', 
             borderRadius: '15px',
             border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`,
             textAlign: 'center'

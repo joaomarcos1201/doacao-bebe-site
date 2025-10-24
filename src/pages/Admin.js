@@ -20,8 +20,8 @@ function Admin() {
   const { notifications, showSuccess, showError, removeNotification } = useNotification();
   const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirm();
   
-  const produtosPendentes = produtos.filter(p => p.status === 'pendente');
-  const produtosAprovados = produtos.filter(p => p.status === 'aprovado');
+  const produtosPendentes = produtos.filter(p => p.statusAnuncio === 'INATIVO');
+  const produtosAprovados = produtos.filter(p => p.statusAnuncio === 'ATIVO');
 
   useEffect(() => {
     carregarUsuarios();
@@ -42,7 +42,7 @@ function Admin() {
 
   const carregarMensagens = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/contato');
+      const response = await fetch('http://localhost:7979/api/contato');
       if (response.ok) {
         const data = await response.json();
         setMensagens(data);
@@ -56,7 +56,7 @@ function Admin() {
 
   const carregarUsuarios = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/usuarios');
+      const response = await fetch('http://localhost:7979/api/usuarios');
       if (response.ok) {
         const data = await response.json();
         console.log('DEBUG - Dados dos usuários:', data);
@@ -82,7 +82,7 @@ function Admin() {
 
   const toggleStatus = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/usuarios/${id}/status`, {
+      const response = await fetch(`http://localhost:7979/api/usuarios/${id}/status`, {
         method: 'PUT',
       });
       if (response.ok) {
@@ -103,7 +103,7 @@ function Admin() {
       async () => {
         try {
           console.log('DEBUG - Tentando remover usuário ID:', id);
-          const response = await fetch(`http://localhost:8080/api/usuarios/${id}`, {
+          const response = await fetch(`http://localhost:7979/api/usuarios/${id}`, {
             method: 'DELETE',
           });
           console.log('DEBUG - Status da resposta:', response.status);
@@ -133,7 +133,7 @@ function Admin() {
       `Tem certeza que deseja ${acao} deste usuário?`,
       async () => {
         try {
-          const response = await fetch(`http://localhost:8080/api/usuarios/${id}/admin`, {
+          const response = await fetch(`http://localhost:7979/api/usuarios/${id}/admin`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -165,7 +165,7 @@ function Admin() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)' }}>
+    <div style={{ minHeight: '100vh', background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)' }}>
       {/* Header */}
       <div style={{
         backgroundColor: theme.cardBackground,

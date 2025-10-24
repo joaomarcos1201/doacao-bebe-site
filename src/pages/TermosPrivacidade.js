@@ -8,7 +8,7 @@ function TermosPrivacidade() {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
+      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
       padding: '20px'
     }}>
       <div style={{ position: 'absolute', top: '20px', right: '20px' }}>

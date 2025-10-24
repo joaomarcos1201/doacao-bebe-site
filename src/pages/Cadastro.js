@@ -63,7 +63,7 @@ function Cadastro() {
     
     if (nome && email && senha) {
       try {
-        const response = await fetch('http://localhost:8080/api/auth/cadastro', {
+        const response = await fetch('http://localhost:7979/api/auth/cadastro', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

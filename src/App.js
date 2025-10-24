@@ -14,6 +14,7 @@ import FAQ from './pages/FAQ';
 import Chat from './pages/Chat';
 import TermosPrivacidade from './pages/TermosPrivacidade';
 import ManualSeguranca from './pages/ManualSeguranca';
+import UserStatusChecker from './components/UserStatusChecker';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ThemeProvider } from './context/ThemeContext';
 import './App.css';
@@ -27,7 +28,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:8080/api/auth/me', {
+      fetch('http://localhost:7979/api/auth/me', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -36,6 +37,15 @@ function App() {
       .then(response => {
         if (response.ok) {
           return response.json();
+        } else if (response.status === 400) {
+          // Verificar se é conta inativa
+          return response.text().then(errorText => {
+            if (errorText.includes('Conta inativa')) {
+              alert('⚠️ Sua conta foi desativada pelo administrador.\n\nEntre em contato conosco para mais informações.');
+              throw new Error('Conta inativa');
+            }
+            throw new Error(errorText || 'Token inválido');
+          });
         } else {
           throw new Error('Token inválido');
         }
@@ -84,6 +94,7 @@ function App() {
         <ProdutosProvider>
           <Router>
             <div className="App">
+              {user && <UserStatusChecker user={user} setUser={setUser} />}
               <Routes>
                 <Route path="/login" element={<Login setUser={setUser} />} />
                 <Route path="/cadastro" element={<Cadastro />} />

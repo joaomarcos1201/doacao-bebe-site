@@ -15,6 +15,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service
 public class UsuarioService {
@@ -27,6 +31,12 @@ public class UsuarioService {
 
     @Autowired
     private JwtService jwtService;
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     // Cache temporário para códigos de recuperação (em produção, usar Redis)
     private final Map<String, CodigoRecuperacao> codigosRecuperacao = new ConcurrentHashMap<>();
@@ -50,10 +60,37 @@ public class UsuarioService {
         
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
+            
+            // Limpar cache do JPA e buscar status atualizado diretamente do banco
+            String statusAtualizado = jdbcTemplate.queryForObject(
+                "SELECT status FROM usuarios WHERE email = ?", 
+                String.class, 
+                loginRequest.getEmail()
+            );
+            
+            System.out.println("=== DEBUG LOGIN ===");
+            System.out.println("Usuario: " + usuario.getNome());
+            System.out.println("Email: " + usuario.getEmail());
+            System.out.println("Status do banco: [" + statusAtualizado + "]");
+            
+            // Verificar se o usuário está inativo (case-insensitive e trim)
+            String statusLimpo = statusAtualizado != null ? statusAtualizado.trim().toUpperCase() : "";
+            System.out.println("Status limpo: [" + statusLimpo + "]");
+            
+            if ("INATIVO".equals(statusLimpo)) {
+                System.out.println("*** BLOQUEANDO LOGIN - USUARIO INATIVO ***");
+                throw new RuntimeException("Conta inativa. Entre em contato com o administrador.");
+            }
+            
+            System.out.println("Status OK, continuando login...");
+            
             if (passwordEncoder.matches(loginRequest.getSenha(), usuario.getSenha())) {
+                System.out.println("Senha correta, gerando token...");
                 String token = jwtService.generateToken(usuario.getEmail());
                 return new AuthResponse(token, usuario.getId(), usuario.getNome(), 
                                       usuario.getEmail(), usuario.getIsAdmin());
+            } else {
+                System.out.println("Senha incorreta!");
             }
         }
         throw new RuntimeException("Credenciais inválidas");
@@ -81,17 +118,51 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    @Transactional
     public Usuario alterarStatus(Long id) {
+        System.out.println("DEBUG - Alterando status do usuário ID: " + id);
+        
+        // Buscar status atual diretamente do banco
+        String statusAtual = jdbcTemplate.queryForObject(
+            "SELECT status FROM usuarios WHERE id = ?", 
+            String.class, 
+            id
+        );
+        System.out.println("DEBUG - Status atual no banco: [" + statusAtual + "]");
+        
+        // Limpar espaços e normalizar
+        String statusLimpo = statusAtual != null ? statusAtual.trim().toUpperCase() : "ATIVO";
+        System.out.println("DEBUG - Status limpo: [" + statusLimpo + "]");
+        
+        // Alternar entre ATIVO e INATIVO
+        String novoStatus = "ATIVO".equals(statusLimpo) ? "INATIVO" : "ATIVO";
+        System.out.println("DEBUG - Novo status: [" + novoStatus + "]");
+        
+        // Atualizar diretamente no banco usando JDBC
+        int rowsAffected = jdbcTemplate.update(
+            "UPDATE usuarios SET status = ? WHERE id = ?", 
+            novoStatus, id
+        );
+        System.out.println("DEBUG - Linhas afetadas: " + rowsAffected);
+        
+        // Verificar se mudou
+        String statusFinal = jdbcTemplate.queryForObject(
+            "SELECT status FROM usuarios WHERE id = ?", 
+            String.class, 
+            id
+        );
+        System.out.println("DEBUG - Status final no banco: [" + statusFinal + "]");
+        
+        // Limpar completamente o cache do JPA
+        entityManager.clear();
+        
+        // Buscar usuário com status atualizado
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
-        String statusAtual = usuario.getStatusUsuario();
-        if (statusAtual == null || statusAtual.equals("ATIVO")) {
-            usuario.setStatusUsuario("INATIVO");
-        } else {
-            usuario.setStatusUsuario("ATIVO");
-        }
-        return usuarioRepository.save(usuario);
+        System.out.println("DEBUG - Status final na entidade: [" + usuario.getStatusUsuario() + "]");
+        
+        return usuario;
     }
 
     public void remover(Long id) {
@@ -178,7 +249,25 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findByEmail(email)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
+        // Verificar status diretamente do banco
+        String statusAtualizado = jdbcTemplate.queryForObject(
+            "SELECT status FROM usuarios WHERE email = ?", 
+            String.class, 
+            email
+        );
+        
         System.out.println("DEBUG - Usuario encontrado: " + usuario.getNome());
+        System.out.println("DEBUG - Status do banco: [" + statusAtualizado + "]");
+        
+        // Bloquear se inativo (case-insensitive e trim)
+        String statusLimpo = statusAtualizado != null ? statusAtualizado.trim().toUpperCase() : "";
+        System.out.println("DEBUG - Status limpo: [" + statusLimpo + "]");
+        
+        if ("INATIVO".equals(statusLimpo)) {
+            System.out.println("*** BLOQUEANDO ACESSO - USUARIO INATIVO ***");
+            throw new RuntimeException("Conta inativa. Entre em contato com o administrador.");
+        }
+        
         System.out.println("DEBUG - NivelAcesso: " + usuario.getNivelAcesso());
         System.out.println("DEBUG - IsAdmin: " + usuario.getIsAdmin());
         
@@ -212,5 +301,81 @@ public class UsuarioService {
             }
             System.out.println("Usuário admin já existe!");
         }
+    }
+    
+    public String checkUserStatus(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        return "Usuario: " + usuario.getNome() + 
+               ", Email: " + usuario.getEmail() + 
+               ", Status: [" + usuario.getStatusUsuario() + "]" +
+               ", ID: " + usuario.getId();
+    }
+    
+    public String debugUserStatus(String email) {
+        // Buscar via JPA
+        Usuario usuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        
+        // Buscar diretamente do banco via JDBC
+        String statusBanco = jdbcTemplate.queryForObject(
+            "SELECT status FROM usuarios WHERE email = ?", 
+            String.class, 
+            email
+        );
+        
+        return "=== DEBUG STATUS ===\n" +
+               "Via JPA - Status: [" + usuario.getStatusUsuario() + "]\n" +
+               "Via JDBC - Status: [" + statusBanco + "]\n" +
+               "Usuario: " + usuario.getNome() + "\n" +
+               "ID: " + usuario.getId();
+    }
+    
+    @Transactional
+    public String forceInactiveStatus(String email) {
+        // Forçar status INATIVO para debug
+        int rowsAffected = jdbcTemplate.update(
+            "UPDATE usuarios SET status = 'INATIVO' WHERE email = ?", 
+            email
+        );
+        
+        // Limpar cache
+        entityManager.clear();
+        
+        // Verificar resultado
+        String statusFinal = jdbcTemplate.queryForObject(
+            "SELECT status FROM usuarios WHERE email = ?", 
+            String.class, 
+            email
+        );
+        
+        return "Forçado INATIVO - Linhas afetadas: " + rowsAffected + 
+               ", Status final: [" + statusFinal + "]";
+    }
+    
+    @Transactional
+    public String simpleToggleStatus(Long id) {
+        // Método simples usando apenas JDBC
+        String statusAtual = jdbcTemplate.queryForObject(
+            "SELECT status FROM usuarios WHERE id = ?", 
+            String.class, 
+            id
+        );
+        
+        String novoStatus = "ATIVO".equals(statusAtual.trim()) ? "INATIVO" : "ATIVO";
+        
+        jdbcTemplate.update(
+            "UPDATE usuarios SET status = ? WHERE id = ?", 
+            novoStatus, id
+        );
+        
+        String statusFinal = jdbcTemplate.queryForObject(
+            "SELECT status FROM usuarios WHERE id = ?", 
+            String.class, 
+            id
+        );
+        
+        return "Status alterado de [" + statusAtual + "] para [" + statusFinal + "]";
     }
 }

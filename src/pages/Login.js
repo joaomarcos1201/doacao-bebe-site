@@ -15,6 +15,10 @@ function Login({ setUser }) {
   useEffect(() => {
     setUser(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    // Limpar todo o localStorage para garantir
+    localStorage.clear();
+    console.log('localStorage limpo!');
   }, [setUser]);
 
   const handleSubmit = async (e) => {
@@ -59,7 +63,20 @@ function Login({ setUser }) {
           }
         } else {
           const errorData = await response.text();
-          alert(errorData || 'Erro no login');
+          if (errorData.includes('Conta inativa')) {
+            // Mensagem especial para conta inativa
+            const confirmResult = window.confirm(
+              '⚠️ Conta Inativa\n\n' +
+              'Sua conta foi desativada pelo administrador.\n' +
+              'Entre em contato conosco para mais informações.\n\n' +
+              'Deseja ir para a página de contato?'
+            );
+            if (confirmResult) {
+              navigate('/fale-conosco');
+            }
+          } else {
+            alert(errorData || 'Erro no login');
+          }
         }
       } catch (error) {
         alert('Erro de conexão com o servidor');
@@ -121,7 +138,7 @@ function Login({ setUser }) {
             e.target.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
           }}
         >
-          {isDark ? 'Sol' : 'Lua'}
+          {isDark ? '☀️' : '🌙'}
         </button>
       </div>
       

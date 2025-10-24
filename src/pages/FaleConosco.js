@@ -56,7 +56,7 @@ function FaleConosco() {
     return (
       <div style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
+        background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -81,7 +81,7 @@ function FaleConosco() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
+      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
       padding: window.innerWidth < 768 ? '15px' : '20px'
     }}>
       <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>

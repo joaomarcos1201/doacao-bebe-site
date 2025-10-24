@@ -51,13 +51,13 @@ function Home({ user, setUser }) {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
+      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
     }}>
       <header style={{ 
-        background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.98) 0%, rgba(173, 115, 120, 0.98) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 192, 203, 0.7) 100%)', 
+        background: theme.headerBg, 
         backdropFilter: 'blur(25px)',
-        boxShadow: '0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06)',
-        borderBottom: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
+        boxShadow: isDark ? '0 12px 40px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.15)' : '0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06)',
+        borderBottom: `1px solid ${theme.border}`,
         position: 'sticky',
         top: 0,
         zIndex: 1000
@@ -93,21 +93,21 @@ function Home({ user, setUser }) {
               onClick={toggleTheme}
               style={{
                 padding: '10px 12px',
-                backgroundColor: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)',
+                backgroundColor: isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)',
                 color: theme.text,
-                border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.4)' : 'rgba(252, 192, 203, 0.4)'}`,
+                border: `1px solid ${isDark ? 'rgba(244, 114, 182, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
                 borderRadius: '8px',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 fontSize: '16px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)'
               }}
               onMouseEnter={(e) => {
-                e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)';
+                e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.2)' : 'rgba(252, 192, 203, 0.3)';
                 e.target.style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)';
+                e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)';
                 e.target.style.transform = 'translateY(0)';
               }}
             >
@@ -118,9 +118,9 @@ function Home({ user, setUser }) {
               alignItems: 'center', 
               gap: '8px',
               padding: '8px 12px',
-              backgroundColor: isDark ? 'rgba(173, 115, 120, 0.15)' : 'rgba(252, 192, 203, 0.15)',
+              backgroundColor: isDark ? 'rgba(26, 26, 46, 0.8)' : 'rgba(252, 192, 203, 0.15)',
               borderRadius: '8px',
-              border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`
+              border: `1px solid ${theme.border}`
             }}>
               <span style={{ fontSize: '16px' }}>👤</span>
               <span style={{ 
@@ -137,21 +137,21 @@ function Home({ user, setUser }) {
                 onClick={() => setMenuAberto(!menuAberto)}
                 style={{
                   padding: '10px 12px',
-                  backgroundColor: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)',
+                  backgroundColor: isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)',
                   color: theme.text,
-                  border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.4)' : 'rgba(252, 192, 203, 0.4)'}`,
+                  border: `1px solid ${isDark ? 'rgba(244, 114, 182, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '16px',
                   transition: 'all 0.2s ease',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)'
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)';
+                  e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.2)' : 'rgba(252, 192, 203, 0.3)';
                   e.target.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)';
+                  e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)';
                   e.target.style.transform = 'translateY(0)';
                 }}
               >
@@ -189,9 +189,9 @@ function Home({ user, setUser }) {
         </div>
         <div style={{ 
           padding: '24px', 
-          backgroundColor: isDark ? 'rgba(69, 75, 96, 0.6)' : 'rgba(247, 182, 186, 0.4)', 
+          backgroundColor: isDark ? 'rgba(26, 26, 46, 0.8)' : 'rgba(247, 182, 186, 0.4)', 
           backdropFilter: 'blur(15px)',
-          borderTop: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}` 
+          borderTop: `1px solid ${theme.border}` 
         }}>
           <div style={{ display: 'flex', gap: '15px', maxWidth: '800px', margin: '0 auto', flexWrap: 'wrap', flexDirection: window.innerWidth < 768 ? 'column' : 'row' }}>
             <input
@@ -203,23 +203,23 @@ function Home({ user, setUser }) {
                 flex: '1',
                 minWidth: window.innerWidth < 768 ? '100%' : '280px',
                 padding: '14px 20px',
-                border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
+                border: `2px solid ${theme.inputBorder}`,
                 borderRadius: '12px',
-                backgroundColor: isDark ? 'rgba(105, 72, 75, 0.8)' : 'rgba(255, 255, 255, 0.95)',
+                backgroundColor: theme.inputBg,
                 color: theme.text,
                 fontSize: '15px',
                 fontWeight: '500',
                 outline: 'none',
                 transition: 'all 0.2s ease',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                boxShadow: isDark ? '0 4px 12px rgba(0,0,0,0.2)' : '0 4px 12px rgba(0,0,0,0.05)'
               }}
               onFocus={(e) => {
                 e.target.style.borderColor = theme.primary;
                 e.target.style.boxShadow = '0 6px 20px rgba(173, 115, 120, 0.15)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)';
-                e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
+                e.target.style.borderColor = theme.inputBorder;
+                e.target.style.boxShadow = isDark ? '0 4px 12px rgba(0,0,0,0.2)' : '0 4px 12px rgba(0,0,0,0.05)';
               }}
             />
             <select
@@ -227,16 +227,16 @@ function Home({ user, setUser }) {
               onChange={(e) => setCategoriaFiltro(e.target.value)}
               style={{
                 padding: '14px 20px',
-                border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
+                border: `2px solid ${theme.inputBorder}`,
                 borderRadius: '12px',
-                backgroundColor: isDark ? 'rgba(105, 72, 75, 0.8)' : 'rgba(255, 255, 255, 0.95)',
+                backgroundColor: theme.inputBg,
                 color: theme.text,
                 fontSize: '15px',
                 fontWeight: '500',
                 minWidth: window.innerWidth < 768 ? '100%' : '180px',
                 outline: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
+                boxShadow: isDark ? '0 4px 12px rgba(0,0,0,0.2)' : '0 4px 12px rgba(0,0,0,0.05)'
               }}
             >
               <option value="">Todas as categorias</option>
@@ -274,7 +274,7 @@ function Home({ user, setUser }) {
             right: '0',
             height: '100vh',
             width: '280px',
-            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+            backgroundColor: theme.cardBg,
             backdropFilter: 'blur(15px)',
             boxShadow: '-4px 0 20px rgba(0,0,0,0.3)',
             zIndex: 99999,
@@ -402,9 +402,6 @@ function Home({ user, setUser }) {
         maxWidth: '1200px', 
         margin: '0 auto' 
       }}>
-        {/* Carrossel de Imagens de Gravidez */}
-        <PregnancyCarousel theme={theme} isDark={isDark} />
-        
         <div style={{ padding: '0 0 30px' }}>
           <div style={{
             display: 'flex',
@@ -460,7 +457,7 @@ function Home({ user, setUser }) {
           <div style={{
             textAlign: 'center',
             padding: '50px',
-            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: theme.cardBg,
             backdropFilter: 'blur(10px)',
             borderRadius: '12px',
             color: theme.textSecondary
@@ -473,7 +470,7 @@ function Home({ user, setUser }) {
           <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
             {produtosFiltrados.map(produto => (
             <div key={produto.id} style={{
-              background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.95) 0%, rgba(173, 115, 120, 0.95) 100%)' : 'linear-gradient(135deg, white 0%, #ffc0cb 100%)',
+              background: isDark ? 'linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%)' : 'linear-gradient(135deg, white 0%, #ffc0cb 100%)',
               backdropFilter: 'blur(15px)',
               padding: '24px',
               borderRadius: '16px',
@@ -502,7 +499,7 @@ function Home({ user, setUser }) {
               }}>{produto.nome}</h3>
               <div style={{ marginBottom: '16px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 <span style={{ 
-                  backgroundColor: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)', 
+                  backgroundColor: isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)', 
                   color: theme.text, 
                   padding: '6px 12px', 
                   borderRadius: '12px', 
@@ -535,7 +532,7 @@ function Home({ user, setUser }) {
                 gap: '8px',
                 marginBottom: '20px',
                 padding: '8px 12px',
-                backgroundColor: isDark ? 'rgba(173, 115, 120, 0.1)' : 'rgba(252, 192, 203, 0.1)',
+                backgroundColor: isDark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(252, 192, 203, 0.1)',
                 borderRadius: '8px',
                 border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`
               }}>
@@ -593,9 +590,9 @@ function Home({ user, setUser }) {
       <footer style={{
         marginTop: '50px',
         padding: '30px 20px',
-        background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.95) 0%, rgba(173, 115, 120, 0.95) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 192, 203, 0.7) 100%)',
+        background: theme.footerBg,
         backdropFilter: 'blur(25px)',
-        borderTop: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`
+        borderTop: `1px solid ${theme.border}`
       }}>
         <div style={{
           maxWidth: '1200px',
@@ -653,119 +650,6 @@ function Home({ user, setUser }) {
   );
 }
 
-// Componente do Carrossel de Gravidez
-function PregnancyCarousel({ theme, isDark }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const images = [
-    'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&crop=center',
-    'https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&h=300&fit=crop&crop=center'
-  ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => 
-        prevIndex === images.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [images.length]);
-
-  return (
-    <div style={{
-      marginBottom: window.innerWidth < 768 ? '30px' : '50px',
-      position: 'relative',
-      overflow: 'hidden',
-      borderRadius: '20px',
-      background: isDark ? 'linear-gradient(135deg, rgba(105, 72, 75, 0.3) 0%, rgba(173, 115, 120, 0.2) 100%)' : 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(252, 192, 203, 0.3) 100%)',
-      backdropFilter: 'blur(10px)',
-      border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.3)'}`
-    }}>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        padding: window.innerWidth < 768 ? '30px 20px' : '40px 30px',
-        gap: '30px',
-        flexDirection: window.innerWidth < 768 ? 'column' : 'row'
-      }}>
-        <div style={{ flex: 1, textAlign: window.innerWidth < 768 ? 'center' : 'left' }}>
-          <h2 style={{
-            fontSize: window.innerWidth < 768 ? '24px' : '32px',
-            fontWeight: '700',
-            color: theme.primary,
-            marginBottom: '12px'
-          }}>
-            Bem-vinda ao Além do Positivo
-          </h2>
-          <p style={{
-            fontSize: '16px',
-            color: theme.textSecondary,
-            marginBottom: '20px',
-            lineHeight: '1.5'
-          }}>
-            Um espaço dedicado ao apoio e cuidado durante a jornada da maternidade. Encontre produtos e suporte para você e seu bebê.
-          </p>
-        </div>
-        
-        <div style={{ position: 'relative' }}>
-          <img
-            src={images[currentIndex]}
-            alt="Imagem relacionada à gravidez"
-            style={{
-              width: window.innerWidth < 768 ? '200px' : '250px',
-              height: window.innerWidth < 768 ? '150px' : '180px',
-              objectFit: 'cover',
-              borderRadius: '12px',
-              boxShadow: '0 8px 25px rgba(0,0,0,0.15)'
-            }}
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
-          />
-          <div style={{
-            width: window.innerWidth < 768 ? '200px' : '250px',
-            height: window.innerWidth < 768 ? '150px' : '180px',
-            backgroundColor: isDark ? 'rgba(69, 75, 96, 0.6)' : 'rgba(247, 182, 186, 0.6)',
-            display: 'none',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: '12px',
-            color: theme.textSecondary,
-            fontSize: '14px'
-          }}>
-            Imagem não disponível
-          </div>
-        </div>
-      </div>
-      
-      {/* Indicadores */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '8px',
-        paddingBottom: '20px'
-      }}>
-        {images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            style={{
-              width: '10px',
-              height: '10px',
-              borderRadius: '50%',
-              border: 'none',
-              backgroundColor: index === currentIndex ? theme.primary : (isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'),
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default Home;

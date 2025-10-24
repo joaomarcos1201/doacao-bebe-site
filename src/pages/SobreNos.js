@@ -8,7 +8,7 @@ function SobreNos() {
   return (
     <div style={{ 
       minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
+      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
       padding: '20px'
     }}>
       <div 
@@ -43,7 +43,7 @@ function SobreNos() {
           onClick={toggleTheme}
           style={{
             padding: '10px',
-            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: isDark ? '#2a2d33' : 'rgba(255, 255, 255, 0.9)',
             color: theme.text,
             border: `1px solid ${theme.border}`,
             borderRadius: '5px',
@@ -60,12 +60,12 @@ function SobreNos() {
         </div>
         
         <div style={{
-          backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+          background: isDark ? 'linear-gradient(135deg, #1e2328 0%, #2a2d33 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
           backdropFilter: 'blur(10px)',
           padding: '40px',
           borderRadius: '12px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-          border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(179, 116, 122, 0.3)'}`
+          border: '1px solid #ffc0cb'
         }}>
           <h1 style={{ textAlign: 'center', marginBottom: '30px', color: theme.primary, fontSize: '2.5rem' }}>
             Sobre Nós

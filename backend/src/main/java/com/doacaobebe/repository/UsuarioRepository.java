@@ -18,4 +18,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Transactional
     @Query("DELETE FROM Usuario u WHERE u.id = :id")
     void deleteUsuarioById(@Param("id") Long id);
+    
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE usuarios SET statusUsuario = :status WHERE id = :id", nativeQuery = true)
+    void updateStatusUsuario(@Param("id") Long id, @Param("status") String status);
 }

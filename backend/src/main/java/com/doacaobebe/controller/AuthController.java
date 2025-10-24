@@ -29,11 +29,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        System.out.println("*** CONTROLLER LOGIN - Email: " + loginRequest.getEmail());
         try {
             AuthResponse response = usuarioService.login(loginRequest);
+            System.out.println("*** CONTROLLER LOGIN - SUCESSO");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro no login: " + e.getMessage());
+            System.out.println("*** CONTROLLER LOGIN - ERRO: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -115,12 +118,16 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
+        System.out.println("*** CONTROLLER /me - CHAMADO ***");
         try {
             String email = jwtService.extractEmail(token.replace("Bearer ", ""));
+            System.out.println("*** CONTROLLER /me - Email extraido: " + email);
             AuthResponse response = usuarioService.getUserByEmail(email);
+            System.out.println("*** CONTROLLER /me - SUCESSO ***");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Token inválido");
+            System.out.println("*** CONTROLLER /me - ERRO: " + e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -131,6 +138,47 @@ public class AuthController {
             return ResponseEntity.ok("Usuário admin criado com sucesso");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao criar admin: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+        return ResponseEntity.ok("Backend funcionando na porta 7979!");
+    }
+    
+    @GetMapping("/check-user/{email}")
+    public ResponseEntity<?> checkUser(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok(usuarioService.checkUserStatus(email));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    @GetMapping("/debug-status/{email}")
+    public ResponseEntity<?> debugStatus(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok(usuarioService.debugUserStatus(email));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    @PostMapping("/force-inactive/{email}")
+    public ResponseEntity<?> forceInactive(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok(usuarioService.forceInactiveStatus(email));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    @PostMapping("/simple-toggle/{id}")
+    public ResponseEntity<?> simpleToggle(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(usuarioService.simpleToggleStatus(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
