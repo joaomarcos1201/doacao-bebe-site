@@ -36,14 +36,13 @@ public class TesteController {
 
             Produto produto = new Produto(
                 "Carrinho de Bebê Teste",
-                "moveis",
                 "Carrinho de bebê em ótimo estado para teste do sistema de chat",
                 "seminovo",
-                "(11) 99999-9999",
-                "000.000.000-00",
-                "https://via.placeholder.com/400x300?text=Carrinho+de+Bebe",
-                admin.getEmail()
+                "(11) 99999-9999"
             );
+            produto.setCategoria("moveis");
+            produto.setCpf("000.000.000-00");
+            produto.setDoador(admin.getEmail());
             produto.setStatus("aprovado");
             
             produtoRepository.save(produto);

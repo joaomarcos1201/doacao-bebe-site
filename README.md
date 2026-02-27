@@ -29,7 +29,7 @@ doacao-bebe-site/
 ## Configuração do Banco de Dados
 
 O sistema está configurado para conectar ao banco SQL Server com as seguintes credenciais:
-- **Servidor**: doacao_bebe_bancodedados.mssql.somee.com
+- **Servidor**: doacao-bebe-site.mssql.somee.com
 - **Usuário**: alemdopositivo
 - **Senha**: doacaobebe
 
