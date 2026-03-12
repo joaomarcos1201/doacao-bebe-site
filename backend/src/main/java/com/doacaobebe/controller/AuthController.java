@@ -146,6 +146,16 @@ public class AuthController {
         return ResponseEntity.ok("Backend funcionando na porta 7979!");
     }
     
+    @GetMapping("/test-db")
+    public ResponseEntity<?> testDatabase() {
+        try {
+            long count = usuarioService.listarTodos().size();
+            return ResponseEntity.ok("Conexão com banco OK! Total de usuários: " + count);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao conectar no banco: " + e.getMessage());
+        }
+    }
+    
     @GetMapping("/check-user/{email}")
     public ResponseEntity<?> checkUser(@PathVariable String email) {
         try {
@@ -174,7 +184,7 @@ public class AuthController {
     }
     
     @PostMapping("/simple-toggle/{id}")
-    public ResponseEntity<?> simpleToggle(@PathVariable Long id) {
+    public ResponseEntity<?> simpleToggle(@PathVariable Integer id) {
         try {
             return ResponseEntity.ok(usuarioService.simpleToggleStatus(id));
         } catch (Exception e) {

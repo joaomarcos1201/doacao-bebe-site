@@ -5,37 +5,37 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "Usuario")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String nome;
     
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
     
-    @Column(nullable = true, length = 11)
+    @Column(nullable = false, length = 11)
     private String cpf;
     
-    @Column(name = "dataNascimento")
+    @Column(name = "dataNascimento", nullable = true)
     private LocalDate dataNascimento;
     
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String senha;
     
-    @Column(name = "nivelAcesso")
+    @Column(name = "nivelAcesso", length = 10)
     private String nivelAcesso = "USER";
     
     @Column(name = "foto")
     private byte[] foto;
     
-    @Column(name = "dataCadastro")
+    @Column(name = "dataCadastro", nullable = false)
     private LocalDateTime dataCadastro = LocalDateTime.now();
     
-    @Column(name = "status", nullable = false, length = 20)
+    @Column(name = "statusUsuario", nullable = false, length = 20)
     private String statusUsuario = "ATIVO";
 
     // Construtores
@@ -46,11 +46,14 @@ public class Usuario {
         this.email = email;
         this.cpf = cpf;
         this.senha = senha;
+        this.dataCadastro = LocalDateTime.now();
+        this.statusUsuario = "ATIVO";
+        this.nivelAcesso = "USER";
     }
 
     // Getters e Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
     
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }

@@ -63,7 +63,7 @@ public class UsuarioService {
             
             // Limpar cache do JPA e buscar status atualizado diretamente do banco
             String statusAtualizado = jdbcTemplate.queryForObject(
-                "SELECT status FROM usuarios WHERE email = ?", 
+                "SELECT statusUsuario FROM Usuario WHERE email = ?", 
                 String.class, 
                 loginRequest.getEmail()
             );
@@ -119,12 +119,12 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario alterarStatus(Long id) {
+    public Usuario alterarStatus(Integer id) {
         System.out.println("DEBUG - Alterando status do usuário ID: " + id);
         
         // Buscar status atual diretamente do banco
         String statusAtual = jdbcTemplate.queryForObject(
-            "SELECT status FROM usuarios WHERE id = ?", 
+            "SELECT statusUsuario FROM Usuario WHERE id = ?", 
             String.class, 
             id
         );
@@ -140,14 +140,14 @@ public class UsuarioService {
         
         // Atualizar diretamente no banco usando JDBC
         int rowsAffected = jdbcTemplate.update(
-            "UPDATE usuarios SET status = ? WHERE id = ?", 
+            "UPDATE Usuario SET statusUsuario = ? WHERE id = ?", 
             novoStatus, id
         );
         System.out.println("DEBUG - Linhas afetadas: " + rowsAffected);
         
         // Verificar se mudou
         String statusFinal = jdbcTemplate.queryForObject(
-            "SELECT status FROM usuarios WHERE id = ?", 
+            "SELECT statusUsuario FROM Usuario WHERE id = ?", 
             String.class, 
             id
         );
@@ -165,7 +165,7 @@ public class UsuarioService {
         return usuario;
     }
 
-    public void remover(Long id) {
+    public void remover(Integer id) {
         try {
             if (!usuarioRepository.existsById(id)) {
                 throw new RuntimeException("Usuário não encontrado");
@@ -190,7 +190,7 @@ public class UsuarioService {
         System.out.println("DEBUG: Senha atualizada com sucesso");
     }
 
-    public Usuario atualizarDados(Long id, Usuario usuarioAtualizado) {
+    public Usuario atualizarDados(Integer id, Usuario usuarioAtualizado) {
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
@@ -200,7 +200,7 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public void alterarSenha(Long id, String senhaAtual, String novaSenha) {
+    public void alterarSenha(Integer id, String senhaAtual, String novaSenha) {
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         
@@ -212,7 +212,7 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    public Usuario alterarPrivilegiosAdmin(Long id, Boolean isAdmin) {
+    public Usuario alterarPrivilegiosAdmin(Integer id, Boolean isAdmin) {
         System.out.println("DEBUG: Alterando privilégios de usuário");
         
         Usuario usuario = usuarioRepository.findById(id)
@@ -251,7 +251,7 @@ public class UsuarioService {
         
         // Verificar status diretamente do banco
         String statusAtualizado = jdbcTemplate.queryForObject(
-            "SELECT status FROM usuarios WHERE email = ?", 
+            "SELECT statusUsuario FROM Usuario WHERE email = ?", 
             String.class, 
             email
         );
@@ -320,7 +320,7 @@ public class UsuarioService {
         
         // Buscar diretamente do banco via JDBC
         String statusBanco = jdbcTemplate.queryForObject(
-            "SELECT status FROM usuarios WHERE email = ?", 
+            "SELECT statusUsuario FROM Usuario WHERE email = ?", 
             String.class, 
             email
         );
@@ -336,7 +336,7 @@ public class UsuarioService {
     public String forceInactiveStatus(String email) {
         // Forçar status INATIVO para debug
         int rowsAffected = jdbcTemplate.update(
-            "UPDATE usuarios SET status = 'INATIVO' WHERE email = ?", 
+            "UPDATE Usuario SET statusUsuario = 'INATIVO' WHERE email = ?", 
             email
         );
         
@@ -345,7 +345,7 @@ public class UsuarioService {
         
         // Verificar resultado
         String statusFinal = jdbcTemplate.queryForObject(
-            "SELECT status FROM usuarios WHERE email = ?", 
+            "SELECT statusUsuario FROM Usuario WHERE email = ?", 
             String.class, 
             email
         );
@@ -355,10 +355,10 @@ public class UsuarioService {
     }
     
     @Transactional
-    public String simpleToggleStatus(Long id) {
+    public String simpleToggleStatus(Integer id) {
         // Método simples usando apenas JDBC
         String statusAtual = jdbcTemplate.queryForObject(
-            "SELECT status FROM usuarios WHERE id = ?", 
+            "SELECT statusUsuario FROM Usuario WHERE id = ?", 
             String.class, 
             id
         );
@@ -366,12 +366,12 @@ public class UsuarioService {
         String novoStatus = "ATIVO".equals(statusAtual.trim()) ? "INATIVO" : "ATIVO";
         
         jdbcTemplate.update(
-            "UPDATE usuarios SET status = ? WHERE id = ?", 
+            "UPDATE Usuario SET statusUsuario = ? WHERE id = ?", 
             novoStatus, id
         );
         
         String statusFinal = jdbcTemplate.queryForObject(
-            "SELECT status FROM usuarios WHERE id = ?", 
+            "SELECT statusUsuario FROM Usuario WHERE id = ?", 
             String.class, 
             id
         );

@@ -18,19 +18,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Verificar se já existe um usuário administrador
-        if (!usuarioRepository.existsByEmail("admin@alemdopositivo.com")) {
-            Usuario admin = new Usuario();
-            admin.setNome("Administrador");
-            admin.setEmail("admin@alemdopositivo.com");
-            admin.setSenha(passwordEncoder.encode("Admin@123"));
-            admin.setNivelAcesso("ADMIN");
-            admin.setStatusUsuario("ATIVO");
-            
-            usuarioRepository.save(admin);
-            System.out.println("Usuário administrador criado com sucesso!");
-            System.out.println("Email: admin@alemdopositivo.com");
-            System.out.println("Senha: Admin@123");
-        }
+        System.out.println("=== BACKEND INICIADO COM SUCESSO ===");
+        System.out.println("Para criar o usuário admin, execute no SQL Server:");
+        System.out.println("INSERT INTO Usuario (nome, email, cpf, dataNascimento, senha, nivelAcesso, dataCadastro, statusUsuario)");
+        System.out.println("VALUES ('Administrador', 'admin@alemdopositivo.com', '00000000000', NULL, '" + passwordEncoder.encode("Admin@123") + "', 'ADMIN', GETDATE(), 'ATIVO')");
     }
 }
