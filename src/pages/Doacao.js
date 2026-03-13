@@ -4,6 +4,7 @@ import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import Notification from '../components/Notification';
+import { API_URL } from '../config/api';
 import '../styles/global.css';
 
 function Doacao() {
@@ -38,7 +39,7 @@ function Doacao() {
           formData.append('imagem', imagemArquivo);
         }
 
-        const response = await fetch('http://localhost:7979/api/produtos', {
+        const response = await fetch(`${API_URL}/api/produtos`, {
           method: 'POST',
           body: formData
         });

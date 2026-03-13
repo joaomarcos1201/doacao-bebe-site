@@ -17,6 +17,7 @@ import ManualSeguranca from './pages/ManualSeguranca';
 import UserStatusChecker from './components/UserStatusChecker';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { API_URL } from './config/api';
 import './App.css';
 import './styles/global.css';
 
@@ -28,7 +29,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:7979/api/auth/me', {
+      fetch(`${API_URL}/api/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'

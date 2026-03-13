@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
@@ -26,7 +27,7 @@ function FaleConosco() {
     console.log('Enviando dados:', formData);
     
     try {
-      const response = await fetch('http://localhost:8080/api/contato', {
+      const response = await fetch('${API_URL}/api/contato', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

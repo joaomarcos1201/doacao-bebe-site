@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProdutos } from '../context/ProdutosContext';
@@ -27,7 +28,7 @@ function Chat() {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch(`http://localhost:8080/api/chat/${chatId}/mensagens`, {
+      const response = await fetch(`${API_URL}/api/chat/${chatId}/mensagens`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -53,7 +54,7 @@ function Chat() {
   const buscarInfoChat = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/chat/meus-chats', {
+      const response = await fetch('${API_URL}/api/chat/meus-chats', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -83,7 +84,7 @@ function Chat() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:8080/api/chat/enviar-mensagem', {
+      const response = await fetch('${API_URL}/api/chat/enviar-mensagem', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

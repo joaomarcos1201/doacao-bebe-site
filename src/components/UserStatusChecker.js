@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../config/api';
 
 function UserStatusChecker({ user, setUser }) {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ function UserStatusChecker({ user, setUser }) {
       if (!token || !user) return;
 
       try {
-        const response = await fetch('http://localhost:7979/api/auth/me', {
+        const response = await fetch(`${API_URL}/api/auth/me`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { API_URL } from '../config/api';
 
 const ProdutosContext = createContext();
 
@@ -19,7 +20,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const carregarProdutos = async () => {
     try {
-      const response = await fetch('http://localhost:7979/api/produtos');
+      const response = await fetch(`${API_URL}/api/produtos`);
       if (response.ok) {
         const data = await response.json();
         setProdutos(data);
@@ -31,7 +32,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const adicionarProduto = async (novoProduto) => {
     try {
-      const response = await fetch('http://localhost:7979/api/produtos', {
+      const response = await fetch(`${API_URL}/api/produtos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +49,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const aprovarProduto = async (produtoId) => {
     try {
-      const response = await fetch(`http://localhost:7979/api/produtos/${produtoId}/aprovar`, {
+      const response = await fetch(`${API_URL}/api/produtos/${produtoId}/aprovar`, {
         method: 'PUT',
       });
       if (response.ok) {
@@ -61,7 +62,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const rejeitarProduto = async (produtoId) => {
     try {
-      const response = await fetch(`http://localhost:7979/api/produtos/${produtoId}`, {
+      const response = await fetch(`${API_URL}/api/produtos/${produtoId}`, {
         method: 'DELETE',
       });
       if (response.ok) {
@@ -74,7 +75,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const removerProduto = async (produtoId) => {
     try {
-      const response = await fetch(`http://localhost:7979/api/produtos/${produtoId}`, {
+      const response = await fetch(`${API_URL}/api/produtos/${produtoId}`, {
         method: 'DELETE',
       });
       if (response.ok) {

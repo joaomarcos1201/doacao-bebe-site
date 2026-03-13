@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import { sanitizeInput, validateEmail, getSecureHeaders, API_BASE_URL } from '../utils/security';
+import { sanitizeInput, validateEmail, getSecureHeaders } from '../utils/security';
+import { API_URL } from '../config/api';
 
 function Login({ setUser }) {
   const [email, setEmail] = useState('');
@@ -39,7 +40,7 @@ function Login({ setUser }) {
       }
       
       try {
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
           method: 'POST',
           headers: getSecureHeaders(),
           body: JSON.stringify({ email: cleanEmail, senha: cleanSenha }),

@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
@@ -19,7 +20,7 @@ function RecuperarSenha() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/enviar-codigo', {
+      const response = await fetch('${API_URL}/api/auth/enviar-codigo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +46,7 @@ function RecuperarSenha() {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verificar-codigo', {
+      const response = await fetch('${API_URL}/api/auth/verificar-codigo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +86,7 @@ function RecuperarSenha() {
       };
       alert('DEBUG: Enviando dados para API...');
 
-      const response = await fetch('http://localhost:5000/api/auth/redefinir-senha', {
+      const response = await fetch('${API_URL}/api/auth/redefinir-senha', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
@@ -58,7 +59,7 @@ function Perfil({ user, setUser }) {
 
     try {
       // Atualizar dados básicos
-      const updateResponse = await fetch(`http://localhost:5000/api/usuarios/${user.id}`, {
+      const updateResponse = await fetch(`${API_URL}/api/usuarios/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +73,7 @@ function Perfil({ user, setUser }) {
 
       // Alterar senha se fornecida
       if (novaSenha) {
-        const senhaResponse = await fetch('http://localhost:5000/api/usuarios/alterar-senha', {
+        const senhaResponse = await fetch('${API_URL}/api/usuarios/alterar-senha', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

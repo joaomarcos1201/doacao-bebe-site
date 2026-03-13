@@ -34,8 +34,3 @@ export const getSecureHeaders = () => {
     ...(token && { 'Authorization': `Bearer ${token}` })
   };
 };
-
-// URL base segura
-export const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://seu-dominio.com/api' 
-  : 'http://localhost:7979/api';

@@ -6,6 +6,7 @@ import { useConfirm } from '../hooks/useConfirm';
 import { useProdutos } from '../context/ProdutosContext';
 import Notification from '../components/Notification';
 import ConfirmDialog from '../components/ConfirmDialog';
+import { API_URL } from '../config/api';
 
 function Admin() {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ function Admin() {
 
   const carregarMensagens = async () => {
     try {
-      const response = await fetch('http://localhost:7979/api/contato');
+      const response = await fetch(`${API_URL}/api/contato`);
       if (response.ok) {
         const data = await response.json();
         setMensagens(data);
@@ -56,7 +57,7 @@ function Admin() {
 
   const carregarUsuarios = async () => {
     try {
-      const response = await fetch('http://localhost:7979/api/usuarios');
+      const response = await fetch(`${API_URL}/api/usuarios`);
       if (response.ok) {
         const data = await response.json();
         console.log('DEBUG - Dados dos usuários:', data);
@@ -82,7 +83,7 @@ function Admin() {
 
   const toggleStatus = async (id) => {
     try {
-      const response = await fetch(`http://localhost:7979/api/usuarios/${id}/status`, {
+      const response = await fetch(`${API_URL}/api/usuarios/${id}/status`, {
         method: 'PUT',
       });
       if (response.ok) {
@@ -103,7 +104,7 @@ function Admin() {
       async () => {
         try {
           console.log('DEBUG - Tentando remover usuário ID:', id);
-          const response = await fetch(`http://localhost:7979/api/usuarios/${id}`, {
+          const response = await fetch(`${API_URL}/api/usuarios/${id}`, {
             method: 'DELETE',
           });
           console.log('DEBUG - Status da resposta:', response.status);
@@ -133,7 +134,7 @@ function Admin() {
       `Tem certeza que deseja ${acao} deste usuário?`,
       async () => {
         try {
-          const response = await fetch(`http://localhost:7979/api/usuarios/${id}/admin`, {
+          const response = await fetch(`${API_URL}/api/usuarios/${id}/admin`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
