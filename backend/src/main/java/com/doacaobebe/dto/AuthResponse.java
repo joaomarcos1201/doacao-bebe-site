@@ -3,12 +3,12 @@ package com.doacaobebe.dto;
 public class AuthResponse {
     private String token;
     private String tipo = "Bearer";
-    private Long id;
+    private Integer id;
     private String nome;
     private String email;
     private Boolean isAdmin;
 
-    public AuthResponse(String token, Long id, String nome, String email, Boolean isAdmin) {
+    public AuthResponse(String token, Integer id, String nome, String email, Boolean isAdmin) {
         this.token = token;
         this.id = id;
         this.nome = nome;
@@ -22,8 +22,8 @@ public class AuthResponse {
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
     
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
     
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }

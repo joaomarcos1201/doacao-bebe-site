@@ -25,7 +25,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<?> alterarStatus(@PathVariable Long id) {
+    public ResponseEntity<?> alterarStatus(@PathVariable Integer id) {
         try {
             Usuario usuario = usuarioService.alterarStatus(id);
             return ResponseEntity.ok(usuario);
@@ -51,7 +51,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
+    public ResponseEntity<?> atualizarUsuario(@PathVariable Integer id, @RequestBody Usuario usuarioAtualizado) {
         try {
             Usuario usuario = usuarioService.atualizarDados(id, usuarioAtualizado);
             return ResponseEntity.ok(usuario);
@@ -71,7 +71,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}/admin")
-    public ResponseEntity<?> alterarPrivilegiosAdmin(@PathVariable Long id, @RequestBody AdminRequest request) {
+    public ResponseEntity<?> alterarPrivilegiosAdmin(@PathVariable Integer id, @RequestBody AdminRequest request) {
         try {
             Usuario usuario = usuarioService.alterarPrivilegiosAdmin(id, request.getIsAdmin());
             return ResponseEntity.ok(usuario);

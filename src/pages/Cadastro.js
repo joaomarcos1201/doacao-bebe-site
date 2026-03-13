@@ -10,7 +10,6 @@ function Cadastro() {
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
   const [senha, setSenha] = useState('');
-  const [telefone, setTelefone] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
@@ -232,23 +231,7 @@ function Cadastro() {
               required
             />
           </div>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', color: theme.text }}>Telefone:</label>
-            <input
-              type="tel"
-              value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: `1px solid ${theme.border}`,
-                borderRadius: '5px',
-                backgroundColor: theme.background,
-                color: theme.text
-              }}
-              required
-            />
-          </div>
+
           <div style={{ marginBottom: '20px' }}>
             <label style={{ display: 'block', marginBottom: '5px', color: theme.text }}>Senha:</label>
             <input

@@ -1,20 +1,20 @@
 package com.doacaobebe.dto;
 
 public class AlterarSenhaRequest {
-    private Long id;
+    private Integer id;
     private String senhaAtual;
     private String novaSenha;
 
     public AlterarSenhaRequest() {}
 
-    public AlterarSenhaRequest(Long id, String senhaAtual, String novaSenha) {
+    public AlterarSenhaRequest(Integer id, String senhaAtual, String novaSenha) {
         this.id = id;
         this.senhaAtual = senhaAtual;
         this.novaSenha = novaSenha;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
     
     public String getSenhaAtual() { return senhaAtual; }
     public void setSenhaAtual(String senhaAtual) { this.senhaAtual = senhaAtual; }
