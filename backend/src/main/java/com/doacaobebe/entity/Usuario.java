@@ -38,6 +38,9 @@ public class Usuario {
     @Column(name = "statusUsuario", nullable = false, length = 20)
     private String statusUsuario = "ATIVO";
 
+    @Column(name = "status", nullable = false, length = 20)
+    private String status = "ATIVO";
+
     // Construtores
     public Usuario() {}
     
@@ -81,6 +84,9 @@ public class Usuario {
     
     public String getStatusUsuario() { return statusUsuario; }
     public void setStatusUsuario(String statusUsuario) { this.statusUsuario = statusUsuario; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
     
     public Boolean getIsAdmin() { return "ADMIN".equals(nivelAcesso); }
 }

@@ -10,17 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByEmail(String email);
     boolean existsByEmail(String email);
     
     @Modifying
     @Transactional
     @Query("DELETE FROM Usuario u WHERE u.id = :id")
-    void deleteUsuarioById(@Param("id") Long id);
+    void deleteUsuarioById(@Param("id") Integer id);
     
     @Modifying
     @Transactional
     @Query(value = "UPDATE Usuario SET statusUsuario = :status WHERE id = :id", nativeQuery = true)
-    void updateStatusUsuario(@Param("id") Long id, @Param("status") String status);
+    void updateStatusUsuario(@Param("id") Integer id, @Param("status") String status);
 }
