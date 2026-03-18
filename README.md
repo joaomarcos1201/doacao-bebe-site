@@ -107,6 +107,45 @@ Para acessar o painel administrativo:
 - data_criacao (DATETIME, DEFAULT NOW())
 - is_admin (BOOLEAN, DEFAULT false)
 
+## Git - Comandos de Commit e Deploy
+
+### Salvar alterações na branch desenvolvimento
+```bash
+git add .
+git commit -m "sua mensagem aqui"
+git push origin desenvolvimento
+```
+
+### Subir alterações da desenvolvimento para a main
+```bash
+git add .
+git commit -m "sua mensagem aqui"
+git push origin desenvolvimento
+git checkout main
+git merge desenvolvimento
+git push origin main
+git checkout desenvolvimento
+```
+
+### Trocar de branch
+```bash
+# Ir para a main
+git checkout main
+
+# Ir para a desenvolvimento
+git checkout desenvolvimento
+```
+
+### Ver em qual branch você está
+```bash
+git branch
+```
+
+### Ver status dos arquivos alterados
+```bash
+git status
+```
+
 ## Observações
 
 1. O backend cria automaticamente as tabelas no banco de dados na primeira execução
