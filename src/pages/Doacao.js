@@ -24,6 +24,8 @@ function Doacao() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Arquivo:", imagemArquivo);
+console.log("Tamanho:", imagemArquivo?.size);
     if (produto && categoria && descricao && estado && contato && cpf && nomeDoador) {
       try {
         const formData = new FormData();
@@ -58,7 +60,8 @@ function Doacao() {
           navigate('/home');
         } else {
           const errorData = await response.text();
-          alert(errorData || 'Erro ao cadastrar produto');
+          console.error('Erro backend:', errorData);
+          alert('Erro: ' + errorData);
         }
       } catch (error) {
         alert('Erro de conexão com o servidor');

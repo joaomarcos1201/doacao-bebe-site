@@ -113,78 +113,101 @@ function Home({ user, setUser }) {
             >
               {isDark ? '☀️' : '🌙'}
             </button>
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '8px',
-              padding: '8px 12px',
-              backgroundColor: isDark ? 'rgba(26, 26, 46, 0.8)' : 'rgba(252, 192, 203, 0.15)',
-              borderRadius: '8px',
-              border: `1px solid ${theme.border}`
-            }}>
-              <span style={{ fontSize: '16px' }}>👤</span>
-              <span style={{ 
-                color: theme.text, 
-                fontSize: '14px', 
-                fontWeight: '500'
-              }}>Olá, {user.nome}!</span>
-            </div>
-            
 
-            
-            <div style={{ position: 'relative' }}>
-              <button 
-                onClick={() => setMenuAberto(!menuAberto)}
+            {user ? (
+              <>
+                <div style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px',
+                  padding: '8px 12px',
+                  backgroundColor: isDark ? 'rgba(26, 26, 46, 0.8)' : 'rgba(252, 192, 203, 0.15)',
+                  borderRadius: '8px',
+                  border: `1px solid ${theme.border}`
+                }}>
+                  <span style={{ fontSize: '16px' }}>👤</span>
+                  <span style={{ color: theme.text, fontSize: '14px', fontWeight: '500' }}>Olá, {user.nome}!</span>
+                </div>
+                <div style={{ position: 'relative' }}>
+                  <button 
+                    onClick={() => setMenuAberto(!menuAberto)}
+                    style={{
+                      padding: '10px 12px',
+                      backgroundColor: isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)',
+                      color: theme.text,
+                      border: `1px solid ${isDark ? 'rgba(244, 114, 182, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontSize: '16px',
+                      transition: 'all 0.2s ease',
+                      boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.2)' : 'rgba(252, 192, 203, 0.3)';
+                      e.target.style.transform = 'translateY(-1px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)';
+                      e.target.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    ☰
+                  </button>
+                </div>
+                <button 
+                  onClick={handleLogout}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: 'transparent',
+                    color: theme.textSecondary,
+                    border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`,
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    fontWeight: '500',
+                    transition: 'all 0.2s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)';
+                    e.target.style.color = '#ef4444';
+                    e.target.style.borderColor = '#ef4444';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = 'transparent';
+                    e.target.style.color = theme.textSecondary;
+                    e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)';
+                  }}
+                >
+                  Sair
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
                 style={{
-                  padding: '10px 12px',
-                  backgroundColor: isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)',
-                  color: theme.text,
-                  border: `1px solid ${isDark ? 'rgba(244, 114, 182, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
+                  padding: '10px 24px',
+                  backgroundColor: theme.primary,
+                  color: 'white',
+                  border: 'none',
                   borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '16px',
+                  fontSize: '14px',
+                  fontWeight: '600',
                   transition: 'all 0.2s ease',
-                  boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)'
+                  boxShadow: '0 2px 8px rgba(173, 115, 120, 0.3)'
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.2)' : 'rgba(252, 192, 203, 0.3)';
+                  e.target.style.backgroundColor = '#9a6b70';
                   e.target.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)';
+                  e.target.style.backgroundColor = theme.primary;
                   e.target.style.transform = 'translateY(0)';
                 }}
               >
-                ☰
+                Entrar
               </button>
-            </div>
-            
-            <button 
-              onClick={handleLogout}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: 'transparent',
-                color: theme.textSecondary,
-                border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`,
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '13px',
-                fontWeight: '500',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)';
-                e.target.style.color = '#ef4444';
-                e.target.style.borderColor = '#ef4444';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = 'transparent';
-                e.target.style.color = theme.textSecondary;
-                e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)';
-              }}
-            >
-              Sair
-            </button>
+            )}
           </div>
         </div>
         <div style={{ 

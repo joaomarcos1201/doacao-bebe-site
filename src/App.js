@@ -66,9 +66,11 @@ function App() {
         console.error('Erro ao carregar usuário:', error);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-      });
+      })
+      .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
 
@@ -99,20 +101,20 @@ function App() {
               <Routes>
                 <Route path="/login" element={<Login setUser={setUser} />} />
                 <Route path="/cadastro" element={<Cadastro />} />
-                <Route path="/home" element={user ? <Home user={user} setUser={setUser} /> : <Navigate to="/login" />} />
+                <Route path="/home" element={<Home user={user} setUser={setUser} />} />
                 <Route path="/admin" element={user && (user.isAdmin || user.email === 'admin@alemdopositivo.com') ? <Admin /> : <Navigate to="/login" />} />
                 <Route path="/doacao" element={user ? <Doacao /> : <Navigate to="/login" />} />
-                <Route path="/produto/:id" element={user ? <DetalhesProduto /> : <Navigate to="/login" />} />
+                <Route path="/produto/:id" element={<DetalhesProduto />} />
                 <Route path="/perfil" element={user ? <Perfil user={user} setUser={setUser} /> : <Navigate to="/login" />} />
 
-                <Route path="/sobre-nos" element={user ? <SobreNos /> : <Navigate to="/login" />} />
-                <Route path="/fale-conosco" element={user ? <FaleConosco /> : <Navigate to="/login" />} />
-                <Route path="/faq" element={user ? <FAQ /> : <Navigate to="/login" />} />
-                <Route path="/termos-privacidade" element={user ? <TermosPrivacidade /> : <Navigate to="/login" />} />
-                <Route path="/manual-seguranca" element={user ? <ManualSeguranca /> : <Navigate to="/login" />} />
+                <Route path="/sobre-nos" element={<SobreNos />} />
+                <Route path="/fale-conosco" element={<FaleConosco />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/termos-privacidade" element={<TermosPrivacidade />} />
+                <Route path="/manual-seguranca" element={<ManualSeguranca />} />
 
                 <Route path="/recuperar-senha" element={<RecuperarSenha />} />
-                <Route path="/" element={<Navigate to="/login" />} />
+                <Route path="/" element={<Navigate to="/home" />} />
               </Routes>
             </div>
           </Router>

@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Pular verificação para endpoints públicos
         String requestPath = request.getRequestURI();
         if (requestPath.contains("/auth/") || requestPath.contains("/api/contato") || 
-            requestPath.contains("/api/produtos") && "GET".equals(request.getMethod())) {
+            requestPath.contains("/api/produtos")) {
             filterChain.doFilter(request, response);
             return;
         }

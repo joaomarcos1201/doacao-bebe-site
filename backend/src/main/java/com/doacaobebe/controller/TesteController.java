@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/teste")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class TesteController {
 
     @Autowired
@@ -34,16 +34,15 @@ public class TesteController {
                 return ResponseEntity.badRequest().body("Admin não encontrado");
             }
 
-            Produto produto = new Produto(
-                "Carrinho de Bebê Teste",
-                "Carrinho de bebê em ótimo estado para teste do sistema de chat",
-                "seminovo",
-                "(11) 99999-9999"
-            );
+            Produto produto = new Produto();
+            produto.setNome("Carrinho de Bebê Teste");
+            produto.setDescricao("Carrinho de bebê em ótimo estado para teste do sistema de chat");
+            produto.setCondicao("seminovo");
+            produto.setTelefone("(11) 99999-9999");
             produto.setCategoria("moveis");
             produto.setCpf("000.000.000-00");
             produto.setDoador(admin.getEmail());
-            produto.setStatus("aprovado");
+            produto.setStatusAnuncio("ATIVO");
             
             produtoRepository.save(produto);
             return ResponseEntity.ok("Produto de teste criado com sucesso! ID: " + produto.getId());

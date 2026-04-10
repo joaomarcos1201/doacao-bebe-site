@@ -3,9 +3,13 @@ package com.doacaobebe.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.DynamicInsert;
+
 @Entity
+@DynamicInsert
 @Table(name = "Anuncio")
 public class Produto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -18,33 +22,34 @@ public class Produto {
 
     @Column(name = "dataAnuncio", nullable = false)
     private LocalDateTime dataAnuncio = LocalDateTime.now();
-
-    @Column(name = "foto")
+    
+    @Lob
+    @Column(name = "foto", nullable = true)
     private byte[] foto;
 
-    @Column(name = "telefone")
+    @Column(name = "telefone", length = 20)
     private String telefone;
 
     @Column(name = "condicao", nullable = false, length = 100)
     private String condicao;
 
-    @Column(name = "cidade", nullable = false)
+    @Column(name = "cidade", nullable = false, length = 100)
     private String cidade = "São Paulo";
 
-    @Column(name = "uf", nullable = false)
+    @Column(name = "uf", nullable = false, length = 2)
     private String uf = "SP";
 
-    @Column(name = "fumante")
+    @Column(name = "fumante", length = 10)
     private String fumante;
 
-    @Column(name = "com_pet")
+    @Column(name = "com_pet", length = 10)
     private String comPet;
 
-    @Column(name = "motivo", nullable = false, length = 100)
+    @Column(name = "motivo", length = 100)
     private String motivo = "Doacao";
 
     @Column(name = "usuario_id", nullable = false)
-    private Integer usuarioId = 1;
+    private Integer usuarioId = 17;
 
     @Column(name = "categoria_id", nullable = false)
     private Integer categoriaId = 1;
@@ -52,38 +57,14 @@ public class Produto {
     @Column(name = "statusAnuncio", nullable = false, length = 20)
     private String statusAnuncio = "INATIVO";
 
-    @Column(name = "categoria")
-    private String categoria;
+    @Transient private String categoria;
+    @Transient private String contato;
+    @Transient private String cpf;
+    @Transient private String doador;
+    @Transient private String estado;
 
-    @Column(name = "contato", nullable = false)
-    private String contato;
-
-    @Column(name = "cpf")
-    private String cpf;
-
-    @Column(name = "data_criacao")
-    private LocalDateTime dataCriacao = LocalDateTime.now();
-
-    @Column(name = "doador")
-    private String doador;
-
-    @Column(name = "estado")
-    private String estado;
-
-    @Column(name = "status")
-    private String status;
-
-    // Construtores
     public Produto() {}
 
-    public Produto(String nome, String descricao, String estado, String contato) {
-        this.nome = nome;
-        this.descricao = descricao;
-        this.estado = estado;
-        this.contato = contato;
-    }
-
-    // Getters e Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -138,15 +119,9 @@ public class Produto {
     public String getCpf() { return cpf; }
     public void setCpf(String cpf) { this.cpf = cpf; }
 
-    public LocalDateTime getDataCriacao() { return dataCriacao; }
-    public void setDataCriacao(LocalDateTime dataCriacao) { this.dataCriacao = dataCriacao; }
-
     public String getDoador() { return doador; }
     public void setDoador(String doador) { this.doador = doador; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
-
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
 }

@@ -94,11 +94,11 @@ O frontend será executado na porta 3000: http://localhost:3000
 
 Para acessar o painel administrativo:
 - **Email**: admin@alemdopositivo.com
-- **Senha**: admin123
+- **Senha**: Admin@123
 
 ## Estrutura do Banco de Dados
 
-### Tabela: usuarios
+### Tabela: usuario
 - id (BIGINT, PRIMARY KEY, AUTO_INCREMENT)
 - nome (VARCHAR, NOT NULL)
 - email (VARCHAR, NOT NULL, UNIQUE)
