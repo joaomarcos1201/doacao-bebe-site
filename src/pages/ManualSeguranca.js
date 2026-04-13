@@ -1,145 +1,104 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 
 function ManualSeguranca() {
-  const { theme, isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+
+  const secoes = [
+    {
+      n: '1', emoji: '🔍', titulo: 'Verificação de Produtos',
+      lista: ['Inspecione cuidadosamente o estado dos produtos', 'Verifique se não há peças quebradas ou soltas', 'Verifique se não há sinais de roupas rasgadas ou manchadas', 'Para produtos eletrônicos, teste o funcionamento', 'Confirme se o produto atende às normas de segurança']
+    },
+    {
+      n: '2', emoji: '💬', titulo: 'Comunicação Segura',
+      lista: ['Não compartilhe informações pessoais desnecessárias', 'Desconfie de pedidos urgentes ou pressão para encontros imediatos', 'Se possível, evite encontros presenciais', 'Mantenha conversas respeitosas e cordiais']
+    },
+    {
+      n: '3', emoji: '🔐', titulo: 'Proteção de Dados',
+      lista: ['Use senhas fortes e únicas para sua conta', 'Não compartilhe suas credenciais de login', 'Faça logout ao usar computadores públicos', 'Mantenha seu perfil atualizado com informações precisas']
+    },
+    {
+      n: '4', emoji: '👶', titulo: 'Para Famílias com Crianças',
+      lista: ['Verifique se brinquedos não possuem peças pequenas (risco de engasgo)', 'Higienize todos os itens antes do uso', 'Teste a estabilidade de móveis e equipamentos']
+    },
+    {
+      n: '5', emoji: '🚨', titulo: 'Como Reportar Problemas',
+      lista: ['Entre em contato conosco imediatamente', 'Forneça detalhes específicos da situação', 'Preserve evidências (capturas de tela, mensagens)', 'Em casos graves, procure as autoridades competentes']
+    },
+  ];
 
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
-      padding: '20px'
-    }}>
-      <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
-        <button 
-          onClick={toggleTheme}
-          style={{
-            padding: '10px',
-            backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-            color: theme.text,
-            border: `1px solid ${theme.border}`,
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          {isDark ? '☀️' : '🌙'}
-        </button>
-      </div>
-      
-      <div style={{ maxWidth: '800px', margin: '0 auto', paddingTop: '60px' }}>
-        <div style={{ marginBottom: '20px' }}>
-          <Link to="/home" style={{ color: theme.primary, textDecoration: 'none', fontWeight: 'bold' }}>← Voltar ao Início</Link>
-        </div>
-        
-        <div style={{
-          backgroundColor: isDark ? 'rgba(105, 72, 75, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-          backdropFilter: 'blur(10px)',
-          padding: '40px',
-          borderRadius: '12px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-          border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(179, 116, 122, 0.3)'}`
-        }}>
-          <h1 style={{ textAlign: 'center', marginBottom: '30px', color: theme.primary, fontSize: '2.5rem' }}>
-            Manual de Segurança
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 100,
+        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+        padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+      }}>
+        <button onClick={() => navigate('/home')} style={{
+          padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
+        }}>← Voltar</button>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>Manual de Segurança</span>
+        <button onClick={toggleTheme} style={{
+          width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'
+        }}>{isDark ? '☀️' : '🌙'}</button>
+      </nav>
+
+      <div style={{ maxWidth: '760px', margin: '0 auto', padding: '48px 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <h1 style={{ fontSize: '32px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 8px', letterSpacing: '-0.5px' }}>
+            🛡️ Manual de Segurança
           </h1>
-          
-          <div style={{ lineHeight: '1.8', fontSize: '16px', color: theme.text }}>
-            
+          <p style={{ fontSize: '14px', color: isDark ? '#666' : '#999', margin: 0 }}>
+            Sua segurança é nossa prioridade. Siga estas orientações.
+          </p>
+        </div>
 
-            <section style={{ marginBottom: '30px' }}>
-              <h2 style={{ color: theme.primary, marginBottom: '15px', fontSize: '1.5rem' }}>
-              1. Verificação de Produtos
-              </h2>
-              <ul style={{ marginLeft: '20px', marginBottom: '15px' }}>
-                <li style={{ marginBottom: '8px' }}>Inspecione cuidadosamente o estado dos produtos</li>
-                <li style={{ marginBottom: '8px' }}>Verifique se não há peças quebradas ou soltas</li>
-                <li style={{ marginBottom: '8px' }}>Verifique se não há sinais de roupas rasgadas ou manchadas</li>
-                <li style={{ marginBottom: '8px' }}>Para produtos eletrônicos, teste o funcionamento</li>
-                <li style={{ marginBottom: '8px' }}>Confirme se o produto atende às normas de segurança</li>
-              </ul>
-            </section>
-
-            <section style={{ marginBottom: '30px' }}>
-              <h2 style={{ color: theme.primary, marginBottom: '15px', fontSize: '1.5rem' }}>
-                2. Comunicação Segura
-              </h2>
-              <ul style={{ marginLeft: '20px', marginBottom: '15px' }}>
-                
-                <li style={{ marginBottom: '8px' }}>Não compartilhe informações pessoais desnecessárias</li>
-                <li style={{ marginBottom: '8px' }}>Desconfie de pedidos urgentes ou pressão para encontros imediatos (se possível não se encontre com ninguém pessoalmente)</li>
-                <li style={{ marginBottom: '8px' }}>Mantenha conversas respeitosas e cordiais</li>
-              </ul>
-            </section>
-
-         
-
-            <section style={{ marginBottom: '30px' }}>
-              <h2 style={{ color: theme.primary, marginBottom: '15px', fontSize: '1.5rem' }}>
-                3. Proteção de Dados
-              </h2>
-              <ul style={{ marginLeft: '20px', marginBottom: '15px' }}>
-                <li style={{ marginBottom: '8px' }}>Use senhas fortes e únicas para sua conta</li>
-                <li style={{ marginBottom: '8px' }}>Não compartilhe suas credenciais de login</li>
-                <li style={{ marginBottom: '8px' }}>Faça logout ao usar computadores públicos</li>
-                <li style={{ marginBottom: '8px' }}>Mantenha seu perfil atualizado com informações precisas</li>
-              </ul>
-            </section>
-
-            <section style={{ marginBottom: '30px' }}>
-              <h2 style={{ color: theme.primary, marginBottom: '15px', fontSize: '1.5rem' }}>
-                4. Para Famílias com Crianças
-              </h2>
-              <ul style={{ marginLeft: '20px', marginBottom: '15px' }}>
-                <li style={{ marginBottom: '8px' }}>Verifique se brinquedos não possuem peças pequenas (risco de engasgo)</li>
-              
-                <li style={{ marginBottom: '8px' }}>Higienize todos os itens antes do uso</li>
-                <li style={{ marginBottom: '8px' }}>Teste a estabilidade de móveis e equipamentos</li>
-              </ul>
-            </section>
-
-            <section style={{ marginBottom: '30px' }}>
-              <h2 style={{ color: theme.primary, marginBottom: '15px', fontSize: '1.5rem' }}>
-                5. Como Reportar Problemas
-              </h2>
-              <p style={{ marginBottom: '15px' }}>
-                Se você encontrar algum comportamento suspeito ou inadequado:
-              </p>
-              <ul style={{ marginLeft: '20px', marginBottom: '15px' }}>
-                <li style={{ marginBottom: '8px' }}>Entre em contato conosco imediatamente</li>
-                <li style={{ marginBottom: '8px' }}>Forneça detalhes específicos da situação</li>
-                <li style={{ marginBottom: '8px' }}>Preserve evidências (capturas de tela, mensagens)</li>
-                <li style={{ marginBottom: '8px' }}>Em casos graves, procure as autoridades competentes</li>
-              </ul>
-            </section>
-
-            <div style={{ 
-              textAlign: 'center', 
-              padding: '25px', 
-              backgroundColor: isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(173, 115, 120, 0.2)', 
-              borderRadius: '8px',
-              border: `1px solid ${theme.primary}`,
-              marginTop: '30px'
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
+          {secoes.map(({ n, emoji, titulo, lista }) => (
+            <div key={n} style={{
+              backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
+              border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
             }}>
-              <h3 style={{ color: theme.primary, marginBottom: '15px' }}>
-                Emergência
-              </h3>
-              <p style={{ marginBottom: '15px', fontWeight: 'bold' }}>
-                Em caso de emergência, ligue imediatamente para:
-              </p>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', flexWrap: 'wrap' }}>
-                <div>
-                  <strong>Polícia Militar:</strong> 190
-                </div>
-                <div>
-                  <strong>Bombeiros:</strong> 193
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+                <span style={{ fontSize: '22px' }}>{emoji}</span>
+                <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: 0 }}>{titulo}</h2>
               </div>
-              <p style={{ margin: '15px 0 0 0', fontSize: '14px', color: theme.textSecondary }}>
-                Sua segurança é nossa prioridade. Sempre confie em seus instintos.
-              </p>
+              <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                {lista.map((item, i) => (
+                  <li key={i} style={{ fontSize: '14px', color: isDark ? '#888' : '#666', lineHeight: '1.7', marginBottom: '4px' }}>{item}</li>
+                ))}
+              </ul>
             </div>
+          ))}
+        </div>
+
+        {/* Emergência */}
+        <div style={{
+          backgroundColor: isDark ? '#1a0a0a' : '#fff5f5', borderRadius: '16px', padding: '28px',
+          border: '1px solid #ef4444', textAlign: 'center'
+        }}>
+          <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#ef4444', margin: '0 0 16px' }}>🚨 Emergência</h3>
+          <p style={{ fontSize: '14px', color: isDark ? '#aaa' : '#666', margin: '0 0 16px' }}>Em caso de emergência, ligue imediatamente para:</p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', flexWrap: 'wrap', marginBottom: '16px' }}>
+            {[{ label: 'Polícia Militar', num: '190' }, { label: 'Bombeiros', num: '193' }, { label: 'SAMU', num: '192' }].map(({ label, num }) => (
+              <div key={num} style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', fontWeight: '800', color: '#ef4444' }}>{num}</div>
+                <div style={{ fontSize: '12px', color: isDark ? '#888' : '#999' }}>{label}</div>
+              </div>
+            ))}
           </div>
+          <p style={{ fontSize: '13px', color: isDark ? '#666' : '#aaa', margin: 0 }}>Sempre confie em seus instintos.</p>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '24px' }}>
+          <Link to="/fale-conosco" style={{ color: '#c0606a', fontSize: '14px', fontWeight: '600', textDecoration: 'none' }}>
+            Reportar um problema →
+          </Link>
         </div>
       </div>
     </div>

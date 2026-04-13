@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import Notification from '../components/Notification';
 import { API_URL } from '../config/api';
-import '../styles/global.css';
 
 function Doacao() {
   const [produto, setProduto] = useState('');
@@ -17,533 +16,201 @@ function Doacao() {
   const [nomeDoador, setNomeDoador] = useState('');
   const [imagem, setImagem] = useState('');
   const [imagemArquivo, setImagemArquivo] = useState(null);
-  const { adicionarProduto } = useProdutos();
+  const { carregarProdutos } = useProdutos();
   const navigate = useNavigate();
-  const { theme, isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   const { notifications, showSuccess, removeNotification } = useNotification();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Arquivo:", imagemArquivo);
-console.log("Tamanho:", imagemArquivo?.size);
-    if (produto && categoria && descricao && estado && contato && cpf && nomeDoador) {
-      try {
-        const formData = new FormData();
-        formData.append('nome', produto);
-        formData.append('categoria', categoria);
-        formData.append('descricao', descricao);
-        formData.append('estado', estado);
-        formData.append('contato', contato);
-        formData.append('cpf', cpf);
-        formData.append('doador', nomeDoador);
-        
-        if (imagemArquivo) {
-          formData.append('imagem', imagemArquivo);
-        }
+    if (!produto || !categoria || !descricao || !estado || !contato || !cpf || !nomeDoador) return;
+    try {
+      const formData = new FormData();
+      formData.append('nome', produto);
+      formData.append('categoria', categoria);
+      formData.append('descricao', descricao);
+      formData.append('estado', estado);
+      formData.append('contato', contato);
+      formData.append('cpf', cpf);
+      formData.append('doador', nomeDoador);
+      if (imagemArquivo) formData.append('imagem', imagemArquivo);
 
-        const response = await fetch(`${API_URL}/api/produtos`, {
-          method: 'POST',
-          body: formData
-        });
-
-        if (response.ok) {
-          showSuccess('Produto enviado para aprovação! Será analisado pelo administrador antes de aparecer no site.');
-          setProduto('');
-          setCategoria('');
-          setDescricao('');
-          setEstado('');
-          setContato('');
-          setCpf('');
-          setNomeDoador('');
-          setImagem('');
-          setImagemArquivo(null);
-          navigate('/home');
-        } else {
-          const errorData = await response.text();
-          console.error('Erro backend:', errorData);
-          alert('Erro: ' + errorData);
-        }
-      } catch (error) {
-        alert('Erro de conexão com o servidor');
+      const response = await fetch(`${API_URL}/api/produtos`, { method: 'POST', body: formData });
+      if (response.ok) {
+        await carregarProdutos();
+        showSuccess('Produto enviado para aprovação!');
+        setProduto(''); setCategoria(''); setDescricao(''); setEstado('');
+        setContato(''); setCpf(''); setNomeDoador(''); setImagem(''); setImagemArquivo(null);
+        navigate('/home');
+      } else {
+        const err = await response.text();
+        alert('Erro: ' + err);
       }
-    }
+    } catch { alert('Erro de conexão com o servidor'); }
   };
 
+  const input = {
+    width: '100%', padding: '12px 16px', borderRadius: '10px', fontSize: '14px',
+    border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+    backgroundColor: isDark ? '#1e1e1e' : '#fdf8f8',
+    color: isDark ? '#e0e0e0' : '#333', outline: 'none', boxSizing: 'border-box'
+  };
+
+  const label = { display: 'block', fontSize: '13px', fontWeight: '600', color: isDark ? '#ccc' : '#555', marginBottom: '6px' };
+
   return (
-    <div style={{ minHeight: '100vh', background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)', padding: window.innerWidth < 768 ? '15px' : '20px' }}>
-      <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
-        <button 
-          onClick={toggleTheme}
-          style={{
-            padding: '12px 16px',
-            backgroundColor: isDark ? '#2a2d33' : 'rgba(255, 255, 255, 0.9)',
-            color: theme.text,
-            border: `2px solid ${theme.inputBorder}`,
-            borderRadius: '12px',
-            cursor: 'pointer',
-            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
-            transition: 'all 0.2s ease',
-            backdropFilter: 'blur(10px)'
-          }}
-        >
-          {isDark ? '☀️' : '🌙'}
-        </button>
-      </div>
-      
-      <div style={{ maxWidth: '900px', margin: '0 auto', paddingTop: window.innerWidth < 768 ? '50px' : '60px' }}>
-        <div style={{ marginBottom: '30px' }}>
-          <Link 
-            to="/home" 
-            style={{ 
-              color: theme.primary, 
-              textDecoration: 'none',
-              fontSize: '16px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            ← Voltar ao Início
-          </Link>
+    <div style={{
+      minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6',
+      fontFamily: "'Inter', system-ui, sans-serif"
+    }}>
+      {/* Navbar */}
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 100,
+        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+        padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+      }}>
+        <button onClick={() => navigate('/home')} style={{
+          padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
+        }}>← Voltar</button>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>Doar Produto</span>
+        <button onClick={toggleTheme} style={{
+          width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'
+        }}>{isDark ? '☀️' : '🌙'}</button>
+      </nav>
+
+      <div style={{ maxWidth: '700px', margin: '0 auto', padding: '32px 24px' }}>
+        {/* Header */}
+        <div style={{ marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 8px', letterSpacing: '-0.5px' }}>
+            🎁 Fazer uma doação
+          </h1>
+          <p style={{ fontSize: '14px', color: isDark ? '#666' : '#999', margin: 0 }}>
+            Ajude outras famílias compartilhando o que você não usa mais
+          </p>
         </div>
-        
+
         <div style={{
-          background: isDark ? 'linear-gradient(135deg, #1e2328 0%, #2a2d33 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
-          backdropFilter: 'blur(15px)',
-          padding: window.innerWidth < 768 ? '25px' : '40px',
-          borderRadius: '20px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.15), 0 8px 25px rgba(0,0,0,0.1)',
-          border: '1px solid #ffc0cb'
+          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', padding: '32px',
+          border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
         }}>
-          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-            <h1 style={{ 
-              color: theme.primary, 
-              fontSize: window.innerWidth < 768 ? '26px' : '32px', 
-              fontWeight: '700',
-              marginBottom: '8px',
-              letterSpacing: '-0.5px'
-            }}>
-              Doar Produto
-            </h1>
-            <p style={{ 
-              color: theme.textSecondary, 
-              fontSize: '16px',
-              margin: 0
-            }}>
-              Ajude outras famílias compartilhando o que você não usa mais
-            </p>
-          </div>
-      
           <form onSubmit={handleSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Nome do Produto *</label>
-                <input
-                  type="text"
-                  value={produto}
-                  onChange={(e) => setProduto(e.target.value)}
-                  placeholder="Ex: Carrinho de bebê"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                />
+                <label style={label}>Nome do Produto *</label>
+                <input type="text" value={produto} onChange={(e) => setProduto(e.target.value)} placeholder="Ex: Carrinho de bebê" style={input} required />
               </div>
-
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Categoria *</label>
-                <select
-                  value={categoria}
-                  onChange={(e) => setCategoria(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                >
-                  <option value="">Selecione uma categoria</option>
-                  <option value="roupas">Roupas</option>
-                  <option value="brinquedos">Brinquedos</option>
-                  <option value="moveis">Móveis</option>
-                  <option value="acessorios">Acessórios</option>
-                  <option value="alimentacao">Alimentação</option>
-                  <option value="outros">Outros</option>
+                <label style={label}>Categoria *</label>
+                <select value={categoria} onChange={(e) => setCategoria(e.target.value)} style={input} required>
+                  <option value="">Selecione</option>
+                  <option value="roupas">👕 Roupas</option>
+                  <option value="brinquedos">🧸 Brinquedos</option>
+                  <option value="moveis">🪑 Móveis</option>
+                  <option value="acessorios">🎒 Acessórios</option>
+                  <option value="alimentacao">🍼 Alimentação</option>
+                  <option value="outros">📦 Outros</option>
                 </select>
               </div>
             </div>
 
-            <div style={{ marginBottom: '25px' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '8px', 
-                color: theme.text,
-                fontWeight: '600',
-                fontSize: '14px'
-              }}>Descrição *</label>
-              <textarea
-                value={descricao}
-                onChange={(e) => setDescricao(e.target.value)}
-                placeholder="Descreva o produto: tamanho, cor, condições de uso, etc."
-                rows="4"
-                style={{
-                  width: '100%',
-                  padding: '14px 16px',
-                  border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                  borderRadius: '12px',
-                  backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                  color: theme.text,
-                  fontSize: '15px',
-                  transition: 'all 0.2s ease',
-                  outline: 'none',
-                  resize: 'vertical',
-                  fontFamily: 'inherit'
-                }}
-                onFocus={(e) => e.target.style.borderColor = theme.primary}
-                onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                required
-              />
+            <div style={{ marginBottom: '16px' }}>
+              <label style={label}>Descrição *</label>
+              <textarea value={descricao} onChange={(e) => setDescricao(e.target.value)}
+                placeholder="Descreva o produto: tamanho, cor, condições de uso..." rows="3"
+                style={{ ...input, resize: 'vertical', fontFamily: 'inherit' }} required />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Estado do Produto *</label>
-                <select
-                  value={estado}
-                  onChange={(e) => setEstado(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                >
-                  <option value="">Selecione o estado</option>
-                  <option value="novo">Novo</option>
-                  <option value="seminovo">Semi-novo</option>
-                  <option value="usado">Usado (bom estado)</option>
+                <label style={label}>Estado do Produto *</label>
+                <select value={estado} onChange={(e) => setEstado(e.target.value)} style={input} required>
+                  <option value="">Selecione</option>
+                  <option value="novo">✨ Novo</option>
+                  <option value="seminovo">👍 Semi-novo</option>
+                  <option value="usado">📦 Usado</option>
                 </select>
               </div>
-
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Contato (WhatsApp) *</label>
-                <input
-                  type="tel"
-                  value={contato}
-                  onChange={(e) => setContato(e.target.value)}
-                  placeholder="(11) 99999-9999"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                />
+                <label style={label}>WhatsApp *</label>
+                <input type="tel" value={contato} onChange={(e) => setContato(e.target.value)} placeholder="(11) 99999-9999" style={input} required />
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Nome do Doador *</label>
-                <input
-                  type="text"
-                  value={nomeDoador}
-                  onChange={(e) => setNomeDoador(e.target.value)}
-                  placeholder="Seu nome completo"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                />
+                <label style={label}>Seu Nome *</label>
+                <input type="text" value={nomeDoador} onChange={(e) => setNomeDoador(e.target.value)} placeholder="Nome completo" style={input} required />
               </div>
-
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>CPF do Doador *</label>
-                <input
-                  type="text"
-                  value={cpf}
-                  onChange={(e) => {
-                    let value = e.target.value.replace(/\D/g, '');
-                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
-                    value = value.replace(/(\d{3})(\d)/, '$1.$2');
-                    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-                    setCpf(value);
-                  }}
-                  placeholder="000.000.000-00"
-                  maxLength="14"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                />
+                <label style={label}>CPF *</label>
+                <input type="text" value={cpf} onChange={(e) => {
+                  let v = e.target.value.replace(/\D/g, '');
+                  v = v.replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+                  setCpf(v);
+                }} placeholder="000.000.000-00" maxLength="14" style={input} required />
               </div>
             </div>
 
-            <div style={{ marginBottom: '25px' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '8px', 
-                color: theme.text,
-                fontWeight: '600',
-                fontSize: '14px'
-              }}> Imagem do Produto (opcional)</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    setImagemArquivo(file);
-                    
-                    // Criar preview da imagem
-                    const reader = new FileReader();
-                    reader.onload = (event) => setImagem(event.target.result);
-                    reader.readAsDataURL(file);
-                  }
-                }}
-                style={{
-                  width: '100%',
-                  padding: '14px 16px',
-                  border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                  borderRadius: '12px',
-                  backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                  color: theme.text,
-                  fontSize: '15px',
-                  transition: 'all 0.2s ease',
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
-                onFocus={(e) => e.target.style.borderColor = theme.primary}
-                onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-              />
+            <div style={{ marginBottom: '24px' }}>
+              <label style={label}>Foto do Produto (opcional)</label>
+              <input type="file" accept="image/*" onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  setImagemArquivo(file);
+                  const reader = new FileReader();
+                  reader.onload = (ev) => setImagem(ev.target.result);
+                  reader.readAsDataURL(file);
+                }
+              }} style={{ ...input, cursor: 'pointer' }} />
               {imagem && (
-                <div style={{ marginTop: '15px', textAlign: 'center' }}>
-                  <img 
-                    src={imagem} 
-                    alt="Visualização" 
-                    style={{ 
-                      width: '150px', 
-                      height: '150px', 
-                      objectFit: 'cover', 
-                      borderRadius: '12px',
-                      border: `2px solid ${theme.primary}`,
-                      boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
-                    }}
-                  />
-                  <p style={{ 
-                    color: theme.textSecondary, 
-                    fontSize: '14px', 
-                    marginTop: '8px',
-                    margin: '8px 0 0 0'
-                  }}>Visualização da imagem selecionada</p>
+                <div style={{ marginTop: '12px' }}>
+                  <img src={imagem} alt="Preview" style={{
+                    width: '120px', height: '120px', objectFit: 'cover',
+                    borderRadius: '10px', border: `2px solid ${isDark ? '#333' : '#e8d0d4'}`
+                  }} />
                 </div>
               )}
             </div>
 
-            <button 
-              type="submit" 
-              style={{
-                width: '100%',
-                padding: '16px 24px',
-                backgroundColor: theme.primary,
-                color: 'white',
-                border: 'none',
-                borderRadius: '12px',
-                fontSize: '16px',
-                cursor: 'pointer',
-                fontWeight: '600',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 4px 15px rgba(173, 115, 120, 0.3)',
-                marginTop: '10px'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#9a6b70';
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 20px rgba(173, 115, 120, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = theme.primary;
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 15px rgba(173, 115, 120, 0.3)';
-              }}
-            >
-              Cadastrar Doação
-            </button>
+            <button type="submit" style={{
+              width: '100%', padding: '14px', borderRadius: '10px', border: 'none',
+              backgroundColor: '#c0606a', color: 'white', fontSize: '15px', fontWeight: '600', cursor: 'pointer'
+            }}>Enviar Doação</button>
           </form>
+        </div>
 
-          <div style={{ 
-            marginTop: '30px', 
-            padding: '25px', 
-            background: isDark ? 'linear-gradient(135deg, #2a2d33 0%, #3e4147 100%)' : '#f8f9fa', 
-            borderRadius: '15px',
-            border: `1px solid ${isDark ? '#4a4d53' : '#dddddd'}`,
-            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 2px 10px rgba(0,0,0,0.1)'
-          }}>
-            <h3 style={{ 
-              color: theme.primary, 
-              marginBottom: '15px',
-              fontSize: '18px',
-              fontWeight: '600',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px'
-            }}>
-               Como funciona?
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ 
-                  backgroundColor: theme.primary, 
-                  color: 'white', 
-                  borderRadius: '50%', 
-                  width: '24px', 
-                  height: '24px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  fontSize: '12px', 
-                  fontWeight: 'bold' 
-                }}>1</span>
-                <p style={{ margin: 0, color: theme.text, fontSize: '14px' }}>Preencha o formulário com os dados do produto</p>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ 
-                  backgroundColor: theme.primary, 
-                  color: 'white', 
-                  borderRadius: '50%', 
-                  width: '24px', 
-                  height: '24px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  fontSize: '12px', 
-                  fontWeight: 'bold' 
-                }}>2</span>
-                <p style={{ margin: 0, color: theme.text, fontSize: '14px' }}>Aguarde a aprovação do administrador</p>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ 
-                  backgroundColor: theme.primary, 
-                  color: 'white', 
-                  borderRadius: '50%', 
-                  width: '24px', 
-                  height: '24px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  fontSize: '12px', 
-                  fontWeight: 'bold' 
-                }}>3</span>
-                <p style={{ margin: 0, color: theme.text, fontSize: '14px' }}>Interessados entrarão em contato via WhatsApp</p>
-              </div>
+        {/* Como funciona */}
+        <div style={{
+          marginTop: '24px', padding: '24px', borderRadius: '16px',
+          backgroundColor: isDark ? '#141414' : '#fff',
+          border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
+        }}>
+          <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 16px' }}>Como funciona?</h3>
+          {[
+            { n: '1', text: 'Preencha o formulário com os dados do produto' },
+            { n: '2', text: 'Aguarde a aprovação do administrador' },
+            { n: '3', text: 'Interessados entrarão em contato via WhatsApp' },
+          ].map(({ n, text }) => (
+            <div key={n} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+              <span style={{
+                width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#c0606a',
+                color: 'white', fontSize: '12px', fontWeight: '700',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+              }}>{n}</span>
+              <span style={{ fontSize: '14px', color: isDark ? '#888' : '#666' }}>{text}</span>
             </div>
-          </div>
-    </div>
+          ))}
+        </div>
+      </div>
 
-    {/* Notificações */}
-    {notifications.map(notification => (
-      <Notification
-        key={notification.id}
-        message={notification.message}
-        type={notification.type}
-        duration={notification.duration}
-        onClose={() => removeNotification(notification.id)}
-      />
-    ))}
-  </div>
-</div>
+      {notifications.map(n => (
+        <Notification key={n.id} message={n.message} type={n.type} duration={n.duration} onClose={() => removeNotification(n.id)} />
+      ))}
+    </div>
   );
 }
 

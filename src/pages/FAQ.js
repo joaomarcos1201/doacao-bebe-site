@@ -1,274 +1,88 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 
 function FAQ() {
-  const { theme, isDark, toggleTheme } = useTheme();
-  const [perguntaAberta, setPerguntaAberta] = useState(null);
+  const { isDark, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  const [aberta, setAberta] = useState(null);
 
   const perguntas = [
-    {
-      id: 1,
-      pergunta: "Como funciona o sistema de doações?",
-      resposta: "Nosso sistema conecta pessoas que desejam doar produtos para bebês com famílias que precisam. Você pode cadastrar produtos para doação ou buscar itens disponíveis. Todos os produtos passam por aprovação antes de serem publicados."
-    },
-    {
-      id: 2,
-      pergunta: "Como posso doar um produto?",
-      resposta: "Para doar, faça login em sua conta, clique em 'Doar Produto' no menu, preencha o formulário com as informações do item (nome, categoria, descrição, estado e contato). Após aprovação do administrador, seu produto ficará visível para interessados."
-    },
-    {
-      id: 3,
-      pergunta: "Como entro em contato com quem está doando?",
-      resposta: "Ao encontrar um produto de interesse, clique em 'Entrar em Contato'. Você será direcionado para o WhatsApp do doador com uma mensagem pré-definida. A partir daí, vocês podem combinar os detalhes da doação."
-    },
-    {
-      id: 4,
-      pergunta: "Preciso pagar alguma taxa para usar o site?",
-      resposta: "Não! Nosso serviço é 100% gratuito. Não cobramos taxas para cadastro, doação ou busca de produtos. Nossa missão é facilitar a solidariedade entre famílias."
-    },
-    {
-      id: 5,
-      pergunta: "Que tipos de produtos posso doar?",
-      resposta: "Aceitamos diversos produtos para bebês e gestantes: roupas, brinquedos, móveis (berços, carrinhos), acessórios (mamadeiras, chupetas), produtos de alimentação e outros itens relacionados. Todos devem estar em bom estado de conservação."
-    },
-    {
-      id: 6,
-      pergunta: "Como sei se minha doação foi aprovada?",
-      resposta: "Após cadastrar um produto, ele passa por análise do administrador. Você pode acompanhar o status na sua área de perfil. Produtos aprovados ficam visíveis na página principal para outros usuários."
-    },
-    {
-      id: 7,
-      pergunta: "Posso editar ou remover minha doação?",
-      resposta: "Sim! Você pode gerenciar suas doações através do seu perfil. É possível editar informações ou remover produtos que já foram doados ou não estão mais disponíveis."
-    },
-    {
-      id: 8,
-      pergunta: "Como garantir a segurança nas trocas?",
-      resposta: "Recomendamos sempre encontros em locais públicos e seguros. Verifique as informações do produto antes do encontro. Nossa plataforma facilita o contato, mas a responsabilidade pela transação é dos usuários envolvidos."
-    },
-    {
-      id: 9,
-      pergunta: "Posso doar produtos usados?",
-      resposta: "Sim! Aceitamos produtos novos, semi-novos e usados, desde que estejam em bom estado de conservação e funcionamento. Seja honesto sobre o estado do produto na descrição."
-    },
-    {
-      id: 10,
-      pergunta: "Como posso ajudar o projeto além de doar produtos?",
-      resposta: "Você pode divulgar nossa plataforma para outras famílias, seguir nossas redes sociais, dar feedback sobre melhorias e participar de nossa comunidade solidária. Toda ajuda é bem-vinda!"
-    }
+    { id: 1, q: 'Como funciona o sistema de doações?', r: 'Nosso sistema conecta pessoas que desejam doar produtos para bebês com famílias que precisam. Você pode cadastrar produtos para doação ou buscar itens disponíveis. Todos os produtos passam por aprovação antes de serem publicados.' },
+    { id: 2, q: 'Como posso doar um produto?', r: 'Clique em "Doar Produto" no menu, preencha o formulário com as informações do item. Após aprovação do administrador, seu produto ficará visível para interessados.' },
+    { id: 3, q: 'Como entro em contato com quem está doando?', r: 'Ao encontrar um produto de interesse, clique em "Ver Detalhes" e depois em "Entrar em Contato via WhatsApp". Vocês combinam os detalhes diretamente.' },
+    { id: 4, q: 'Preciso pagar alguma taxa?', r: 'Não! Nosso serviço é 100% gratuito. Não cobramos taxas para cadastro, doação ou busca de produtos.' },
+    { id: 5, q: 'Que tipos de produtos posso doar?', r: 'Roupas, brinquedos, móveis (berços, carrinhos), acessórios, produtos de alimentação e outros itens para bebês. Todos devem estar em bom estado de conservação.' },
+    { id: 6, q: 'Como sei se minha doação foi aprovada?', r: 'Após cadastrar um produto, ele passa por análise do administrador. Produtos aprovados ficam visíveis na página principal.' },
+    { id: 7, q: 'Posso doar produtos usados?', r: 'Sim! Aceitamos produtos novos, semi-novos e usados, desde que estejam em bom estado. Seja honesto sobre o estado do produto na descrição.' },
+    { id: 8, q: 'Como garantir a segurança nas trocas?', r: 'Recomendamos sempre encontros em locais públicos e seguros. Nossa plataforma facilita o contato, mas a responsabilidade pela transação é dos usuários envolvidos.' },
   ];
 
-  const togglePergunta = (id) => {
-    setPerguntaAberta(perguntaAberta === id ? null : id);
-  };
-
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
-      padding: window.innerWidth < 768 ? '15px' : '20px'
-    }}>
-      <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
-        <button 
-          onClick={toggleTheme}
-          style={{
-            padding: '12px',
-            backgroundColor: isDark ? '#2a2d33' : 'rgba(255, 255, 255, 0.9)',
-            color: theme.text,
-            border: `1px solid ${theme.border}`,
-            borderRadius: '10px',
-            cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            transition: 'all 0.2s ease'
-          }}
-        >
-          {isDark ? '☀️' : '🌙'}
-        </button>
-      </div>
-      
-      <div style={{ maxWidth: '900px', margin: '0 auto', paddingTop: window.innerWidth < 768 ? '50px' : '60px' }}>
-        <div style={{ marginBottom: '30px' }}>
-          <Link 
-            to="/home" 
-            style={{ 
-              color: theme.primary, 
-              textDecoration: 'none',
-              fontSize: '16px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            ← Voltar ao Início
-          </Link>
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 100,
+        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+        padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+      }}>
+        <button onClick={() => navigate('/home')} style={{
+          padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
+        }}>← Voltar</button>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>FAQ</span>
+        <button onClick={toggleTheme} style={{
+          width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'
+        }}>{isDark ? '☀️' : '🌙'}</button>
+      </nav>
+
+      <div style={{ maxWidth: '700px', margin: '0 auto', padding: '48px 24px' }}>
+        <div style={{ marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 8px', letterSpacing: '-0.5px' }}>
+            ❓ Perguntas Frequentes
+          </h1>
+          <p style={{ fontSize: '14px', color: isDark ? '#666' : '#999', margin: 0 }}>Tire suas dúvidas sobre a plataforma</p>
         </div>
-        
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '32px' }}>
+          {perguntas.map((item) => (
+            <div key={item.id} style={{
+              backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '12px',
+              border: `1px solid ${aberta === item.id ? '#c0606a' : (isDark ? '#2a2a2a' : '#f0e6e8')}`,
+              overflow: 'hidden', transition: 'border-color 0.2s'
+            }}>
+              <button onClick={() => setAberta(aberta === item.id ? null : item.id)} style={{
+                width: '100%', padding: '18px 20px', backgroundColor: 'transparent', border: 'none',
+                textAlign: 'left', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px'
+              }}>
+                <span style={{ fontSize: '15px', fontWeight: '600', color: isDark ? '#e0e0e0' : '#333', lineHeight: '1.4' }}>{item.q}</span>
+                <span style={{
+                  color: '#c0606a', fontSize: '20px', fontWeight: '300', flexShrink: 0,
+                  transform: aberta === item.id ? 'rotate(45deg)' : 'rotate(0)', transition: 'transform 0.2s'
+                }}>+</span>
+              </button>
+              {aberta === item.id && (
+                <div style={{ padding: '0 20px 18px', borderTop: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
+                  <p style={{ fontSize: '14px', color: isDark ? '#888' : '#666', lineHeight: '1.7', margin: '14px 0 0' }}>{item.r}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
         <div style={{
-          background: isDark ? 'linear-gradient(135deg, #1e2328 0%, #2a2d33 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
-          backdropFilter: 'blur(15px)',
-          padding: window.innerWidth < 768 ? '25px' : '40px',
-          borderRadius: '20px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.15), 0 8px 25px rgba(0,0,0,0.1)',
-          border: '1px solid #ffc0cb'
+          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '28px',
+          border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, textAlign: 'center'
         }}>
-          <div style={{ textAlign: 'center', marginBottom: window.innerWidth < 768 ? '30px' : '40px' }}>
-            <h1 style={{ 
-              color: theme.primary, 
-              fontSize: window.innerWidth < 768 ? '26px' : '32px', 
-              fontWeight: '700',
-              marginBottom: '8px',
-              letterSpacing: '-0.5px'
-            }}>
-              Perguntas Frequentes
-            </h1>
-            <p style={{ 
-              color: theme.textSecondary, 
-              fontSize: '16px',
-              margin: 0
-            }}>
-              Tire suas dúvidas sobre como usar nossa plataforma
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            {perguntas.map((item) => (
-              <div 
-                key={item.id}
-                style={{
-                  background: isDark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(252, 192, 203, 0.2)',
-                  borderRadius: '12px',
-                  border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`,
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease'
-                }}
-              >
-                <button
-                  onClick={() => togglePergunta(item.id)}
-                  style={{
-                    width: '100%',
-                    padding: '20px',
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: '15px',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.1)' : 'rgba(252, 192, 203, 0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                  }}
-                >
-                  <h3 style={{
-                    color: theme.text,
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    margin: 0,
-                    lineHeight: '1.4'
-                  }}>
-                    {item.pergunta}
-                  </h3>
-                  <span style={{
-                    color: theme.primary,
-                    fontSize: '20px',
-                    fontWeight: 'bold',
-                    transform: perguntaAberta === item.id ? 'rotate(45deg)' : 'rotate(0deg)',
-                    transition: 'transform 0.3s ease',
-                    flexShrink: 0
-                  }}>
-                    +
-                  </span>
-                </button>
-                
-                {perguntaAberta === item.id && (
-                  <div style={{
-                    padding: '0 20px 20px 20px',
-                    borderTop: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`,
-                    animation: 'fadeIn 0.3s ease'
-                  }}>
-                    <p style={{
-                      color: theme.textSecondary,
-                      fontSize: '15px',
-                      lineHeight: '1.6',
-                      margin: '15px 0 0 0'
-                    }}>
-                      {item.resposta}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <div style={{ 
-            marginTop: '40px', 
-            padding: '25px', 
-            background: isDark ? 'linear-gradient(135deg, #2a2d33 0%, #3e4147 100%)' : 'rgba(252, 192, 203, 0.2)', 
-            borderRadius: '15px',
-            border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`,
-            textAlign: 'center'
-          }}>
-            <h3 style={{ 
-              color: theme.primary, 
-              marginBottom: '15px',
-              fontSize: '18px',
-              fontWeight: '600'
-            }}>
-              Não encontrou sua resposta?
-            </h3>
-            <p style={{
-              color: theme.text,
-              fontSize: '15px',
-              marginBottom: '20px',
-              lineHeight: '1.5'
-            }}>
-              Entre em contato conosco através do nosso canal de atendimento
-            </p>
-            <Link
-              to="/fale-conosco"
-              style={{
-                display: 'inline-block',
-                padding: '12px 24px',
-                backgroundColor: theme.primary,
-                color: 'white',
-                textDecoration: 'none',
-                borderRadius: '10px',
-                fontSize: '15px',
-                fontWeight: '600',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 4px 15px rgba(173, 115, 120, 0.3)'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#9a6b70';
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 20px rgba(173, 115, 120, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = theme.primary;
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 15px rgba(173, 115, 120, 0.3)';
-              }}
-            >
-              Fale Conosco
-            </Link>
-          </div>
+          <h3 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 8px' }}>Não encontrou sua resposta?</h3>
+          <p style={{ fontSize: '14px', color: isDark ? '#666' : '#999', margin: '0 0 20px' }}>Entre em contato com nossa equipe</p>
+          <Link to="/fale-conosco" style={{
+            padding: '10px 24px', borderRadius: '10px', backgroundColor: '#c0606a',
+            color: 'white', textDecoration: 'none', fontSize: '14px', fontWeight: '600'
+          }}>Fale Conosco</Link>
         </div>
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   );
 }

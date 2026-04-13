@@ -1,678 +1,388 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
-
-
-
 
 function Home({ user, setUser }) {
   const navigate = useNavigate();
   const { produtos, removerProduto } = useProdutos();
   const { theme, isDark, toggleTheme } = useTheme();
-
   const [pesquisa, setPesquisa] = useState('');
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const [menuAberto, setMenuAberto] = useState(false);
 
-  // Debug: verificar dados do usuário
-  console.log('DEBUG Home - user completo:', JSON.stringify(user, null, 2));
-  console.log('DEBUG Home - user.isAdmin:', user?.isAdmin);
-  console.log('DEBUG Home - typeof user.isAdmin:', typeof user?.isAdmin);
-  console.log('DEBUG Home - user.isAdmin === true:', user?.isAdmin === true);
-  console.log('DEBUG Home - Condição do menu admin:', user && user.isAdmin);
-
-
-
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('token');
-    navigate('/login');
-  };
-
-  const handleContact = (produtoId) => {
-    navigate(`/produto/${produtoId}`);
-  };
-
-  const handleRemoverProduto = (produtoId, nomeProduto) => {
-    if (window.confirm(`Tem certeza que deseja excluir o produto "${nomeProduto}"?`)) {
-      removerProduto(produtoId);
-    }
+    navigate('/home');
   };
 
   const produtosFiltrados = produtos.filter(produto => {
     const matchPesquisa = produto.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
                          produto.descricao.toLowerCase().includes(pesquisa.toLowerCase());
     const matchCategoria = categoriaFiltro === '' || produto.categoria === categoriaFiltro;
-    const isAprovado = produto.status === 'aprovado';
+    const isAprovado = produto.statusAnuncio === 'ATIVO';
     return matchPesquisa && matchCategoria && isAprovado;
   });
 
-  return (
-    <div style={{ 
-      minHeight: '100vh', 
-      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)'
-    }}>
-      <header style={{ 
-        background: theme.headerBg, 
-        backdropFilter: 'blur(25px)',
-        boxShadow: isDark ? '0 12px 40px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.15)' : '0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06)',
-        borderBottom: `1px solid ${theme.border}`,
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 20px', flexWrap: 'wrap', gap: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <img 
-              src="logo.JPEG"
-              alt="Logo Além do Positivo"
-              style={{
-                width: '50px',
-                height: '50px',
-                borderRadius: '50%',
-                objectFit: 'cover',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-                border: `2px solid ${theme.primary}`
-              }}
-              onError={(e) => {
-                e.target.style.display = 'none';
-              }}
-            />
-            <h1 style={{ 
-              color: theme.primary, 
-              margin: 0, 
-              fontSize: '24px',
-              fontWeight: '700',
-              letterSpacing: '-0.5px',
-              fontFamily: 'system-ui, -apple-system, sans-serif'
-            }}>Além do Positivo</h1>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <button 
-              onClick={toggleTheme}
-              style={{
-                padding: '10px 12px',
-                backgroundColor: isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)',
-                color: theme.text,
-                border: `1px solid ${isDark ? 'rgba(244, 114, 182, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
-                borderRadius: '8px',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                fontSize: '16px',
-                boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.2)' : 'rgba(252, 192, 203, 0.3)';
-                e.target.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)';
-                e.target.style.transform = 'translateY(0)';
-              }}
-            >
-              {isDark ? '☀️' : '🌙'}
-            </button>
+  const categorias = [
+    { value: 'roupas', label: 'Roupas', emoji: '👕' },
+    { value: 'brinquedos', label: 'Brinquedos', emoji: '🧸' },
+    { value: 'moveis', label: 'Móveis', emoji: '🪑' },
+    { value: 'acessorios', label: 'Acessórios', emoji: '🎒' },
+    { value: 'alimentacao', label: 'Alimentação', emoji: '🍼' },
+    { value: 'outros', label: 'Outros', emoji: '📦' },
+  ];
 
-            {user ? (
-              <>
-                <div style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '8px',
-                  padding: '8px 12px',
-                  backgroundColor: isDark ? 'rgba(26, 26, 46, 0.8)' : 'rgba(252, 192, 203, 0.15)',
-                  borderRadius: '8px',
-                  border: `1px solid ${theme.border}`
-                }}>
-                  <span style={{ fontSize: '16px' }}>👤</span>
-                  <span style={{ color: theme.text, fontSize: '14px', fontWeight: '500' }}>Olá, {user.nome}!</span>
-                </div>
-                <div style={{ position: 'relative' }}>
-                  <button 
-                    onClick={() => setMenuAberto(!menuAberto)}
-                    style={{
-                      padding: '10px 12px',
-                      backgroundColor: isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)',
-                      color: theme.text,
-                      border: `1px solid ${isDark ? 'rgba(244, 114, 182, 0.3)' : 'rgba(252, 192, 203, 0.4)'}`,
-                      borderRadius: '8px',
-                      cursor: 'pointer',
-                      fontSize: '16px',
-                      transition: 'all 0.2s ease',
-                      boxShadow: isDark ? '0 2px 8px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.1)'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.2)' : 'rgba(252, 192, 203, 0.3)';
-                      e.target.style.transform = 'translateY(-1px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)';
-                      e.target.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    ☰
-                  </button>
-                </div>
-                <button 
-                  onClick={handleLogout}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: 'transparent',
-                    color: theme.textSecondary,
-                    border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`,
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '13px',
-                    fontWeight: '500',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = isDark ? 'rgba(239, 68, 68, 0.1)' : 'rgba(239, 68, 68, 0.05)';
-                    e.target.style.color = '#ef4444';
-                    e.target.style.borderColor = '#ef4444';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = theme.textSecondary;
-                    e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)';
-                  }}
-                >
-                  Sair
-                </button>
-              </>
-            ) : (
-              <button
-                onClick={() => navigate('/login')}
-                style={{
-                  padding: '10px 24px',
-                  backgroundColor: theme.primary,
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  transition: 'all 0.2s ease',
-                  boxShadow: '0 2px 8px rgba(173, 115, 120, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#9a6b70';
-                  e.target.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = theme.primary;
-                  e.target.style.transform = 'translateY(0)';
-                }}
-              >
-                Entrar
-              </button>
-            )}
-          </div>
+  const menuItems = [
+    { label: 'Doar Produto', emoji: '🎁', path: '/doacao' },
+    { label: 'Meu Perfil', emoji: '👤', path: '/perfil', authRequired: true },
+    { label: 'Sobre Nós', emoji: '💜', path: '/sobre-nos' },
+    { label: 'Fale Conosco', emoji: '💬', path: '/fale-conosco' },
+    { label: 'FAQ', emoji: '❓', path: '/faq' },
+  ];
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6',
+      fontFamily: "'Inter', system-ui, sans-serif"
+    }}>
+
+      {/* NAVBAR */}
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 1000,
+        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backdropFilter: 'blur(20px)',
+        borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+        padding: '0 24px',
+        height: '64px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <img src="logo.jpeg" alt="Logo" style={{
+            width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover',
+            border: '2px solid #e8a0a8'
+          }} onError={(e) => e.target.style.display = 'none'} />
+          <span style={{
+            fontSize: '18px', fontWeight: '700',
+            color: isDark ? '#f0c0c8' : '#c0606a',
+            letterSpacing: '-0.3px'
+          }}>Além do Positivo</span>
         </div>
-        <div style={{ 
-          padding: '24px', 
-          backgroundColor: isDark ? 'rgba(26, 26, 46, 0.8)' : 'rgba(247, 182, 186, 0.4)', 
-          backdropFilter: 'blur(15px)',
-          borderTop: `1px solid ${theme.border}` 
-        }}>
-          <div style={{ display: 'flex', gap: '15px', maxWidth: '800px', margin: '0 auto', flexWrap: 'wrap', flexDirection: window.innerWidth < 768 ? 'column' : 'row' }}>
-            <input
-              type="text"
-              placeholder="🔍 Pesquisar produtos..."
-              value={pesquisa}
-              onChange={(e) => setPesquisa(e.target.value)}
-              style={{
-                flex: '1',
-                minWidth: window.innerWidth < 768 ? '100%' : '280px',
-                padding: '14px 20px',
-                border: `2px solid ${theme.inputBorder}`,
-                borderRadius: '12px',
-                backgroundColor: theme.inputBg,
-                color: theme.text,
-                fontSize: '15px',
-                fontWeight: '500',
-                outline: 'none',
-                transition: 'all 0.2s ease',
-                boxShadow: isDark ? '0 4px 12px rgba(0,0,0,0.2)' : '0 4px 12px rgba(0,0,0,0.05)'
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = theme.primary;
-                e.target.style.boxShadow = '0 6px 20px rgba(173, 115, 120, 0.15)';
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = theme.inputBorder;
-                e.target.style.boxShadow = isDark ? '0 4px 12px rgba(0,0,0,0.2)' : '0 4px 12px rgba(0,0,0,0.05)';
-              }}
-            />
-            <select
-              value={categoriaFiltro}
-              onChange={(e) => setCategoriaFiltro(e.target.value)}
-              style={{
-                padding: '14px 20px',
-                border: `2px solid ${theme.inputBorder}`,
-                borderRadius: '12px',
-                backgroundColor: theme.inputBg,
-                color: theme.text,
-                fontSize: '15px',
-                fontWeight: '500',
-                minWidth: window.innerWidth < 768 ? '100%' : '180px',
-                outline: 'none',
-                cursor: 'pointer',
-                boxShadow: isDark ? '0 4px 12px rgba(0,0,0,0.2)' : '0 4px 12px rgba(0,0,0,0.05)'
-              }}
-            >
-              <option value="">Todas as categorias</option>
-              <option value="roupas">Roupas</option>
-              <option value="brinquedos">Brinquedos</option>
-              <option value="moveis">Móveis</option>
-              <option value="acessorios">Acessórios</option>
-              <option value="alimentacao">Alimentação</option>
-              <option value="outros">Outros</option>
-            </select>
-          </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button onClick={toggleTheme} style={{
+            width: '36px', height: '36px', borderRadius: '50%',
+            border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+            backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }}>{isDark ? '☀️' : '🌙'}</button>
+
+          {user && (
+            <span style={{
+              fontSize: '13px', color: isDark ? '#aaa' : '#888',
+              padding: '6px 12px',
+              backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
+              borderRadius: '20px',
+              border: `1px solid ${isDark ? '#333' : '#f0d8dc'}`
+            }}>Olá, {user.nome}!</span>
+          )}
+
+          <button onClick={() => setMenuAberto(!menuAberto)} style={{
+            width: '36px', height: '36px', borderRadius: '8px',
+            border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+            backgroundColor: menuAberto ? (isDark ? '#2a2a2a' : '#fdf0f2') : 'transparent',
+            cursor: 'pointer', fontSize: '18px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: isDark ? '#ccc' : '#888'
+          }}>☰</button>
+
+          {user ? (
+            <button onClick={handleLogout} style={{
+              padding: '8px 16px', borderRadius: '8px',
+              border: '1px solid #ef4444', backgroundColor: 'transparent',
+              color: '#ef4444', cursor: 'pointer', fontSize: '13px', fontWeight: '500'
+            }}>Sair</button>
+          ) : (
+            <button onClick={() => navigate('/login')} style={{
+              padding: '8px 20px', borderRadius: '8px',
+              border: 'none', backgroundColor: '#c0606a',
+              color: 'white', cursor: 'pointer', fontSize: '13px', fontWeight: '600'
+            }}>Entrar</button>
+          )}
         </div>
-      </header>
-      
-      {/* Menu hambúrguer e overlay */}
+      </nav>
+
+      {/* MENU LATERAL */}
       {menuAberto && (
         <>
-          <div 
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              zIndex: 99998,
-              opacity: menuAberto ? 1 : 0,
-              transition: 'opacity 0.3s ease-in-out'
-            }}
-            onClick={() => setMenuAberto(false)}
-          />
+          <div onClick={() => setMenuAberto(false)} style={{
+            position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)',
+            zIndex: 9998, backdropFilter: 'blur(2px)'
+          }} />
           <div style={{
-            position: 'fixed',
-            top: '0',
-            right: '0',
-            height: '100vh',
-            width: '280px',
-            backgroundColor: theme.cardBg,
-            backdropFilter: 'blur(15px)',
-            boxShadow: '-4px 0 20px rgba(0,0,0,0.3)',
-            zIndex: 99999,
-            transform: menuAberto ? 'translateX(0)' : 'translateX(100%)',
-            transition: 'transform 0.3s ease-in-out',
-            paddingTop: '80px',
-            overflowY: 'auto'
+            position: 'fixed', top: 0, right: 0, height: '100vh', width: '260px',
+            backgroundColor: isDark ? '#141414' : '#fff',
+            borderLeft: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+            zIndex: 9999, paddingTop: '72px', overflowY: 'auto',
+            boxShadow: '-8px 0 32px rgba(0,0,0,0.15)'
           }}>
-            <div 
-              onClick={() => { navigate('/doacao'); setMenuAberto(false); }}
-              style={{
-                padding: '20px 25px',
-                color: theme.text,
-                borderBottom: `1px solid ${theme.border}`,
-                cursor: 'pointer',
-                fontSize: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '15px',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-            >
-              <span style={{ fontWeight: 'bold' }}>Doar Produto</span>
+            <div style={{ padding: '8px' }}>
+              {menuItems.map((item) => (
+                <div key={item.path} onClick={() => { navigate(item.path); setMenuAberto(false); }}
+                  style={{
+                    padding: '12px 16px', borderRadius: '10px', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: '12px',
+                    color: isDark ? '#e0e0e0' : '#333',
+                    marginBottom: '4px',
+                    transition: 'background 0.15s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#1e1e1e' : '#fdf0f2'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  <span style={{ fontSize: '18px' }}>{item.emoji}</span>
+                  <span style={{ fontSize: '15px', fontWeight: '500' }}>{item.label}</span>
+                </div>
+              ))}
+              {(user?.isAdmin || user?.email === 'admin@alemdopositivo.com') && (
+                <div onClick={() => { navigate('/admin'); setMenuAberto(false); }}
+                  style={{
+                    padding: '12px 16px', borderRadius: '10px', cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', gap: '12px',
+                    color: '#c0606a', marginTop: '8px',
+                    borderTop: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+                    paddingTop: '16px'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#1e1e1e' : '#fdf0f2'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  <span style={{ fontSize: '18px' }}>⚙️</span>
+                  <span style={{ fontSize: '15px', fontWeight: '600' }}>Administração</span>
+                </div>
+              )}
             </div>
-            <div 
-              onClick={() => { navigate('/perfil'); setMenuAberto(false); }}
-              style={{
-                padding: '20px 25px',
-                color: theme.text,
-                borderBottom: `1px solid ${theme.border}`,
-                cursor: 'pointer',
-                fontSize: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '15px',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-            >
-              <span style={{ fontWeight: 'bold' }}>Meu Perfil</span>
-            </div>
-
-            <div 
-              onClick={() => { navigate('/sobre-nos'); setMenuAberto(false); }}
-              style={{
-                padding: '20px 25px',
-                color: theme.text,
-                borderBottom: `1px solid ${theme.border}`,
-                cursor: 'pointer',
-                fontSize: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '15px',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-            >
-              <span style={{ fontWeight: 'bold' }}>Sobre Nós</span>
-            </div>
-            <div 
-              onClick={() => { navigate('/fale-conosco'); setMenuAberto(false); }}
-              style={{
-                padding: '20px 25px',
-                color: theme.text,
-                borderBottom: `1px solid ${theme.border}`,
-                cursor: 'pointer',
-                fontSize: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '15px',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-            >
-              <span style={{ fontWeight: 'bold' }}>Fale Conosco</span>
-            </div>
-            <div 
-              onClick={() => { navigate('/faq'); setMenuAberto(false); }}
-              style={{
-                padding: '20px 25px',
-                color: theme.text,
-                borderBottom: (user.isAdmin || user.email === 'admin@alemdopositivo.com') ? `1px solid ${theme.border}` : 'none',
-                cursor: 'pointer',
-                fontSize: '16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '15px',
-                transition: 'background-color 0.2s ease'
-              }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-            >
-              <span style={{ fontWeight: 'bold' }}>FAQ</span>
-            </div>
-            {(user.isAdmin || user.email === 'admin@alemdopositivo.com') && (
-              <div 
-                onClick={() => { navigate('/admin'); setMenuAberto(false); }}
-                style={{
-                  padding: '20px 25px',
-                  color: theme.text,
-                  cursor: 'pointer',
-                  fontSize: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '15px',
-                  transition: 'background-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(247, 182, 186, 0.3)'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-              >
-                <span style={{ fontWeight: 'bold' }}>Administração</span>
-              </div>
-            )}
           </div>
         </>
       )}
 
-      <div style={{ 
-        padding: window.innerWidth < 768 ? '20px 15px 0' : '40px 30px 0', 
-        maxWidth: '1200px', 
-        margin: '0 auto' 
+      {/* HERO */}
+      <div style={{
+        background: isDark
+          ? 'linear-gradient(135deg, #1a0a0c 0%, #2d1518 100%)'
+          : 'linear-gradient(135deg, #fff0f2 0%, #fde8ec 100%)',
+        padding: '60px 24px 50px',
+        textAlign: 'center',
+        borderBottom: `1px solid ${isDark ? '#2a1518' : '#f5d8dc'}`
       }}>
-        <div style={{ padding: '0 0 30px' }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '25px',
-            padding: '0 10px'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px'
-            }}>
-              <span style={{
-                color: theme.textSecondary,
-                fontSize: '16px',
-                fontWeight: '500'
-              }}>
-                {produtosFiltrados.length} produto{produtosFiltrados.length !== 1 ? 's' : ''} encontrado{produtosFiltrados.length !== 1 ? 's' : ''}
-              </span>
-              {(pesquisa || categoriaFiltro) && (
-                <button
-                  onClick={() => {
-                    setPesquisa('');
-                    setCategoriaFiltro('');
-                  }}
-                  style={{
-                    padding: '6px 12px',
-                    backgroundColor: 'transparent',
-                    color: theme.primary,
-                    border: `1px solid ${theme.primary}`,
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    fontWeight: '500',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = theme.primary;
-                    e.target.style.color = 'white';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = theme.primary;
-                  }}
-                >
-                  Limpar filtros
-                </button>
-              )}
-            </div>
+        <div style={{
+          display: 'inline-block', padding: '6px 16px', borderRadius: '20px',
+          backgroundColor: isDark ? 'rgba(192,96,106,0.15)' : 'rgba(192,96,106,0.1)',
+          border: '1px solid rgba(192,96,106,0.3)',
+          color: '#c0606a', fontSize: '13px', fontWeight: '600',
+          marginBottom: '20px', letterSpacing: '0.5px'
+        }}>💜 DOAÇÕES PARA BEBÊS</div>
+        <h1 style={{
+          fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: '800',
+          color: isDark ? '#f5e0e2' : '#2d1518',
+          margin: '0 0 16px', lineHeight: '1.2', letterSpacing: '-1px'
+        }}>Conectando quem doa<br />com quem precisa</h1>
+        <p style={{
+          fontSize: '16px', color: isDark ? '#9a7a7e' : '#9a6870',
+          maxWidth: '480px', margin: '0 auto 32px', lineHeight: '1.6'
+        }}>Encontre itens para bebês doados por famílias da sua região. Tudo gratuito, com amor.</p>
+        <button onClick={() => navigate('/doacao')} style={{
+          padding: '14px 32px', borderRadius: '12px',
+          backgroundColor: '#c0606a', color: 'white',
+          border: 'none', fontSize: '15px', fontWeight: '600',
+          cursor: 'pointer', boxShadow: '0 4px 20px rgba(192,96,106,0.4)',
+          transition: 'all 0.2s'
+        }}
+          onMouseEnter={(e) => { e.target.style.backgroundColor = '#a85058'; e.target.style.transform = 'translateY(-2px)'; }}
+          onMouseLeave={(e) => { e.target.style.backgroundColor = '#c0606a'; e.target.style.transform = 'translateY(0)'; }}
+        >🎁 Quero Doar</button>
+      </div>
+
+      {/* FILTROS */}
+      <div style={{
+        backgroundColor: isDark ? '#141414' : '#fff',
+        borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+        padding: '16px 24px'
+      }}>
+        <div style={{
+          maxWidth: '900px', margin: '0 auto',
+          display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center'
+        }}>
+          <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
+            <span style={{
+              position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
+              fontSize: '16px', pointerEvents: 'none'
+            }}>🔍</span>
+            <input
+              type="text" placeholder="Pesquisar produtos..."
+              value={pesquisa} onChange={(e) => setPesquisa(e.target.value)}
+              style={{
+                width: '100%', padding: '10px 14px 10px 42px',
+                borderRadius: '10px', fontSize: '14px',
+                border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+                backgroundColor: isDark ? '#1e1e1e' : '#fdf8f8',
+                color: isDark ? '#e0e0e0' : '#333', outline: 'none',
+                boxSizing: 'border-box'
+              }}
+            />
           </div>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button onClick={() => setCategoriaFiltro('')} style={{
+              padding: '8px 14px', borderRadius: '20px', fontSize: '13px',
+              fontWeight: '500', cursor: 'pointer', border: '1px solid',
+              borderColor: categoriaFiltro === '' ? '#c0606a' : (isDark ? '#333' : '#e8d0d4'),
+              backgroundColor: categoriaFiltro === '' ? '#c0606a' : 'transparent',
+              color: categoriaFiltro === '' ? 'white' : (isDark ? '#aaa' : '#666')
+            }}>Todos</button>
+            {categorias.map(cat => (
+              <button key={cat.value} onClick={() => setCategoriaFiltro(cat.value)} style={{
+                padding: '8px 14px', borderRadius: '20px', fontSize: '13px',
+                fontWeight: '500', cursor: 'pointer', border: '1px solid',
+                borderColor: categoriaFiltro === cat.value ? '#c0606a' : (isDark ? '#333' : '#e8d0d4'),
+                backgroundColor: categoriaFiltro === cat.value ? '#c0606a' : 'transparent',
+                color: categoriaFiltro === cat.value ? 'white' : (isDark ? '#aaa' : '#666')
+              }}>{cat.emoji} {cat.label}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* PRODUTOS */}
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px' }}>
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          marginBottom: '24px'
+        }}>
+          <span style={{ fontSize: '14px', color: isDark ? '#666' : '#999' }}>
+            {produtosFiltrados.length} {produtosFiltrados.length === 1 ? 'item encontrado' : 'itens encontrados'}
+          </span>
+        </div>
+
         {produtosFiltrados.length === 0 ? (
           <div style={{
-            textAlign: 'center',
-            padding: '50px',
-            backgroundColor: theme.cardBg,
-            backdropFilter: 'blur(10px)',
-            borderRadius: '12px',
-            color: theme.textSecondary
+            textAlign: 'center', padding: '80px 20px',
+            backgroundColor: isDark ? '#141414' : '#fff',
+            borderRadius: '16px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
           }}>
-            <div style={{ fontSize: '48px', marginBottom: '20px' }}>🔍</div>
-            <h3 style={{ color: theme.text, marginBottom: '10px' }}>Nenhum produto encontrado</h3>
-            <p>Tente ajustar sua pesquisa ou filtro de categoria</p>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔍</div>
+            <h3 style={{ color: isDark ? '#e0e0e0' : '#333', marginBottom: '8px' }}>Nenhum item encontrado</h3>
+            <p style={{ color: isDark ? '#666' : '#999', fontSize: '14px' }}>Tente ajustar os filtros ou a pesquisa</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '20px'
+          }}>
             {produtosFiltrados.map(produto => (
-            <div key={produto.id} style={{
-              background: isDark ? 'linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%)' : 'linear-gradient(135deg, white 0%, #ffc0cb 100%)',
-              backdropFilter: 'blur(15px)',
-              padding: '24px',
-              borderRadius: '16px',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.05)',
-              border: '1px solid #ffc0cb',
-              color: theme.text,
-              position: 'relative',
-              zIndex: 1,
-              transition: 'all 0.3s ease',
-              cursor: 'pointer'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 15px 50px rgba(0,0,0,0.15), 0 6px 18px rgba(0,0,0,0.08)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.05)';
-            }}>
-              <h3 style={{ 
-                color: theme.primary, 
-                marginBottom: '16px', 
-                fontSize: '20px', 
-                fontWeight: '600',
-                letterSpacing: '-0.5px'
-              }}>{produto.nome}</h3>
-              <div style={{ marginBottom: '16px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <span style={{ 
-                  backgroundColor: isDark ? 'rgba(244, 114, 182, 0.1)' : 'rgba(252, 192, 203, 0.2)', 
-                  color: theme.text, 
-                  padding: '6px 12px', 
-                  borderRadius: '12px', 
-                  fontSize: '11px', 
-                  fontWeight: '600',
-                  textTransform: 'capitalize',
-                  border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`
-                }}>{produto.categoria}</span>
-                <span style={{ 
-                  backgroundColor: produto.estado === 'novo' ? 'rgba(34, 197, 94, 0.1)' : produto.estado === 'seminovo' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(245, 158, 11, 0.1)', 
-                  color: produto.estado === 'novo' ? '#059669' : produto.estado === 'seminovo' ? '#2563eb' : '#d97706', 
-                  padding: '6px 12px', 
-                  borderRadius: '12px', 
-                  fontSize: '11px', 
-                  fontWeight: '600',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                  border: `1px solid ${produto.estado === 'novo' ? 'rgba(34, 197, 94, 0.2)' : produto.estado === 'seminovo' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(245, 158, 11, 0.2)'}`
-                }}>{produto.estado}</span>
-              </div>
-              <p style={{ 
-                marginBottom: '12px', 
-                color: theme.textSecondary, 
-                lineHeight: '1.5', 
-                fontSize: '14px'
-              }}>{produto.descricao}</p>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '20px',
-                padding: '8px 12px',
-                backgroundColor: isDark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(252, 192, 203, 0.1)',
-                borderRadius: '8px',
-                border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)'}`
-              }}>
-                <span style={{ fontSize: '14px' }}>👤</span>
-                <span style={{ 
-                  color: theme.textSecondary, 
-                  fontSize: '12px',
-                  fontWeight: '500'
-                }}>Doado por</span>
-                <span style={{ 
-                  color: theme.text, 
-                  fontSize: '13px',
-                  fontWeight: '600'
-                }}>{produto.doador}</span>
-              </div>
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <button 
-                  onClick={() => handleContact(produto.id)}
-                  style={{
-                    width: '100%',
-                    padding: '12px 20px',
-                    backgroundColor: theme.primary,
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    fontSize: '14px',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 2px 8px rgba(173, 115, 120, 0.3)'
+              <div key={produto.id} style={{
+                backgroundColor: isDark ? '#141414' : '#fff',
+                borderRadius: '16px',
+                border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+                overflow: 'hidden', cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)'
+              }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(192,96,106,0.15)';
+                  e.currentTarget.style.borderColor = '#e8a0a8';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+                  e.currentTarget.style.borderColor = isDark ? '#2a2a2a' : '#f0e6e8';
+                }}
+              >
+                {/* Imagem */}
+                <div style={{
+                  height: '180px', overflow: 'hidden',
+                  backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}>
+                  {produto.foto ? (
+                    <img
+                      src={`data:image/jpeg;base64,${produto.foto}`}
+                      alt={produto.nome}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <span style={{ fontSize: '48px', opacity: 0.3 }}>📦</span>
+                  )}
+                </div>
+
+                {/* Conteúdo */}
+                <div style={{ padding: '16px' }}>
+                  <div style={{ display: 'flex', gap: '6px', marginBottom: '10px', flexWrap: 'wrap' }}>
+                    {produto.categoria && (
+                      <span style={{
+                        padding: '3px 10px', borderRadius: '20px', fontSize: '11px',
+                        fontWeight: '600', textTransform: 'capitalize',
+                        backgroundColor: isDark ? '#2a1518' : '#fde8ec',
+                        color: '#c0606a'
+                      }}>{produto.categoria}</span>
+                    )}
+                    {produto.condicao && (
+                      <span style={{
+                        padding: '3px 10px', borderRadius: '20px', fontSize: '11px',
+                        fontWeight: '600', textTransform: 'capitalize',
+                        backgroundColor: isDark ? '#1a2a1a' : '#e8f5e9',
+                        color: '#4caf50'
+                      }}>{produto.condicao}</span>
+                    )}
+                  </div>
+
+                  <h3 style={{
+                    fontSize: '16px', fontWeight: '700', margin: '0 0 8px',
+                    color: isDark ? '#f0e0e2' : '#2d1518'
+                  }}>{produto.nome}</h3>
+
+                  <p style={{
+                    fontSize: '13px', color: isDark ? '#777' : '#999',
+                    margin: '0 0 16px', lineHeight: '1.5',
+                    display: '-webkit-box', WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical', overflow: 'hidden'
+                  }}>{produto.descricao}</p>
+
+                  <button onClick={() => navigate(`/produto/${produto.id}`)} style={{
+                    width: '100%', padding: '10px',
+                    backgroundColor: '#c0606a', color: 'white',
+                    border: 'none', borderRadius: '10px',
+                    fontSize: '13px', fontWeight: '600', cursor: 'pointer',
+                    transition: 'background 0.2s'
                   }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#9a6b70';
-                    e.target.style.transform = 'translateY(-1px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = theme.primary;
-                    e.target.style.transform = 'translateY(0)';
-                  }}
-                >
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
-                    <span>💬</span>
-                    <span>Entrar em Contato</span>
-                  </span>
-                </button>
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#a85058'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#c0606a'}
+                  >Ver Detalhes</button>
+                </div>
               </div>
-            </div>
             ))}
           </div>
         )}
-        </div>
       </div>
-      
-      {/* Footer */}
+
+      {/* FOOTER */}
       <footer style={{
-        marginTop: '50px',
-        padding: '30px 20px',
-        background: theme.footerBg,
-        backdropFilter: 'blur(25px)',
-        borderTop: `1px solid ${theme.border}`
+        borderTop: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+        padding: '32px 24px',
+        backgroundColor: isDark ? '#0f0f0f' : '#fff',
+        textAlign: 'center'
       }}>
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          textAlign: 'center'
-        }}>
-          <p style={{
-            color: theme.textSecondary,
-            fontSize: '14px',
-            margin: '0 0 10px 0'
-          }}>
-            © 2024 Além do Positivo. Todos os direitos reservados.
-          </p>
-          <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link
-              to="/termos-privacidade"
-              style={{
-                color: theme.primary,
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: '500',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.textDecoration = 'underline';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.textDecoration = 'none';
-              }}
-            >
-              Termos de Privacidade
-            </Link>
-            <Link
-              to="/manual-seguranca"
-              style={{
-                color: theme.primary,
-                textDecoration: 'none',
-                fontSize: '14px',
-                fontWeight: '500',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.textDecoration = 'underline';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.textDecoration = 'none';
-              }}
-            >
-              Manual de Segurança
-            </Link>
-          </div>
+        <p style={{ color: isDark ? '#444' : '#bbb', fontSize: '13px', margin: '0 0 12px' }}>
+          © 2024 Além do Positivo. Todos os direitos reservados.
+        </p>
+        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
+          <Link to="/termos-privacidade" style={{ color: '#c0606a', fontSize: '13px', textDecoration: 'none' }}>Termos de Privacidade</Link>
+          <Link to="/manual-seguranca" style={{ color: '#c0606a', fontSize: '13px', textDecoration: 'none' }}>Manual de Segurança</Link>
         </div>
       </footer>
     </div>
   );
 }
-
-
 
 export default Home;

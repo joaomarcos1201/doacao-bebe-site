@@ -87,7 +87,7 @@ export const ProdutosProvider = ({ children }) => {
   };
 
   return (
-    <ProdutosContext.Provider value={{ produtos, adicionarProduto, removerProduto, aprovarProduto, rejeitarProduto }}>
+    <ProdutosContext.Provider value={{ produtos, adicionarProduto, removerProduto, aprovarProduto, rejeitarProduto, carregarProdutos }}>
       {children}
     </ProdutosContext.Provider>
   );

@@ -97,23 +97,39 @@ public class UsuarioService {
     }
 
     public AuthResponse cadastrar(CadastroRequest cadastroRequest) {
-        if (usuarioRepository.existsByEmail(cadastroRequest.getEmail())) {
-            throw new RuntimeException("Email já cadastrado");
-        }
-
-        Usuario usuario = new Usuario();
-        usuario.setNome(cadastroRequest.getNome());
-        usuario.setEmail(cadastroRequest.getEmail());
-        usuario.setCpf(cadastroRequest.getCpf());
-        usuario.setSenha(passwordEncoder.encode(cadastroRequest.getSenha()));
-        
-        usuario = usuarioRepository.save(usuario);
-        
-        String token = jwtService.generateToken(usuario.getEmail());
-        return new AuthResponse(token, usuario.getId(), usuario.getNome(), 
-                              usuario.getEmail(), usuario.getIsAdmin());
+    if (usuarioRepository.existsByEmail(cadastroRequest.getEmail())) {
+        throw new RuntimeException("Email já cadastrado");
     }
 
+    Usuario usuario = new Usuario();
+    usuario.setNome(cadastroRequest.getNome());
+    usuario.setEmail(cadastroRequest.getEmail());
+
+    // Remove máscara do CPF (000.000.000-00 → 00000000000)
+    usuario.setCpf(cadastroRequest.getCpf().replaceAll("\\D", ""));
+
+    usuario.setSenha(passwordEncoder.encode(cadastroRequest.getSenha()));
+
+    //  CAMPOS OBRIGATÓRIOS DO BANCO
+    usuario.setNivelAcesso("USER");
+    usuario.setStatusUsuario("ATIVO");
+    usuario.setDataCadastro(java.time.LocalDateTime.now());
+
+    //  obrigatório no banco (ajuste temporário)
+    usuario.setDataNascimento(java.time.LocalDate.of(2000, 1, 1));
+
+    usuario = usuarioRepository.save(usuario);
+
+    String token = jwtService.generateToken(usuario.getEmail());
+
+    return new AuthResponse(
+        token,
+        usuario.getId(),
+        usuario.getNome(),
+        usuario.getEmail(),
+        usuario.getIsAdmin()
+    );
+}
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }

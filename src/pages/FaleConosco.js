@@ -1,344 +1,114 @@
-import { API_URL } from '../config/api';
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { API_URL } from '../config/api';
 
 function FaleConosco() {
   const navigate = useNavigate();
-  const { theme, isDark, toggleTheme } = useTheme();
-  const [formData, setFormData] = useState({
-    nome: '',
-    email: '',
-    telefone: '',
-    mensagem: ''
-  });
+  const { isDark, toggleTheme } = useTheme();
+  const [formData, setFormData] = useState({ nome: '', email: '', telefone: '', mensagem: '' });
   const [enviado, setEnviado] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    console.log('Enviando dados:', formData);
-    
     try {
-      const response = await fetch('${API_URL}/api/contato', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch(`${API_URL}/api/contato`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      
-      console.log('Status da resposta:', response.status);
-      const responseText = await response.text();
-      console.log('Resposta do servidor:', responseText);
-      
-      if (response.ok) {
-        setEnviado(true);
-        setTimeout(() => {
-          navigate('/home');
-        }, 2000);
-      } else {
-        alert(`Erro ${response.status}: ${responseText}`);
-      }
-    } catch (error) {
-      console.error('Erro de conexão:', error);
-      alert('Erro de conexão. Verifique se o backend está rodando na porta 8080.');
-    }
+      if (response.ok) { setEnviado(true); setTimeout(() => navigate('/home'), 2000); }
+      else { const err = await response.text(); alert(`Erro: ${err}`); }
+    } catch { alert('Erro de conexão.'); }
   };
 
-  if (enviado) {
-    return (
-      <div style={{
-        minHeight: '100vh',
-        background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}>
-        <div style={{
-          backgroundColor: isDark ? 'rgba(105, 72, 75, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(15px)',
-          padding: '40px',
-          borderRadius: '15px',
-          textAlign: 'center',
-          maxWidth: '400px',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
-        }}>
-          <div style={{ fontSize: '48px', marginBottom: '20px' }}>✅</div>
-          <h2 style={{ color: theme.primary, marginBottom: '15px' }}>Mensagem Enviada!</h2>
-          <p style={{ color: theme.text }}>Obrigado pelo contato. Retornaremos em breve!</p>
-        </div>
+  const input = {
+    width: '100%', padding: '12px 16px', borderRadius: '10px', fontSize: '14px',
+    border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+    backgroundColor: isDark ? '#1e1e1e' : '#fdf8f8',
+    color: isDark ? '#e0e0e0' : '#333', outline: 'none', boxSizing: 'border-box'
+  };
+
+  if (enviado) return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6' }}>
+      <div style={{ textAlign: 'center', padding: '48px', backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>✅</div>
+        <h2 style={{ color: '#c0606a', marginBottom: '8px' }}>Mensagem enviada!</h2>
+        <p style={{ color: isDark ? '#888' : '#999', fontSize: '14px' }}>Retornaremos em breve.</p>
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
-      padding: window.innerWidth < 768 ? '15px' : '20px'
-    }}>
-      <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
-        <button 
-          onClick={toggleTheme}
-          style={{
-            padding: '12px 16px',
-            backgroundColor: isDark ? '#2a2d33' : 'rgba(255, 255, 255, 0.9)',
-            color: theme.text,
-            border: `2px solid ${theme.inputBorder}`,
-            borderRadius: '12px',
-            cursor: 'pointer',
-            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.4)' : '0 4px 12px rgba(0,0,0,0.15)',
-            transition: 'all 0.2s ease',
-            backdropFilter: 'blur(10px)'
-          }}
-        >
-          {isDark ? '☀️' : '🌙'}
-        </button>
-      </div>
-      
-      <div style={{ maxWidth: '900px', margin: '0 auto', paddingTop: window.innerWidth < 768 ? '50px' : '60px' }}>
-        <div style={{ marginBottom: '30px' }}>
-          <Link 
-            to="/home" 
-            style={{ 
-              color: theme.primary, 
-              textDecoration: 'none',
-              fontSize: '16px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            ← Voltar ao Início
-          </Link>
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 100,
+        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+        padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+      }}>
+        <button onClick={() => navigate('/home')} style={{
+          padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
+        }}>← Voltar</button>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>Fale Conosco</span>
+        <button onClick={toggleTheme} style={{
+          width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'
+        }}>{isDark ? '☀️' : '🌙'}</button>
+      </nav>
+
+      <div style={{ maxWidth: '600px', margin: '0 auto', padding: '48px 24px' }}>
+        <div style={{ marginBottom: '32px' }}>
+          <h1 style={{ fontSize: '28px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 8px', letterSpacing: '-0.5px' }}>
+             Entre em contato
+          </h1>
+          <p style={{ fontSize: '14px', color: isDark ? '#666' : '#999', margin: 0 }}>Estamos aqui para ajudar!</p>
         </div>
-        
+
         <div style={{
-          background: isDark ? 'linear-gradient(135deg, #1e2328 0%, #2a2d33 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
-          backdropFilter: 'blur(15px)',
-          padding: window.innerWidth < 768 ? '25px' : '40px',
-          borderRadius: '20px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.15), 0 8px 25px rgba(0,0,0,0.1)',
-          border: '1px solid #ffc0cb'
+          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', padding: '32px',
+          border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '24px'
         }}>
-          <div style={{ textAlign: 'center', marginBottom: window.innerWidth < 768 ? '30px' : '40px' }}>
-            <h1 style={{ 
-              color: theme.primary, 
-              fontSize: window.innerWidth < 768 ? '26px' : '32px', 
-              fontWeight: '700',
-              marginBottom: '8px',
-              letterSpacing: '-0.5px'
-            }}>
-              Fale Conosco
-            </h1>
-            <p style={{ 
-              color: theme.textSecondary, 
-              fontSize: '16px',
-              margin: 0
-            }}>
-              Estamos aqui para ajudar! Entre em contato conosco
-            </p>
-          </div>
-
           <form onSubmit={handleSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Nome Completo *</label>
-                <input
-                  type="text"
-                  name="nome"
-                  value={formData.nome}
-                  onChange={handleChange}
-                  placeholder="Seu nome completo"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                />
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: isDark ? '#ccc' : '#555', marginBottom: '6px' }}>Nome *</label>
+                <input type="text" name="nome" value={formData.nome} onChange={(e) => setFormData({ ...formData, nome: e.target.value })} placeholder="Seu nome" style={input} required />
               </div>
-
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Email *</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="seu@email.com"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                />
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: isDark ? '#ccc' : '#555', marginBottom: '6px' }}>Email *</label>
+                <input type="email" name="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="seu@email.com" style={input} required />
               </div>
             </div>
-
-            <div style={{ marginBottom: '25px' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '8px', 
-                color: theme.text,
-                fontWeight: '600',
-                fontSize: '14px'
-              }}>Telefone</label>
-              <input
-                type="tel"
-                name="telefone"
-                value={formData.telefone}
-                onChange={handleChange}
-                placeholder="(11) 99999-9999"
-                style={{
-                  width: '100%',
-                  padding: '14px 16px',
-                  border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                  borderRadius: '12px',
-                  backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                  color: theme.text,
-                  fontSize: '15px',
-                  transition: 'all 0.2s ease',
-                  outline: 'none'
-                }}
-                onFocus={(e) => e.target.style.borderColor = theme.primary}
-                onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-              />
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: isDark ? '#ccc' : '#555', marginBottom: '6px' }}>Telefone</label>
+              <input type="tel" name="telefone" value={formData.telefone} onChange={(e) => setFormData({ ...formData, telefone: e.target.value })} placeholder="(11) 99999-9999" style={input} />
             </div>
-
-            <div style={{ marginBottom: '30px' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '8px', 
-                color: theme.text,
-                fontWeight: '600',
-                fontSize: '14px'
-              }}>Mensagem *</label>
-              <textarea
-                name="mensagem"
-                value={formData.mensagem}
-                onChange={handleChange}
-                placeholder="Descreva sua dúvida, sugestão ou problema..."
-                rows="6"
-                style={{
-                  width: '100%',
-                  padding: '14px 16px',
-                  border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                  borderRadius: '12px',
-                  backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                  color: theme.text,
-                  fontSize: '15px',
-                  transition: 'all 0.2s ease',
-                  outline: 'none',
-                  resize: 'vertical',
-                  fontFamily: 'inherit'
-                }}
-                onFocus={(e) => e.target.style.borderColor = theme.primary}
-                onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                required
-              />
+            <div style={{ marginBottom: '24px' }}>
+              <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: isDark ? '#ccc' : '#555', marginBottom: '6px' }}>Mensagem *</label>
+              <textarea name="mensagem" value={formData.mensagem} onChange={(e) => setFormData({ ...formData, mensagem: e.target.value })}
+                placeholder="Descreva sua dúvida ou sugestão..." rows="5"
+                style={{ ...input, resize: 'vertical', fontFamily: 'inherit' }} required />
             </div>
-
-            <button 
-              type="submit" 
-              style={{
-                width: '100%',
-                padding: '16px 24px',
-                backgroundColor: theme.primary,
-                color: 'white',
-                border: 'none',
-                borderRadius: '12px',
-                fontSize: '16px',
-                cursor: 'pointer',
-                fontWeight: '600',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 4px 15px rgba(173, 115, 120, 0.3)',
-                marginTop: '10px'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#9a6b70';
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 20px rgba(173, 115, 120, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = theme.primary;
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 15px rgba(173, 115, 120, 0.3)';
-              }}
-            >
-              Enviar Mensagem
-            </button>
+            <button type="submit" style={{
+              width: '100%', padding: '12px', borderRadius: '10px', border: 'none',
+              backgroundColor: '#c0606a', color: 'white', fontSize: '14px', fontWeight: '600', cursor: 'pointer'
+            }}>Enviar Mensagem</button>
           </form>
-          
-          <div style={{ 
-            marginTop: '30px', 
-            padding: '25px', 
-            background: isDark ? 'linear-gradient(135deg, #2a2d33 0%, #3e4147 100%)' : '#f8f9fa', 
-            borderRadius: '15px',
-            border: `1px solid ${isDark ? '#4a4d53' : '#dddddd'}`,
-            boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 2px 10px rgba(0,0,0,0.1)'
-          }}>
-            <h3 style={{ 
-              color: theme.primary, 
-              marginBottom: '15px',
-              fontSize: '18px',
-              fontWeight: '600'
-            }}>
-              Outras formas de contato
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '16px' }}></span>
-                <span style={{ color: theme.text, fontSize: '14px' }}>alemdopositivo0225@gmail.com</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '16px' }}></span>
-                <span style={{ color: theme.text, fontSize: '14px' }}></span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '16px' }}></span>
-                <span style={{ color: theme.text, fontSize: '14px' }}>Horário de atendimento: Segunda a Sexta, 9h às 18h</span>
-              </div>
-            </div>
+        </div>
+
+        <div style={{
+          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
+          border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
+        }}>
+          <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 16px' }}>Outras formas de contato</h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+            <span>📧</span>
+            <span style={{ fontSize: '14px', color: isDark ? '#888' : '#666' }}>alemdopositivo0225@gmail.com</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span></span>
+            <span style={{ fontSize: '14px', color: isDark ? '#888' : '#666' }}></span>
           </div>
         </div>
       </div>

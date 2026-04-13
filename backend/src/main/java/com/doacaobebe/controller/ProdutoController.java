@@ -27,31 +27,31 @@ public class ProdutoController {
             @RequestParam("cpf") String cpf,
             @RequestParam("doador") String doador,
             @RequestParam(value = "imagem", required = false) MultipartFile imagem) {
+
         try {
             Produto produto = new Produto();
+
+            // CAMPOS QUE REALMENTE EXISTEM NO BANCO
             produto.setNome(nome);
-            produto.setDescricao(descricao.length() > 400 ? descricao.substring(0, 400) : descricao);
-            produto.setCondicao(estado);
-            produto.setTelefone(contato != null && !contato.trim().isEmpty() ? contato : "(11) 99999-9999");
-            produto.setCidade("São Paulo");
-            produto.setUf("SP");
-            produto.setMotivo("Doacao");
-            produto.setUsuarioId(17);
-            produto.setCategoriaId(1);
+            produto.setDescricao(descricao);
             produto.setStatusAnuncio("INATIVO");
 
-            try {
-                if (imagem != null && !imagem.isEmpty()) {
-                    produto.setFoto(imagem.getBytes());
-                } else {
-                    produto.setFoto(null);
-                }
-            } catch (java.io.IOException e) {
-                produto.setFoto(null);
+            // IMAGEM
+            if (imagem != null && !imagem.isEmpty()) {
+                produto.setFoto(imagem.getBytes());
             }
 
+            // CAMPOS TEMPORÁRIOS (não vão pro banco)
+            produto.setCategoria(categoria);
+            produto.setEstado(estado);
+            produto.setContato(contato);
+            produto.setCpf(cpf);
+            produto.setDoador(doador);
+
             produtoRepository.save(produto);
+
             return ResponseEntity.ok("Produto cadastrado com sucesso!");
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao cadastrar produto: " + e.getMessage());
         }
@@ -64,41 +64,40 @@ public class ProdutoController {
 
     @GetMapping("/aprovados")
     public ResponseEntity<List<Produto>> listarProdutosAprovados() {
-        return ResponseEntity.ok(produtoRepository.findByStatusAnuncioOrderByDataAnuncioDesc("ATIVO"));
+        return ResponseEntity.ok(
+            produtoRepository.findByStatusAnuncioOrderByDataAnuncioDesc("ATIVO")
+        );
     }
 
     @GetMapping("/pendentes")
     public ResponseEntity<List<Produto>> listarProdutosPendentes() {
-        return ResponseEntity.ok(produtoRepository.findByStatusAnuncioOrderByDataAnuncioDesc("INATIVO"));
+        return ResponseEntity.ok(
+            produtoRepository.findByStatusAnuncioOrderByDataAnuncioDesc("INATIVO")
+        );
     }
 
     @PutMapping("/{id}/aprovar")
     public ResponseEntity<String> aprovarProduto(@PathVariable Long id) {
-        try {
-            Produto produto = produtoRepository.findById(id).orElse(null);
-            if (produto != null) {
-                produto.setStatusAnuncio("ATIVO");
-                produtoRepository.save(produto);
-                return ResponseEntity.ok("Produto aprovado com sucesso!");
-            }
+        Produto produto = produtoRepository.findById(id).orElse(null);
+
+        if (produto == null) {
             return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao aprovar produto: " + e.getMessage());
         }
+
+        produto.setStatusAnuncio("ATIVO");
+        produtoRepository.save(produto);
+
+        return ResponseEntity.ok("Produto aprovado com sucesso!");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> removerProduto(@PathVariable Long id) {
-        try {
-            produtoRepository.deleteById(id);
-            return ResponseEntity.ok("Produto removido com sucesso!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao remover produto: " + e.getMessage());
-        }
+        produtoRepository.deleteById(id);
+        return ResponseEntity.ok("Produto removido com sucesso!");
     }
 
     @GetMapping("/test")
     public ResponseEntity<String> test() {
-        return ResponseEntity.ok("API Produtos funcionando na porta 7979!");
+        return ResponseEntity.ok("API Produtos funcionando!");
     }
 }

@@ -1,538 +1,169 @@
-import { API_URL } from '../config/api';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import Notification from '../components/Notification';
+import { API_URL } from '../config/api';
 
 function Perfil({ user, setUser }) {
   const navigate = useNavigate();
-  const { theme, isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   const [nome, setNome] = useState(user?.nome || '');
   const [email, setEmail] = useState(user?.email || '');
-  const [telefone, setTelefone] = useState('');
-  const [endereco, setEndereco] = useState('');
   const [senhaAtual, setSenhaAtual] = useState('');
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const { notifications, showError, removeNotification } = useNotification();
 
-  // Função para validar senha
-  const validatePassword = (password) => {
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    const hasNumber = /\d/.test(password);
-    
-    return {
-      isValid: hasUpperCase && hasSpecialChar && hasNumber,
-      hasUpperCase,
-      hasSpecialChar,
-      hasNumber
-    };
-  };
+  const validatePassword = (p) => ({
+    isValid: /[A-Z]/.test(p) && /[!@#$%^&*(),.?":{}|<>]/.test(p) && /\d/.test(p),
+    hasUpperCase: /[A-Z]/.test(p),
+    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(p),
+    hasNumber: /\d/.test(p)
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (novaSenha && novaSenha !== confirmarSenha) {
-      showError('As senhas não coincidem!');
-      return;
-    }
-    
-    // Validar nova senha se fornecida
-    if (novaSenha) {
-      const passwordValidation = validatePassword(novaSenha);
-      if (!passwordValidation.isValid) {
-        let errorMessage = 'A nova senha deve conter:';
-        if (!passwordValidation.hasUpperCase) {
-          errorMessage += '\n• Pelo menos uma letra maiúscula';
-        }
-        if (!passwordValidation.hasSpecialChar) {
-          errorMessage += '\n• Pelo menos um caractere especial (!@#$%^&*)';
-        }
-        if (!passwordValidation.hasNumber) {
-          errorMessage += '\n• Pelo menos um número';
-        }
-        showError(errorMessage);
-        return;
-      }
-    }
-
+    if (novaSenha && novaSenha !== confirmarSenha) { showError('As senhas não coincidem!'); return; }
+    if (novaSenha && !validatePassword(novaSenha).isValid) { showError('A senha não atende aos requisitos.'); return; }
     try {
-      // Atualizar dados básicos
       const updateResponse = await fetch(`${API_URL}/api/usuarios/${user.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, email }),
       });
-
-      if (!updateResponse.ok) {
-        throw new Error('Erro ao atualizar dados');
-      }
-
-      // Alterar senha se fornecida
+      if (!updateResponse.ok) throw new Error('Erro ao atualizar dados');
       if (novaSenha) {
-        const senhaResponse = await fetch('${API_URL}/api/usuarios/alterar-senha', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            id: user.id,
-            senhaAtual: senhaAtual,
-            novaSenha: novaSenha 
-          }),
+        const senhaResponse = await fetch(`${API_URL}/api/usuarios/alterar-senha`, {
+          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: user.id, senhaAtual, novaSenha }),
         });
-
-        if (!senhaResponse.ok) {
-          const errorText = await senhaResponse.text();
-          throw new Error(errorText || 'Erro ao alterar senha');
-        }
+        if (!senhaResponse.ok) { const err = await senhaResponse.text(); throw new Error(err || 'Erro ao alterar senha'); }
       }
-
       setUser({ ...user, nome, email });
       alert('Perfil atualizado com sucesso!');
-      setSenhaAtual('');
-      setNovaSenha('');
-      setConfirmarSenha('');
-    } catch (error) {
-      alert('Erro: ' + error.message);
-    }
+      setSenhaAtual(''); setNovaSenha(''); setConfirmarSenha('');
+    } catch (error) { alert('Erro: ' + error.message); }
   };
 
+  const input = {
+    width: '100%', padding: '12px 16px', borderRadius: '10px', fontSize: '14px',
+    border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+    backgroundColor: isDark ? '#1e1e1e' : '#fdf8f8',
+    color: isDark ? '#e0e0e0' : '#333', outline: 'none', boxSizing: 'border-box'
+  };
+  const label = { display: 'block', fontSize: '13px', fontWeight: '600', color: isDark ? '#ccc' : '#555', marginBottom: '6px' };
+
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      background: isDark ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)' : 'linear-gradient(135deg, #ffc0cb 0%, #f8d7da 100%)',
-      padding: window.innerWidth < 768 ? '15px' : '20px'
-    }}>
-      <div style={{ position: 'absolute', top: window.innerWidth < 768 ? '15px' : '20px', right: window.innerWidth < 768 ? '15px' : '20px' }}>
-        <button 
-          onClick={toggleTheme}
-          style={{
-            padding: '12px',
-            backgroundColor: isDark ? '#2a2d33' : 'rgba(255, 255, 255, 0.9)',
-            color: theme.text,
-            border: `1px solid ${theme.border}`,
-            borderRadius: '10px',
-            cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            transition: 'all 0.2s ease'
-          }}
-        >
-          {isDark ? '☀️' : '🌙'}
-        </button>
-      </div>
-      
-      <div style={{ maxWidth: '900px', margin: '0 auto', paddingTop: window.innerWidth < 768 ? '50px' : '60px' }}>
-        <div style={{ marginBottom: '30px' }}>
-          <Link 
-            to="/home" 
-            style={{ 
-              color: theme.primary, 
-              textDecoration: 'none',
-              fontSize: '16px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            ← Voltar ao Início
-          </Link>
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <nav style={{
+        position: 'sticky', top: 0, zIndex: 100,
+        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+        padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+      }}>
+        <button onClick={() => navigate('/home')} style={{
+          padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
+        }}>← Voltar</button>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>Meu Perfil</span>
+        <button onClick={toggleTheme} style={{
+          width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
+          backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'
+        }}>{isDark ? '☀️' : '🌙'}</button>
+      </nav>
+
+      <div style={{ maxWidth: '600px', margin: '0 auto', padding: '40px 24px' }}>
+        {/* Avatar */}
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{
+            width: '80px', height: '80px', borderRadius: '50%', backgroundColor: '#c0606a',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '32px', fontWeight: '700', color: 'white', margin: '0 auto 12px'
+          }}>{user?.nome?.charAt(0).toUpperCase()}</div>
+          <h2 style={{ fontSize: '20px', fontWeight: '700', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 4px' }}>{user?.nome}</h2>
+          <p style={{ fontSize: '14px', color: isDark ? '#666' : '#999', margin: 0 }}>{user?.email}</p>
         </div>
-        
+
+        {/* Dados pessoais */}
         <div style={{
-          background: isDark ? 'linear-gradient(135deg, #1e2328 0%, #2a2d33 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
-          backdropFilter: 'blur(15px)',
-          padding: window.innerWidth < 768 ? '25px' : '40px',
-          borderRadius: '20px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.15), 0 8px 25px rgba(0,0,0,0.1)',
-          border: '1px solid #ffc0cb'
+          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', padding: '28px',
+          border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '16px'
         }}>
-          <div style={{ textAlign: 'center', marginBottom: window.innerWidth < 768 ? '30px' : '40px' }}>
-            <h1 style={{ 
-              color: theme.primary, 
-              fontSize: window.innerWidth < 768 ? '26px' : '32px', 
-              fontWeight: '700',
-              marginBottom: '8px',
-              letterSpacing: '-0.5px'
-            }}>
-              Meu Perfil
-            </h1>
-            <p style={{ 
-              color: theme.textSecondary, 
-              fontSize: '16px',
-              margin: 0
-            }}>
-              Gerencie suas informações pessoais e configurações
-            </p>
-          </div>
-
-
-          
+          <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 20px' }}>Dados Pessoais</h3>
           <form onSubmit={handleSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Nome Completo *</label>
-                <input
-                  type="text"
-                  value={nome}
-                  onChange={(e) => setNome(e.target.value)}
-                  placeholder="Seu nome completo"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                />
+                <label style={label}>Nome *</label>
+                <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} style={input} required />
               </div>
-
               <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Email *</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="seu@email.com"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  required
-                />
+                <label style={label}>Email *</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} style={input} required />
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px', marginBottom: '25px' }}>
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Telefone</label>
-                <input
-                  type="tel"
-                  value={telefone}
-                  onChange={(e) => setTelefone(e.target.value)}
-                  placeholder="(11) 99999-9999"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                />
-              </div>
-
-              <div>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Endereço</label>
-                <input
-                  type="text"
-                  value={endereco}
-                  onChange={(e) => setEndereco(e.target.value)}
-                  placeholder="Rua, número, bairro, cidade"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                />
-              </div>
-            </div>
-
-            <div style={{ 
-              marginTop: '40px',
-              marginBottom: '30px', 
-              padding: '25px', 
-              background: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)', 
-              borderRadius: '15px',
-              border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`
+            <div style={{
+              backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8', borderRadius: '12px', padding: '20px',
+              border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '20px'
             }}>
-              <h3 style={{ 
-                color: theme.primary, 
-                marginBottom: '20px',
-                fontSize: '18px',
-                fontWeight: '600'
-              }}>
-                Alterar Senha
-              </h3>
-
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ 
-                  display: 'block', 
-                  marginBottom: '8px', 
-                  color: theme.text,
-                  fontWeight: '600',
-                  fontSize: '14px'
-                }}>Senha Atual</label>
-                <input
-                  type="password"
-                  value={senhaAtual}
-                  onChange={(e) => setSenhaAtual(e.target.value)}
-                  placeholder="Digite sua senha atual"
-                  style={{
-                    width: '100%',
-                    padding: '14px 16px',
-                    border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                    borderRadius: '12px',
-                    backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                    color: theme.text,
-                    fontSize: '15px',
-                    transition: 'all 0.2s ease',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = theme.primary}
-                  onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                />
+              <h4 style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#ccc' : '#555', margin: '0 0 16px' }}>Alterar Senha</h4>
+              <div style={{ marginBottom: '12px' }}>
+                <label style={label}>Senha Atual</label>
+                <input type="password" value={senhaAtual} onChange={(e) => setSenhaAtual(e.target.value)} placeholder="••••••••" style={input} />
               </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 768 ? '1fr' : '1fr 1fr', gap: '20px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div>
-                  <label style={{ 
-                    display: 'block', 
-                    marginBottom: '8px', 
-                    color: theme.text,
-                    fontWeight: '600',
-                    fontSize: '14px'
-                  }}>Nova Senha</label>
-                  <input
-                    type="password"
-                    value={novaSenha}
-                    onChange={(e) => setNovaSenha(e.target.value)}
-                    placeholder="Digite a nova senha"
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                      borderRadius: '12px',
-                      backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                      color: theme.text,
-                      fontSize: '15px',
-                      transition: 'all 0.2s ease',
-                      outline: 'none'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = theme.primary}
-                    onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  />
+                  <label style={label}>Nova Senha</label>
+                  <input type="password" value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)} placeholder="••••••••" style={input} />
                   {novaSenha && (
-                    <div style={{ marginTop: '8px', fontSize: '12px' }}>
-                      <div style={{ 
-                        color: validatePassword(novaSenha).hasUpperCase ? '#28a745' : '#dc3545',
-                        marginBottom: '2px'
-                      }}>
-                        {validatePassword(novaSenha).hasUpperCase ? '✓' : '✗'} Pelo menos uma letra maiúscula
-                      </div>
-                      <div style={{ 
-                        color: validatePassword(novaSenha).hasSpecialChar ? '#28a745' : '#dc3545',
-                        marginBottom: '2px'
-                      }}>
-                        {validatePassword(novaSenha).hasSpecialChar ? '✓' : '✗'} Pelo menos um caractere especial (!@#$%^&*)
-                      </div>
-                      <div style={{ 
-                        color: validatePassword(novaSenha).hasNumber ? '#28a745' : '#dc3545'
-                      }}>
-                        {validatePassword(novaSenha).hasNumber ? '✓' : '✗'} Pelo menos um número
-                      </div>
+                    <div style={{ marginTop: '6px' }}>
+                      {[
+                        { ok: validatePassword(novaSenha).hasUpperCase, label: 'Maiúscula' },
+                        { ok: validatePassword(novaSenha).hasSpecialChar, label: 'Especial' },
+                        { ok: validatePassword(novaSenha).hasNumber, label: 'Número' },
+                      ].map(({ ok, label: l }) => (
+                        <span key={l} style={{ fontSize: '11px', color: ok ? '#4caf50' : '#ef4444', display: 'block' }}>
+                          {ok ? '✓' : '✗'} {l}
+                        </span>
+                      ))}
                     </div>
                   )}
                 </div>
-
                 <div>
-                  <label style={{ 
-                    display: 'block', 
-                    marginBottom: '8px', 
-                    color: theme.text,
-                    fontWeight: '600',
-                    fontSize: '14px'
-                  }}>Confirmar Nova Senha</label>
-                  <input
-                    type="password"
-                    value={confirmarSenha}
-                    onChange={(e) => setConfirmarSenha(e.target.value)}
-                    placeholder="Confirme a nova senha"
-                    style={{
-                      width: '100%',
-                      padding: '14px 16px',
-                      border: `2px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}`,
-                      borderRadius: '12px',
-                      backgroundColor: isDark ? 'rgba(105, 72, 75, 0.3)' : 'rgba(255, 255, 255, 0.8)',
-                      color: theme.text,
-                      fontSize: '15px',
-                      transition: 'all 0.2s ease',
-                      outline: 'none'
-                    }}
-                    onFocus={(e) => e.target.style.borderColor = theme.primary}
-                    onBlur={(e) => e.target.style.borderColor = isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.5)'}
-                  />
+                  <label style={label}>Confirmar</label>
+                  <input type="password" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} placeholder="••••••••" style={input} />
                 </div>
               </div>
             </div>
 
-            <button 
-              type="submit" 
-              style={{
-                width: '100%',
-                padding: '16px 24px',
-                backgroundColor: theme.primary,
-                color: 'white',
-                border: 'none',
-                borderRadius: '12px',
-                fontSize: '16px',
-                cursor: 'pointer',
-                fontWeight: '600',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 4px 15px rgba(173, 115, 120, 0.3)',
-                marginTop: '10px'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = '#9a6b70';
-                e.target.style.transform = 'translateY(-2px)';
-                e.target.style.boxShadow = '0 6px 20px rgba(173, 115, 120, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = theme.primary;
-                e.target.style.transform = 'translateY(0)';
-                e.target.style.boxShadow = '0 4px 15px rgba(173, 115, 120, 0.3)';
-              }}
-            >
-              Salvar Alterações
-            </button>
+            <button type="submit" style={{
+              width: '100%', padding: '12px', borderRadius: '10px', border: 'none',
+              backgroundColor: '#c0606a', color: 'white', fontSize: '14px', fontWeight: '600', cursor: 'pointer'
+            }}>Salvar Alterações</button>
           </form>
+        </div>
 
-          <div style={{ 
-            marginTop: '30px', 
-            padding: '25px', 
-            background: isDark ? 'rgba(173, 115, 120, 0.2)' : 'rgba(252, 192, 203, 0.2)', 
-            borderRadius: '15px',
-            border: `1px solid ${isDark ? 'rgba(173, 115, 120, 0.3)' : 'rgba(252, 192, 203, 0.3)'}`
-          }}>
-            <h3 style={{ 
-              color: theme.primary, 
-              marginBottom: '15px',
-              fontSize: '18px',
-              fontWeight: '600'
-            }}>
-              Dicas de Segurança
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'flex', alignItems: window.innerWidth < 768 ? 'flex-start' : 'center', gap: '12px' }}>
-                <span style={{ 
-                  backgroundColor: theme.primary, 
-                  color: 'white', 
-                  borderRadius: '50%', 
-                  width: '24px', 
-                  height: '24px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  fontSize: '12px', 
-                  fontWeight: 'bold',
-                  flexShrink: 0
-                }}>1</span>
-                <p style={{ margin: 0, color: theme.text, fontSize: '14px', lineHeight: '1.4' }}>Use uma senha forte com pelo menos 8 caracteres</p>
-              </div>
-              <div style={{ display: 'flex', alignItems: window.innerWidth < 768 ? 'flex-start' : 'center', gap: '12px' }}>
-                <span style={{ 
-                  backgroundColor: theme.primary, 
-                  color: 'white', 
-                  borderRadius: '50%', 
-                  width: '24px', 
-                  height: '24px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  fontSize: '12px', 
-                  fontWeight: 'bold',
-                  flexShrink: 0
-                }}>2</span>
-                <p style={{ margin: 0, color: theme.text, fontSize: '14px', lineHeight: '1.4' }}>Mantenha suas informações sempre atualizadas</p>
-              </div>
-              <div style={{ display: 'flex', alignItems: window.innerWidth < 768 ? 'flex-start' : 'center', gap: '12px' }}>
-                <span style={{ 
-                  backgroundColor: theme.primary, 
-                  color: 'white', 
-                  borderRadius: '50%', 
-                  width: '24px', 
-                  height: '24px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  fontSize: '12px', 
-                  fontWeight: 'bold',
-                  flexShrink: 0
-                }}>3</span>
-                <p style={{ margin: 0, color: theme.text, fontSize: '14px', lineHeight: '1.4' }}>Nunca compartilhe sua senha com outras pessoas</p>
-              </div>
+        {/* Dicas */}
+        <div style={{
+          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
+          border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
+        }}>
+          <h3 style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 14px' }}>🔒 Dicas de Segurança</h3>
+          {['Use uma senha forte com pelo menos 8 caracteres', 'Mantenha suas informações sempre atualizadas', 'Nunca compartilhe sua senha com outras pessoas'].map((tip, i) => (
+            <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', marginBottom: '8px' }}>
+              <span style={{
+                width: '20px', height: '20px', borderRadius: '50%', backgroundColor: '#c0606a',
+                color: 'white', fontSize: '11px', fontWeight: '700', flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>{i + 1}</span>
+              <span style={{ fontSize: '13px', color: isDark ? '#888' : '#666' }}>{tip}</span>
             </div>
-          </div>
+          ))}
         </div>
       </div>
-      
-      {/* Notificações */}
-      {notifications.map(notification => (
-        <Notification
-          key={notification.id}
-          message={notification.message}
-          type={notification.type}
-          duration={notification.duration}
-          onClose={() => removeNotification(notification.id)}
-        />
+
+      {notifications.map(n => (
+        <Notification key={n.id} message={n.message} type={n.type} duration={n.duration} onClose={() => removeNotification(n.id)} />
       ))}
     </div>
   );
