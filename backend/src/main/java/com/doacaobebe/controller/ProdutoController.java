@@ -77,7 +77,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}/aprovar")
-    public ResponseEntity<String> aprovarProduto(@PathVariable Long id) {
+    public ResponseEntity<String> aprovarProduto(@PathVariable Integer id) {
         Produto produto = produtoRepository.findById(id).orElse(null);
 
         if (produto == null) {
@@ -91,7 +91,7 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> removerProduto(@PathVariable Long id) {
+    public ResponseEntity<String> removerProduto(@PathVariable Integer id) {
         produtoRepository.deleteById(id);
         return ResponseEntity.ok("Produto removido com sucesso!");
     }

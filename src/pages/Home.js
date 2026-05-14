@@ -327,14 +327,14 @@ function Home({ user, setUser }) {
                         color: '#c0606a'
                       }}>{produto.categoria}</span>
                     )}
-                    {produto.condicao && (
+                    {produto.condicao || produto.estado ? (
                       <span style={{
                         padding: '3px 10px', borderRadius: '20px', fontSize: '11px',
                         fontWeight: '600', textTransform: 'capitalize',
                         backgroundColor: isDark ? '#1a2a1a' : '#e8f5e9',
                         color: '#4caf50'
-                      }}>{produto.condicao}</span>
-                    )}
+                      }}>{produto.condicao || produto.estado}</span>
+                    ) : null}
                   </div>
 
                   <h3 style={{
