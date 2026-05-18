@@ -17,19 +17,19 @@ public class Produto {
     @Column(nullable = false, length = 400)
     private String descricao;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String categoria;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String estado;
 
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String contato;
 
-    @Column(nullable = false, length = 14)
+    @Column(length = 14)
     private String cpf;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String doador;
 
     @Lob
