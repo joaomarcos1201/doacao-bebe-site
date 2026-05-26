@@ -26,20 +26,20 @@ function Home({ user, setUser }) {
   });
 
   const categorias = [
-    { value: 'roupas', label: 'Roupas', emoji: '👕' },
-    { value: 'brinquedos', label: 'Brinquedos', emoji: '🧸' },
-    { value: 'moveis', label: 'Móveis', emoji: '🪑' },
-    { value: 'acessorios', label: 'Acessórios', emoji: '🎒' },
-    { value: 'alimentacao', label: 'Alimentação', emoji: '🍼' },
-    { value: 'outros', label: 'Outros', emoji: '📦' },
+    { value: 'roupas', label: 'Roupas' },
+    { value: 'brinquedos', label: 'Brinquedos' },
+    { value: 'moveis', label: 'Móveis' },
+    { value: 'acessorios', label: 'Acessórios' },
+    { value: 'alimentacao', label: 'Alimentação' },
+    { value: 'outros', label: 'Outros' },
   ];
 
   const menuItems = [
-    { label: 'Doar Produto', emoji: '🎁', path: '/doacao' },
-    { label: 'Meu Perfil', emoji: '👤', path: '/perfil', authRequired: true },
-    { label: 'Sobre Nós', emoji: '💜', path: '/sobre-nos' },
-    { label: 'Fale Conosco', emoji: '💬', path: '/fale-conosco' },
-    { label: 'FAQ', emoji: '❓', path: '/faq' },
+    { label: 'Doar Produto', path: '/doacao' },
+    { label: 'Meu Perfil', path: '/perfil', authRequired: true },
+    { label: 'Sobre Nós', path: '/sobre-nos' },
+    { label: 'Fale Conosco', path: '/fale-conosco' },
+    { label: 'FAQ', path: '/faq' },
   ];
 
   return (
@@ -141,7 +141,6 @@ function Home({ user, setUser }) {
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#1e1e1e' : '#fdf0f2'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                  <span style={{ fontSize: '18px' }}>{item.emoji}</span>
                   <span style={{ fontSize: '15px', fontWeight: '500' }}>{item.label}</span>
                 </div>
               ))}
@@ -157,7 +156,6 @@ function Home({ user, setUser }) {
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#1e1e1e' : '#fdf0f2'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                  <span style={{ fontSize: '18px' }}>⚙️</span>
                   <span style={{ fontSize: '15px', fontWeight: '600' }}>Administração</span>
                 </div>
               )}
@@ -181,7 +179,7 @@ function Home({ user, setUser }) {
           border: '1px solid rgba(192,96,106,0.3)',
           color: '#c0606a', fontSize: '13px', fontWeight: '600',
           marginBottom: '20px', letterSpacing: '0.5px'
-        }}>💜 DOAÇÕES PARA BEBÊS</div>
+        }}>DOAÇÕES PARA BEBÊS</div>
         <h1 style={{
           fontSize: 'clamp(28px, 5vw, 48px)', fontWeight: '800',
           color: isDark ? '#f5e0e2' : '#2d1518',
@@ -200,7 +198,7 @@ function Home({ user, setUser }) {
         }}
           onMouseEnter={(e) => { e.target.style.backgroundColor = '#a85058'; e.target.style.transform = 'translateY(-2px)'; }}
           onMouseLeave={(e) => { e.target.style.backgroundColor = '#c0606a'; e.target.style.transform = 'translateY(0)'; }}
-        >🎁 Quero Doar</button>
+        >Quero Doar</button>
       </div>
 
       {/* FILTROS */}
@@ -214,15 +212,11 @@ function Home({ user, setUser }) {
           display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center'
         }}>
           <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
-            <span style={{
-              position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
-              fontSize: '16px', pointerEvents: 'none'
-            }}>🔍</span>
             <input
               type="text" placeholder="Pesquisar produtos..."
               value={pesquisa} onChange={(e) => setPesquisa(e.target.value)}
               style={{
-                width: '100%', padding: '10px 14px 10px 42px',
+                width: '100%', padding: '10px 14px',
                 borderRadius: '10px', fontSize: '14px',
                 border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
                 backgroundColor: isDark ? '#1e1e1e' : '#fdf8f8',
@@ -246,7 +240,7 @@ function Home({ user, setUser }) {
                 borderColor: categoriaFiltro === cat.value ? '#c0606a' : (isDark ? '#333' : '#e8d0d4'),
                 backgroundColor: categoriaFiltro === cat.value ? '#c0606a' : 'transparent',
                 color: categoriaFiltro === cat.value ? 'white' : (isDark ? '#aaa' : '#666')
-              }}>{cat.emoji} {cat.label}</button>
+              }}>{cat.label}</button>
             ))}
           </div>
         </div>
@@ -269,7 +263,7 @@ function Home({ user, setUser }) {
             backgroundColor: isDark ? '#141414' : '#fff',
             borderRadius: '16px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
           }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔍</div>
+
             <h3 style={{ color: isDark ? '#e0e0e0' : '#333', marginBottom: '8px' }}>Nenhum item encontrado</h3>
             <p style={{ color: isDark ? '#666' : '#999', fontSize: '14px' }}>Tente ajustar os filtros ou a pesquisa</p>
           </div>
@@ -312,7 +306,7 @@ function Home({ user, setUser }) {
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   ) : (
-                    <span style={{ fontSize: '48px', opacity: 0.3 }}>📦</span>
+                    <span style={{ fontSize: '14px', opacity: 0.4, color: isDark ? '#666' : '#bbb' }}>Sem imagem</span>
                   )}
                 </div>
 
