@@ -18,7 +18,7 @@ function SobreNos() {
           padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
         }}>← Voltar</button>
-        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>Sobre Nós</span>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e8d0d4' : '#c0606a' }}>Sobre Nós</span>
         <button onClick={toggleTheme} style={{
           width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'
@@ -75,7 +75,7 @@ function SobreNos() {
             ].map(({ n, title, desc }) => (
               <div key={n} style={{
                 padding: '20px', borderRadius: '12px', textAlign: 'center',
-                backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8',
+                backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
                 border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
               }}>
                 <div style={{

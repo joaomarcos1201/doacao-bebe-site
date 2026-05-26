@@ -120,7 +120,7 @@ function Admin() {
           padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
         }}>← Voltar</button>
-        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>⚙️ Administração</span>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e8d0d4' : '#c0606a' }}>⚙️ Administração</span>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button onClick={toggleTheme} style={{
             width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
@@ -160,7 +160,7 @@ function Admin() {
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '600px' }}>
                   <thead>
-                    <tr style={{ backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8' }}>
+                    <tr style={{ backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2' }}>
                       {['Usuário', 'Email', 'Status', 'Nível', 'Ações'].map(h => (
                         <th key={h} style={{ padding: '14px 16px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: isDark ? '#666' : '#999', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{h}</th>
                       ))}
@@ -213,7 +213,7 @@ function Admin() {
                                   width: '100%', padding: '12px 16px', border: 'none', background: 'none',
                                   textAlign: 'left', cursor: 'pointer', color, fontSize: '14px'
                                 }}
-                                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#2a2a2a' : '#fdf8f8'}
+                                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#2a2a2a' : '#fdf0f2'}
                                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                                 >{label}</button>
                               ))}
@@ -250,7 +250,7 @@ function Admin() {
                     <div key={p.id} style={{
                       padding: '20px', borderRadius: '12px',
                       border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
-                      backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8',
+                      backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
                       display: 'flex', gap: '16px', alignItems: 'flex-start'
                     }}>
                       <div style={{
@@ -298,7 +298,7 @@ function Admin() {
                         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                         padding: '14px 16px', borderRadius: '10px',
                         border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
-                        backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8'
+                        backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2'
                       }}>
                         <div>
                           <span style={{ fontSize: '14px', fontWeight: '600', color: isDark ? '#e0e0e0' : '#333' }}>{p.nome}</span>
@@ -333,7 +333,7 @@ function Admin() {
                 <div key={m.id} style={{
                   padding: '20px', borderRadius: '12px',
                   border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
-                  backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8'
+                  backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2'
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                     <div>

@@ -29,7 +29,7 @@ function TermosPrivacidade() {
           padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
         }}>← Voltar</button>
-        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>Termos de Privacidade</span>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e8d0d4' : '#c0606a' }}>Termos de Privacidade</span>
         <button onClick={toggleTheme} style={{
           width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'

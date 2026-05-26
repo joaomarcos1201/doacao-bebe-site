@@ -52,7 +52,7 @@ function Doacao() {
   const input = {
     width: '100%', padding: '12px 16px', borderRadius: '10px', fontSize: '14px',
     border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
-    backgroundColor: isDark ? '#1e1e1e' : '#fdf8f8',
+    backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
     color: isDark ? '#e0e0e0' : '#333', outline: 'none', boxSizing: 'border-box'
   };
 
@@ -74,7 +74,7 @@ function Doacao() {
           padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
         }}>← Voltar</button>
-        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>Doar Produto</span>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e8d0d4' : '#c0606a' }}>Doar Produto</span>
         <button onClick={toggleTheme} style={{
           width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'

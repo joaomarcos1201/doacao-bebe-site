@@ -73,7 +73,7 @@ function DetalhesProduto() {
               {produto.categoria && (
                 <span style={{
                   padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '600',
-                  backgroundColor: isDark ? '#2a1518' : '#fde8ec', color: '#c0606a', textTransform: 'capitalize'
+                  backgroundColor: isDark ? '#2d1518' : '#fde8ec', color: '#c0606a', textTransform: 'capitalize'
                 }}>{produto.categoria}</span>
               )}
               {produto.condicao && (
@@ -90,7 +90,7 @@ function DetalhesProduto() {
 
             <div style={{
               padding: '16px', borderRadius: '12px', marginBottom: '20px',
-              backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8',
+              backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
               border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
             }}>
               <p style={{ fontSize: '14px', color: isDark ? '#888' : '#666', margin: '0 0 4px', fontWeight: '600' }}>Descrição</p>
@@ -100,7 +100,7 @@ function DetalhesProduto() {
             {produto.doador && (
               <div style={{
                 padding: '14px 16px', borderRadius: '12px', marginBottom: '12px',
-                backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8',
+                backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
                 border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
                 display: 'flex', alignItems: 'center', gap: '10px'
               }}>
@@ -115,7 +115,7 @@ function DetalhesProduto() {
             {produto.telefone && (
               <div style={{
                 padding: '14px 16px', borderRadius: '12px', marginBottom: '24px',
-                backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8',
+                backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
                 border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
                 display: 'flex', alignItems: 'center', gap: '10px'
               }}>

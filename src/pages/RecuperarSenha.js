@@ -16,7 +16,7 @@ function RecuperarSenha() {
   const input = {
     width: '100%', padding: '12px 16px', borderRadius: '10px', fontSize: '14px',
     border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
-    backgroundColor: isDark ? '#1e1e1e' : '#fdf8f8',
+    backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
     color: isDark ? '#e0e0e0' : '#333', outline: 'none', boxSizing: 'border-box'
   };
 

@@ -48,7 +48,7 @@ function Perfil({ user, setUser }) {
   const input = {
     width: '100%', padding: '12px 16px', borderRadius: '10px', fontSize: '14px',
     border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
-    backgroundColor: isDark ? '#1e1e1e' : '#fdf8f8',
+    backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
     color: isDark ? '#e0e0e0' : '#333', outline: 'none', boxSizing: 'border-box'
   };
   const label = { display: 'block', fontSize: '13px', fontWeight: '600', color: isDark ? '#ccc' : '#555', marginBottom: '6px' };
@@ -65,7 +65,7 @@ function Perfil({ user, setUser }) {
           padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
         }}>← Voltar</button>
-        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0c0c8' : '#c0606a' }}>Meu Perfil</span>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e8d0d4' : '#c0606a' }}>Meu Perfil</span>
         <button onClick={toggleTheme} style={{
           width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'
@@ -103,7 +103,7 @@ function Perfil({ user, setUser }) {
             </div>
 
             <div style={{
-              backgroundColor: isDark ? '#1a1a1a' : '#fdf8f8', borderRadius: '12px', padding: '20px',
+              backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2', borderRadius: '12px', padding: '20px',
               border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '20px'
             }}>
               <h4 style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#ccc' : '#555', margin: '0 0 16px' }}>Alterar Senha</h4>
