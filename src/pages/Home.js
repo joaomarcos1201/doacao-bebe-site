@@ -53,6 +53,15 @@ function Home({ user, setUser }) {
     { value: 'outros', label: 'Outros' },
   ];
 
+  const categoriaLabel = {
+    roupas: '🧺 Roupas',
+    brinquedos: '🪀 Brinquedos',
+    moveis: '🪑 Móveis',
+    acessorios: '🍼 Acessórios',
+    alimentacao: '🥣 Alimentação',
+    outros: '📦 Outros',
+  };
+
   const menuItems = [
     { label: 'Doar Produto', path: '/doacao' },
     { label: 'Meu Perfil', path: '/perfil', authRequired: true },
@@ -346,7 +355,7 @@ function Home({ user, setUser }) {
         background: isDark
           ? 'linear-gradient(135deg, #1a0a0c 0%, #2d1518 100%)'
           : 'linear-gradient(160deg, #fff0f4 0%, #fde4ec 60%, #fcd8e4 100%)',
-        padding: '60px 48px',
+        padding: '0px 48px 60px',
         borderBottom: `1px solid ${isDark ? '#2a1518' : 'rgba(232,138,162,0.15)'}`,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         gap: '40px', overflow: 'hidden', position: 'relative'
@@ -366,12 +375,11 @@ function Home({ user, setUser }) {
           }}>DOAÇÕES PARA BEBÊS</div>
 
           <h1 style={{
-            fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: '800',
+            fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: '900',
             color: isDark ? '#f5e0e2' : '#1a1a2e',
-            margin: '0 0 8px', lineHeight: '1.15', letterSpacing: '-1px'
+            margin: '0', lineHeight: '1.1', letterSpacing: '-2px'
           }}>
-            Conectando quem doa<br />
-            com <span style={{ color: '#E88AA2' }}>quem precisa</span>
+            Conectando quem doa com <span style={{ color: '#E88AA2', fontStyle: 'italic' }}>quem precisa</span>
           </h1>
 
           <p style={{
@@ -396,17 +404,17 @@ function Home({ user, setUser }) {
           </button>
 
           {/* Mini features */}
-          <div style={{ display: 'flex', gap: '28px', marginTop: '36px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '70px', marginTop: '120px' }}>
             {[
               { icon: '♡', title: 'Tudo gratuito', sub: 'Sem custo para quem precisa' },
               { icon: '✦', title: 'Seguro e confiável', sub: 'Doações verificadas com carinho' },
               { icon: '⌂', title: 'Comunidade solidária', sub: 'Famílias ajudando outras famílias' },
             ].map(f => (
-              <div key={f.title} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', maxWidth: '140px' }}>
+              <div key={f.title} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <span style={{ fontSize: '18px', color: '#E88AA2', marginTop: '2px' }}>{f.icon}</span>
                 <div>
-                  <div style={{ fontSize: '13px', fontWeight: '700', color: isDark ? '#eee' : '#1a1a2e' }}>{f.title}</div>
-                  <div style={{ fontSize: '11.5px', color: isDark ? '#777' : '#9CA3AF', lineHeight: '1.5', marginTop: '2px' }}>{f.sub}</div>
+                  <div style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#eee' : '#1a1a2e' }}>{f.title}</div>
+                  <div style={{ fontSize: '13px', color: isDark ? '#777' : '#9CA3AF', lineHeight: '1.5', marginTop: '4px' }}>{f.sub}</div>
                 </div>
               </div>
             ))}
@@ -415,13 +423,15 @@ function Home({ user, setUser }) {
 
         {/* Lado direito — imagem decorativa */}
         <div style={{
-          width: '420px', height: '380px', flexShrink: 0,
+          width: '420px', height: '480px', flexShrink: 0,
           borderRadius: '32px', overflow: 'hidden',
-          backgroundColor: 'rgba(232,138,162,0.1)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 8px 40px rgba(232,138,162,0.15)'
+          boxShadow: '0 8px 40px rgba(232,138,162,0.2)'
         }}>
-          <span style={{ fontSize: '80px' }}>👶</span>
+          <img
+            src="https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=840&q=80&fit=crop&crop=faces"
+            alt="mae-bebe.png"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+          />
         </div>
       </div>
 
@@ -567,7 +577,7 @@ function Home({ user, setUser }) {
                         fontWeight: '600', textTransform: 'capitalize',
                         backgroundColor: isDark ? '#2a1518' : '#fde8ec',
                         color: '#c0606a'
-                      }}>{produto.categoria}</span>
+                      }}>{categoriaLabel[produto.categoria] || produto.categoria}</span>
                     )}
                     {produto.condicao || produto.estado ? (
                       <span style={{
