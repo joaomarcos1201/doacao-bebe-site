@@ -10,7 +10,7 @@
       "version": "18"
     }
   },
-  "postCreateCommand": "echo 'export JAVA_HOME=/usr/local/sdkman/candidates/java/current' >> ~/.bashrc && echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc",
+  "postCreateCommand": "curl -fsSL https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz | sudo tar -xz -C /opt && sudo ln -sf /opt/apache-maven-3.9.6/bin/mvn /usr/local/bin/mvn",
   "customizations": {
     "vscode": {
       "extensions": [

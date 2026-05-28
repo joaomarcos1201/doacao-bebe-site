@@ -66,12 +66,15 @@ public class AuthController {
             String email = request.get("email");
             
             // Validar email
-            if (email == null || email.trim().isEmpty() || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            if (email == null || email.trim().isEmpty() || !email.trim().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
                 return ResponseEntity.badRequest().body("Email inválido");
             }
             
+            email = email.trim().toLowerCase();
+            
             // Verificar se o email existe
             if (!usuarioService.emailExiste(email)) {
+                System.out.println("Email não encontrado no banco: " + email);
                 return ResponseEntity.badRequest().body("Email não encontrado");
             }
             
