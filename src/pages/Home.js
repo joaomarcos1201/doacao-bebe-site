@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, LogIn, X, Clock, Grid2x2, Shirt, Bed, Baby, Soup, Ellipsis } from 'lucide-react';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -81,220 +82,205 @@ function Home({ user, setUser }) {
       {/* NAVBAR */}
       <nav style={{
         position: 'sticky', top: 0, zIndex: 1000,
-        backgroundColor: isDark ? 'rgba(15,15,15,0.97)' : 'rgba(255,252,253,0.92)',
-        backdropFilter: 'blur(24px)',
-        borderBottom: `1px solid ${isDark ? '#1e1e1e' : 'rgba(232,138,162,0.15)'}`,
-        padding: '0 32px',
-        height: '68px',
+        backgroundColor: isDark ? 'rgba(10,10,10,0.85)' : 'rgba(255,250,252,0.75)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(232,138,162,0.18)'}`,
+        padding: '0 28px',
+        height: '64px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        boxShadow: isDark ? 'none' : '0 1px 24px rgba(232,138,162,0.07)'
+        boxShadow: isDark ? '0 4px 24px rgba(0,0,0,0.4)' : '0 4px 24px rgba(232,138,162,0.1)'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+
+        {/* LOGO */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
           <img src="logo.jpeg" alt="Logo" style={{
-            width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover',
-            border: '2px solid #e8a0a8'
+            width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover',
+            border: '2px solid rgba(232,138,162,0.5)'
           }} onError={(e) => e.target.style.display = 'none'} />
           <span style={{
-            fontSize: '18px', fontWeight: '700',
+            fontSize: '16px', fontWeight: '700',
             color: isDark ? '#f0c0c8' : '#c0606a',
             letterSpacing: '-0.3px', whiteSpace: 'nowrap'
           }}>Além do Positivo</span>
-          {/* BARRA DE PESQUISA */}
-          <div style={{ position: 'relative' }}>
-            <div style={{
-              display: 'flex', alignItems: 'center',
-              backgroundColor: isDark ? '#1a1a1a' : '#ffffff',
-              border: `1.5px solid ${searchFocused ? '#E88AA2' : (isDark ? '#2a2a2a' : '#F8D7E3')}`,
-              borderRadius: '999px',
-              boxShadow: searchFocused
-                ? '0 4px 24px rgba(232,138,162,0.22)'
-                : '0 2px 16px rgba(232,138,162,0.1)',
-              transition: 'all 0.25s ease',
-              height: '46px',
-              minWidth: '460px',
-              overflow: 'visible'
-            }}>
-
-              {/* input */}
-              <div style={{ display: 'flex', alignItems: 'center', flex: 1, padding: '0 12px 0 20px', position: 'relative', overflow: 'hidden', height: '100%' }}>
-                <input
-                  type="text"
-                  value={pesquisa}
-                  onChange={(e) => setPesquisa(e.target.value)}
-                  onFocus={() => setSearchFocused(true)}
-                  onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
-                  style={{
-                    border: 'none', outline: 'none', background: 'transparent',
-                    fontSize: '14px', color: isDark ? '#f0f0f0' : '#374151',
-                    width: '100%', fontFamily: "'Inter', system-ui, sans-serif",
-                    WebkitAppearance: 'none', MozAppearance: 'none',
-                    appearance: 'none', boxShadow: 'none',
-                    borderRadius: '0', padding: '0', margin: '0',
-                    position: 'relative', zIndex: 2
-                  }}
-                />
-                {!pesquisa && (
-                  <span style={{
-                    position: 'absolute', left: '20px', top: '50%',
-                    transform: placeholderVisible ? 'translateY(-50%)' : 'translateY(-70%)',
-                    opacity: placeholderVisible ? 1 : 0,
-                    transition: 'opacity 0.35s ease, transform 0.35s ease',
-                    fontSize: '14px', color: isDark ? '#666' : '#E88AA2',
-                    fontFamily: "'Inter', system-ui, sans-serif",
-                    pointerEvents: 'none', whiteSpace: 'nowrap', zIndex: 1
-                  }}>
-                    {placeholders[placeholderIdx]}
-                  </span>
-                )}
-              </div>
-
-              {/* Divisor */}
-              <div style={{ width: '1px', height: '22px', backgroundColor: isDark ? '#333' : '#e0e0e0', flexShrink: 0 }} />
-
-              {/* Localização + Estado */}
-              <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px', gap: '5px', flexShrink: 0 }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                  stroke={isDark ? '#888' : '#E88AA2'} strokeWidth="2">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                  <circle cx="12" cy="10" r="3"/>
-                </svg>
-                <select
-                  value={estadoFiltro}
-                  onChange={(e) => setEstadoFiltro(e.target.value)}
-                  style={{
-                    border: 'none', outline: 'none', background: 'transparent',
-                    fontSize: '13px', fontWeight: '500',
-                    color: isDark ? '#bbb' : '#6B7280',
-                    cursor: 'pointer', fontFamily: "'Inter', system-ui, sans-serif",
-                    maxWidth: '96px',
-                    WebkitAppearance: 'none', MozAppearance: 'none',
-                    appearance: 'none', boxShadow: 'none'
-                  }}
-                >
-                  <option value="">Todo Brasil</option>
-                  {estados.map(uf => (
-                    <option key={uf} value={uf}>{uf}</option>
-                  ))}
-                </select>
-                {/* seta dropdown */}
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
-                  stroke={isDark ? '#888' : '#E88AA2'} strokeWidth="2.5">
-                  <polyline points="6 9 12 15 18 9"/>
-                </svg>
-              </div>
-
-              {/* Divisor */}
-              <div style={{ width: '1px', height: '22px', backgroundColor: isDark ? '#333' : '#F8D7E3', flexShrink: 0 }} />
-
-              {/* Botão lupa */}
-              <button
-                onClick={() => {}}
-                style={{
-                  height: '44px', width: '48px',
-                  backgroundColor: '#E88AA2',
-                  color: 'white', border: 'none', cursor: 'pointer',
-                  borderRadius: '0 999px 999px 0',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'background-color 0.2s',
-                  flexShrink: 0
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d4708a'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#E88AA2'}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                  <circle cx="11" cy="11" r="8"/>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-              </button>
-            </div>
-
-            {/* DROPDOWN RECENTES */}
-            {searchFocused && (
-              <div style={{
-                position: 'absolute', top: '48px', left: 0,
-                width: '100%', backgroundColor: isDark ? '#1c1c1c' : '#fff',
-                border: `1px solid ${isDark ? '#333' : '#F8D7E3'}`,
-                borderRadius: '12px',
-                boxShadow: '0 4px 20px rgba(232,138,162,0.12)',
-                zIndex: 9999, overflow: 'hidden'
-              }}>
-                <div style={{
-                  padding: '10px 16px 6px',
-                  fontSize: '11px', fontWeight: '600',
-                  color: isDark ? '#666' : '#E88AA2',
-                  letterSpacing: '0.6px', textTransform: 'uppercase'
-                }}>Recentes</div>
-                {['Roupas de bebê', 'Brinquedos', 'Berço', 'Carrinho', 'Acessórios'].map((item) => (
-                  <div
-                    key={item}
-                    onMouseDown={() => setPesquisa(item)}
-                    style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '9px 16px', cursor: 'pointer',
-                      transition: 'background 0.15s'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#2a2a2a' : '#FFF0F4'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                        stroke={isDark ? '#555' : '#F8D7E3'} strokeWidth="1.8">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polyline points="12 6 12 12 16 14"/>
-                      </svg>
-                      <span style={{ fontSize: '13.5px', color: isDark ? '#ddd' : '#6B7280' }}>{item}</span>
-                    </div>
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none"
-                      stroke={isDark ? '#444' : '#F8D7E3'} strokeWidth="2">
-                      <line x1="18" y1="6" x2="6" y2="18"/>
-                      <line x1="6" y1="6" x2="18" y2="18"/>
-                    </svg>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* BARRA DE PESQUISA */}
+        <div style={{ position: 'relative', flex: 1, maxWidth: '480px', margin: '0 20px' }}>
+          <div style={{
+            display: 'flex', alignItems: 'center',
+            backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.9)',
+            border: `1.5px solid ${searchFocused ? '#E88AA2' : (isDark ? 'rgba(255,255,255,0.1)' : 'rgba(232,138,162,0.25)')}`,
+            borderRadius: '999px',
+            boxShadow: searchFocused ? '0 0 0 3px rgba(232,138,162,0.15)' : 'none',
+            transition: 'all 0.25s ease',
+            height: '42px',
+            overflow: 'visible'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', flex: 1, padding: '0 12px 0 18px', position: 'relative', overflow: 'hidden', height: '100%' }}>
+              <input
+                type="text"
+                value={pesquisa}
+                onChange={(e) => setPesquisa(e.target.value)}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
+                style={{
+                  border: 'none', outline: 'none', background: 'transparent',
+                  fontSize: '13.5px', color: isDark ? '#f0f0f0' : '#374151',
+                  width: '100%', fontFamily: "'Inter', system-ui, sans-serif",
+                  WebkitAppearance: 'none', appearance: 'none', boxShadow: 'none',
+                  padding: '0', margin: '0', position: 'relative', zIndex: 2
+                }}
+              />
+              {!pesquisa && (
+                <span style={{
+                  position: 'absolute', left: '18px', top: '50%',
+                  transform: placeholderVisible ? 'translateY(-50%)' : 'translateY(-70%)',
+                  opacity: placeholderVisible ? 1 : 0,
+                  transition: 'opacity 0.35s ease, transform 0.35s ease',
+                  fontSize: '13.5px', color: isDark ? '#555' : '#c0a0a8',
+                  pointerEvents: 'none', whiteSpace: 'nowrap', zIndex: 1
+                }}>
+                  {placeholders[placeholderIdx]}
+                </span>
+              )}
+            </div>
+
+            <div style={{ width: '1px', height: '20px', backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(232,138,162,0.2)', flexShrink: 0 }} />
+
+            <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px', gap: '4px', flexShrink: 0 }}>
+              <MapPin size={13} color={isDark ? '#666' : '#E88AA2'} strokeWidth={2} />
+              <select
+                value={estadoFiltro}
+                onChange={(e) => setEstadoFiltro(e.target.value)}
+                style={{
+                  border: 'none', outline: 'none', background: 'transparent',
+                  fontSize: '12px', fontWeight: '500',
+                  color: isDark ? '#999' : '#6B7280',
+                  cursor: 'pointer', fontFamily: "'Inter', system-ui, sans-serif",
+                  maxWidth: '88px',
+                  WebkitAppearance: 'none', appearance: 'none', boxShadow: 'none'
+                }}
+              >
+                <option value="">Todo Brasil</option>
+                {estados.map(uf => <option key={uf} value={uf}>{uf}</option>)}
+              </select>
+              <ChevronDown size={12} color={isDark ? '#666' : '#E88AA2'} strokeWidth={2.5} />
+            </div>
+
+            <div style={{ width: '1px', height: '20px', backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(232,138,162,0.2)', flexShrink: 0 }} />
+
+            <button onClick={() => {}} style={{
+              height: '40px', width: '44px',
+              background: 'linear-gradient(135deg, #E88AA2 0%, #d4708a 100%)',
+              color: 'white', border: 'none', cursor: 'pointer',
+              borderRadius: '0 999px 999px 0',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'opacity 0.2s', flexShrink: 0
+            }}
+              onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+              onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+            >
+              <Search size={15} color="white" strokeWidth={2.5} />
+            </button>
+          </div>
+
+          {searchFocused && (
+            <div style={{
+              position: 'absolute', top: '46px', left: 0,
+              width: '100%', backgroundColor: isDark ? 'rgba(20,20,20,0.97)' : 'rgba(255,255,255,0.98)',
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(232,138,162,0.2)'}`,
+              borderRadius: '16px',
+              boxShadow: '0 8px 32px rgba(232,138,162,0.15)',
+              backdropFilter: 'blur(12px)',
+              zIndex: 9999, overflow: 'hidden'
+            }}>
+              <div style={{ padding: '10px 16px 6px', fontSize: '10px', fontWeight: '700',
+                color: isDark ? '#555' : '#E88AA2', letterSpacing: '1px', textTransform: 'uppercase'
+              }}>Recentes</div>
+              {['Roupas de bebê', 'Brinquedos', 'Berço', 'Carrinho', 'Acessórios'].map((item) => (
+                <div key={item} onMouseDown={() => setPesquisa(item)}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '9px 16px', cursor: 'pointer', transition: 'background 0.15s' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? 'rgba(255,255,255,0.05)' : '#FFF0F4'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  <span style={{ fontSize: '13px', color: isDark ? '#ccc' : '#6B7280' }}>{item}</span>
+                  <X size={10} color={isDark ? '#444' : '#ddd'} strokeWidth={2} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* AÇÕES DIREITA */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+
+          {/* Botão tema */}
           <button onClick={toggleTheme} style={{
-            width: '36px', height: '36px', borderRadius: '50%',
-            border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
-            backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
-          }}>{isDark ? '☀️' : '🌙'}</button>
+            width: '34px', height: '34px', borderRadius: '10px',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(232,138,162,0.25)'}`,
+            backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(232,138,162,0.08)',
+            cursor: 'pointer', fontSize: '15px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: 'all 0.2s'
+          }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(232,138,162,0.15)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(232,138,162,0.08)'}
+>            {isDark ? <Sun size={16} color="#f0c060" strokeWidth={2} /> : <Moon size={16} color="#c0606a" strokeWidth={2} />}
+          </button>
 
           {user && (
             <span style={{
-              fontSize: '13px', color: isDark ? '#aaa' : '#888',
-              padding: '6px 12px',
-              backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
+              fontSize: '12px', color: isDark ? '#aaa' : '#c0606a',
+              padding: '5px 12px',
+              backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(232,138,162,0.1)',
               borderRadius: '20px',
-              border: `1px solid ${isDark ? '#333' : '#f0d8dc'}`
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(232,138,162,0.2)'}`,
+              fontWeight: '500'
             }}>Olá, {user.nome}!</span>
           )}
 
+          {/* Menu hambúrguer */}
           <button onClick={() => setMenuAberto(!menuAberto)} style={{
-            width: '36px', height: '36px', borderRadius: '8px',
-            border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
-            backgroundColor: menuAberto ? (isDark ? '#2a2a2a' : '#fdf0f2') : 'transparent',
-            cursor: 'pointer', fontSize: '18px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: isDark ? '#ccc' : '#888'
-          }}>☰</button>
+            width: '34px', height: '34px', borderRadius: '10px',
+            border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(232,138,162,0.25)'}`,
+            backgroundColor: menuAberto
+              ? (isDark ? 'rgba(232,138,162,0.15)' : 'rgba(232,138,162,0.12)')
+              : (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(232,138,162,0.08)'),
+            cursor: 'pointer',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px',
+            transition: 'all 0.2s', padding: '0'
+          }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(232,138,162,0.15)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = menuAberto ? (isDark ? 'rgba(232,138,162,0.15)' : 'rgba(232,138,162,0.12)') : (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(232,138,162,0.08)')}
+          >
+            <Menu size={16} color={isDark ? '#ccc' : '#c0606a'} strokeWidth={2} />
+          </button>
 
+          {/* Entrar / Sair */}
           {user ? (
             <button onClick={handleLogout} style={{
-              padding: '8px 16px', borderRadius: '8px',
-              border: '1px solid #ef4444', backgroundColor: 'transparent',
-              color: '#ef4444', cursor: 'pointer', fontSize: '13px', fontWeight: '500'
-            }}>Sair</button>
+              padding: '7px 16px', borderRadius: '10px',
+              border: '1px solid rgba(239,68,68,0.4)', backgroundColor: 'transparent',
+              color: '#ef4444', cursor: 'pointer', fontSize: '13px', fontWeight: '500',
+              transition: 'all 0.2s'
+            }}
+              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239,68,68,0.08)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>Sair <LogOut size={13} /></button>
           ) : (
             <button onClick={() => navigate('/login')} style={{
-              padding: '8px 20px', borderRadius: '8px',
-              border: 'none', backgroundColor: '#c0606a',
-              color: 'white', cursor: 'pointer', fontSize: '13px', fontWeight: '600'
-            }}>Entrar</button>
+              padding: '7px 20px', borderRadius: '10px',
+              border: 'none',
+              background: 'linear-gradient(135deg, #E88AA2 0%, #c0606a 100%)',
+              color: 'white', cursor: 'pointer', fontSize: '13px', fontWeight: '600',
+              boxShadow: '0 4px 14px rgba(232,138,162,0.4)',
+              transition: 'all 0.2s'
+            }}
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.88'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            >Entrar</button>
           )}
         </div>
       </nav>
@@ -364,7 +350,7 @@ function Home({ user, setUser }) {
         <div style={{ position: 'absolute', bottom: '-40px', right: '200px', width: '140px', height: '140px', borderRadius: '50%', backgroundColor: 'rgba(232,138,162,0.08)', pointerEvents: 'none' }} />
 
         {/* Lado esquerdo */}
-        <div style={{ flex: 1, maxWidth: '520px' }}>
+        <div style={{ flex: 1, maxWidth: '620px' }}>
           <div style={{
             display: 'inline-block', padding: '5px 14px', borderRadius: '20px',
             backgroundColor: isDark ? 'rgba(232,138,162,0.15)' : 'rgba(232,138,162,0.12)',
@@ -374,11 +360,11 @@ function Home({ user, setUser }) {
           }}>DOAÇÕES PARA BEBÊS</div>
 
           <h1 style={{
-            fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: '900',
+            fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: '900',
             color: isDark ? '#f5e0e2' : '#1a1a2e',
-            margin: '0', lineHeight: '1.1', letterSpacing: '-2px'
+            margin: '0', lineHeight: '1.2', letterSpacing: '-1px'
           }}>
-            Conectando quem doa com <span style={{ color: '#E88AA2', fontStyle: 'italic' }}>quem precisa</span>
+            Conectando quem doa<br />com <span style={{ color: '#E88AA2', fontStyle: 'italic' }}>quem precisa</span>
           </h1>
 
           <p style={{
@@ -429,8 +415,8 @@ function Home({ user, setUser }) {
           boxShadow: '0 8px 40px rgba(232,138,162,0.2)'
         }}>
           <img
-            src="https://images.unsplash.com/photo-1492725764893-90b379c2b6e7?w=840&q=80&fit=crop&crop=faces"
-            alt="mae-bebe.png"
+            src="mae-bebe.jpg"
+            alt="mae-bebe"
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
           />
         </div>
@@ -444,21 +430,21 @@ function Home({ user, setUser }) {
         padding: '20px 32px'
       }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center' }}>
-            {[{ value: '', label: 'Todos', icon: '⊞' }, { value: 'roupas', label: 'Roupas', icon: '👕' }, { value: 'brinquedos', label: 'Brinquedos', icon: '🧸' }, { value: 'moveis', label: 'Móveis', icon: '🛏' }, { value: 'acessorios', label: 'Acessórios', icon: '🍼' }, { value: 'alimentacao', label: 'Alimentação', icon: '🥣' }, { value: 'outros', label: 'Outros', icon: '···' }].map(cat => (
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
+            {[{ value: '', label: 'Todos', icon: <Grid2x2 size={18} strokeWidth={1.8} /> }, { value: 'roupas', label: 'Roupas', icon: <Shirt size={18} strokeWidth={1.8} /> }, { value: 'brinquedos', label: 'Brinquedos', icon: <Baby size={18} strokeWidth={1.8} /> }, { value: 'moveis', label: 'Móveis', icon: <Bed size={18} strokeWidth={1.8} /> }, { value: 'acessorios', label: 'Acessórios', icon: <Baby size={18} strokeWidth={1.8} /> }, { value: 'alimentacao', label: 'Alimentação', icon: <Soup size={18} strokeWidth={1.8} /> }, { value: 'outros', label: 'Outros', icon: <Ellipsis size={18} strokeWidth={1.8} /> }].map(cat => (
               <button key={cat.value} onClick={() => setCategoriaFiltro(cat.value)} style={{
-                padding: '12px 20px', borderRadius: '16px', fontSize: '13px',
-                fontWeight: '500', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px',
+                padding: '8px 16px', borderRadius: '12px', fontSize: '13px',
+                fontWeight: '500', cursor: 'pointer', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '7px',
                 border: `1.5px solid ${categoriaFiltro === cat.value ? '#E88AA2' : (isDark ? '#2a2a2a' : '#F0F0F0')}`,
                 backgroundColor: categoriaFiltro === cat.value ? 'rgba(232,138,162,0.1)' : (isDark ? '#1a1a1a' : '#fff'),
                 color: categoriaFiltro === cat.value ? '#E88AA2' : (isDark ? '#aaa' : '#6B7280'),
-                transition: 'all 0.18s ease', minWidth: '80px',
+                transition: 'all 0.18s ease',
                 boxShadow: categoriaFiltro === cat.value ? '0 2px 12px rgba(232,138,162,0.2)' : '0 1px 4px rgba(0,0,0,0.04)'
               }}
                 onMouseEnter={(e) => { if (categoriaFiltro !== cat.value) e.currentTarget.style.borderColor = '#F8D7E3'; }}
                 onMouseLeave={(e) => { if (categoriaFiltro !== cat.value) e.currentTarget.style.borderColor = isDark ? '#2a2a2a' : '#F0F0F0'; }}
               >
-                <span style={{ fontSize: '20px' }}>{cat.icon}</span>
+                <span style={{ color: categoriaFiltro === cat.value ? '#E88AA2' : (isDark ? '#aaa' : '#9CA3AF'), display: 'flex' }}>{cat.icon}</span>
                 <span>{cat.label}</span>
               </button>
             ))}
@@ -467,39 +453,73 @@ function Home({ user, setUser }) {
       </div>
 
       {/* COMO FUNCIONA */}
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '48px 32px 0' }}>
-        <h2 style={{ fontSize: '24px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#1a1a2e', margin: '0 0 6px' }}>Como funciona</h2>
-        <p style={{ fontSize: '14px', color: isDark ? '#777' : '#9CA3AF', margin: '0 0 28px' }}>Três passos simples para transformar vidas</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '48px' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 32px 0' }}>
+        <h2 style={{ fontSize: '26px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#1a1a2e', margin: '0 0 6px', letterSpacing: '-0.5px' }}>Como funciona</h2>
+        <p style={{ fontSize: '14px', color: isDark ? '#666' : '#9CA3AF', margin: '0 0 32px' }}>Três passos simples para transformar vidas</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '56px' }}>
           {[
-            { num: '1', emoji: '📦', title: 'Doe itens', desc: 'Separe itens que seu bebê não usa mais e doe com carinho.' },
-            { num: '2', emoji: '👨‍👩‍👧', title: 'Encontre famílias', desc: 'Famílias que precisam encontram o que seu bebê precisa.' },
-            { num: '3', emoji: '💝', title: 'Ajude quem precisa', desc: 'Seu gesto transforma o dia e a vida de outras famílias.' },
+            {
+              num: '1', title: 'Doe itens', desc: 'Separe itens que seu bebê não usa mais e doe com carinho.',
+              svg: (
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                  <rect width="80" height="80" rx="20" fill="#fde8f0"/>
+                  <rect x="20" y="30" width="40" height="28" rx="5" fill="#f5b8ce" stroke="#e88aa2" strokeWidth="1.5"/>
+                  <rect x="20" y="26" width="40" height="8" rx="4" fill="#e88aa2"/>
+                  <line x1="40" y1="26" x2="40" y2="58" stroke="#d4708a" strokeWidth="1.5"/>
+                  <path d="M33 20 Q40 15 47 20" stroke="#e88aa2" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                </svg>
+              )
+            },
+            {
+              num: '2', title: 'Encontre famílias', desc: 'Famílias que precisam encontram o que seu bebê precisa.',
+              svg: (
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                  <rect width="80" height="80" rx="20" fill="#fde8f0"/>
+                  <circle cx="40" cy="28" r="10" fill="#f5b8ce" stroke="#e88aa2" strokeWidth="1.5"/>
+                  <path d="M22 58 Q22 44 40 44 Q58 44 58 58" fill="#f5b8ce" stroke="#e88aa2" strokeWidth="1.5"/>
+                  <circle cx="27" cy="35" r="6" fill="#fde8f0" stroke="#e88aa2" strokeWidth="1.2"/>
+                  <circle cx="53" cy="35" r="6" fill="#fde8f0" stroke="#e88aa2" strokeWidth="1.2"/>
+                </svg>
+              )
+            },
+            {
+              num: '3', title: 'Ajude quem precisa', desc: 'Seu gesto transforma o dia e a vida de outras famílias.',
+              svg: (
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                  <rect width="80" height="80" rx="20" fill="#fde8f0"/>
+                  <path d="M40 55 L19 36 Q14 28 22 23 Q30 18 37 26 L40 29 L43 26 Q50 18 58 23 Q66 28 61 36 Z" fill="#f5b8ce" stroke="#e88aa2" strokeWidth="1.5" strokeLinejoin="round"/>
+                  <circle cx="40" cy="44" r="5" fill="#e88aa2" opacity="0.5"/>
+                </svg>
+              )
+            },
           ].map(step => (
             <div key={step.num} style={{
               backgroundColor: isDark ? '#161616' : '#fff',
-              borderRadius: '20px', padding: '28px 24px',
-              border: `1px solid ${isDark ? '#222' : 'rgba(248,215,227,0.6)'}`,
-              boxShadow: isDark ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 16px rgba(232,138,162,0.08)',
-              display: 'flex', alignItems: 'flex-start', gap: '16px'
+              borderRadius: '22px',
+              padding: '28px 24px',
+              border: `1px solid ${isDark ? '#222' : 'rgba(248,215,227,0.7)'}`,
+              boxShadow: isDark ? '0 2px 16px rgba(0,0,0,0.3)' : '0 4px 24px rgba(232,138,162,0.09)',
+              display: 'flex', alignItems: 'center', gap: '20px',
+              position: 'relative'
             }}>
               <div style={{
-                width: '32px', height: '32px', borderRadius: '50%',
+                position: 'absolute', top: '18px', left: '18px',
+                width: '28px', height: '28px', borderRadius: '50%',
                 backgroundColor: '#E88AA2', color: 'white',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '13px', fontWeight: '700', flexShrink: 0
+                fontSize: '12px', fontWeight: '800', flexShrink: 0,
+                boxShadow: '0 2px 8px rgba(232,138,162,0.4)'
               }}>{step.num}</div>
+              <div style={{ flexShrink: 0, marginTop: '8px' }}>{step.svg}</div>
               <div>
-                <div style={{ fontSize: '32px', marginBottom: '8px' }}>{step.emoji}</div>
-                <div style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#f0e0e2' : '#1a1a2e', marginBottom: '6px' }}>{step.title}</div>
-                <div style={{ fontSize: '13px', color: isDark ? '#777' : '#9CA3AF', lineHeight: '1.6' }}>{step.desc}</div>
+                <div style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0e0e2' : '#1a1a2e', marginBottom: '8px' }}>{step.title}</div>
+                <div style={{ fontSize: '13.5px', color: isDark ? '#777' : '#9CA3AF', lineHeight: '1.65' }}>{step.desc}</div>
               </div>
             </div>
           ))}
         </div>
       </div>
-
-      {/* PRODUTOS */}
+            {/* PRODUTOS */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px' }}>
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
