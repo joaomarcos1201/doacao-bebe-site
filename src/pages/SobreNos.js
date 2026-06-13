@@ -91,10 +91,6 @@ function SobreNos() {
         </div>
 
         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link to="/doacao" style={{
-            padding: '12px 28px', borderRadius: '10px', backgroundColor: '#c0606a',
-            color: 'white', textDecoration: 'none', fontSize: '14px', fontWeight: '600'
-          }}>🎁 Fazer uma Doação</Link>
           <Link to="/home" style={{
             padding: '12px 28px', borderRadius: '10px', border: '1px solid #c0606a',
             color: '#c0606a', textDecoration: 'none', fontSize: '14px', fontWeight: '600',

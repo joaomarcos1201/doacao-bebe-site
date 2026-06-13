@@ -63,7 +63,6 @@ function Home({ user, setUser }) {
   };
 
   const menuItems = [
-    { label: 'Doar Produto', path: '/doacao' },
     { label: 'Meu Perfil', path: '/perfil', authRequired: true },
     { label: 'Sobre Nós', path: '/sobre-nos' },
     { label: 'Fale Conosco', path: '/fale-conosco' },
@@ -387,7 +386,7 @@ function Home({ user, setUser }) {
             margin: '16px 0 32px', lineHeight: '1.7', maxWidth: '420px'
           }}>Encontre itens para bebês doados por famílias da sua região.<br />Tudo gratuito, com amor.</p>
 
-          <button onClick={() => navigate('/doacao')} style={{
+          <button onClick={() => navigate('/baixar-app')} style={{
             padding: '14px 28px', borderRadius: '50px',
             backgroundColor: '#E88AA2', color: 'white',
             border: 'none', fontSize: '15px', fontWeight: '600',
@@ -402,6 +401,8 @@ function Home({ user, setUser }) {
             </svg>
             Quero doar
           </button>
+
+
 
           {/* Mini features */}
           <div style={{ display: 'flex', flexDirection: 'row', gap: '70px', marginTop: '120px' }}>

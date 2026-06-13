@@ -4,7 +4,6 @@ import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
-import Doacao from './pages/Doacao';
 import DetalhesProduto from './pages/DetalhesProduto';
 import Perfil from './pages/Perfil';
 import RecuperarSenha from './pages/RecuperarSenha';
@@ -13,6 +12,7 @@ import FaleConosco from './pages/FaleConosco';
 import FAQ from './pages/FAQ';
 import Chat from './pages/Chat';
 import TermosPrivacidade from './pages/TermosPrivacidade';
+import BaixarApp from './pages/BaixarApp';
 import ManualSeguranca from './pages/ManualSeguranca';
 import UserStatusChecker from './components/UserStatusChecker';
 import { ProdutosProvider } from './context/ProdutosContext';
@@ -103,7 +103,6 @@ function App() {
                 <Route path="/cadastro" element={<Cadastro />} />
                 <Route path="/home" element={<Home user={user} setUser={setUser} />} />
                 <Route path="/admin" element={user && (user.isAdmin || user.email === 'admin@alemdopositivo.com') ? <Admin /> : <Navigate to="/login" />} />
-                <Route path="/doacao" element={user ? <Doacao /> : <Navigate to="/login" />} />
                 <Route path="/produto/:id" element={<DetalhesProduto />} />
                 <Route path="/perfil" element={user ? <Perfil user={user} setUser={setUser} /> : <Navigate to="/login" />} />
 
@@ -111,6 +110,7 @@ function App() {
                 <Route path="/fale-conosco" element={<FaleConosco />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/termos-privacidade" element={<TermosPrivacidade />} />
+                <Route path="/baixar-app" element={<BaixarApp />} />
                 <Route path="/manual-seguranca" element={<ManualSeguranca />} />
 
                 <Route path="/recuperar-senha" element={<RecuperarSenha />} />

@@ -9,7 +9,7 @@ function FAQ() {
 
   const perguntas = [
     { id: 1, q: 'Como funciona o sistema de doações?', r: 'Nosso sistema conecta pessoas que desejam doar produtos para bebês com famílias que precisam. Você pode cadastrar produtos para doação ou buscar itens disponíveis. Todos os produtos passam por aprovação antes de serem publicados.' },
-    { id: 2, q: 'Como posso doar um produto?', r: 'Clique em "Doar Produto" no menu, preencha o formulário com as informações do item. Após aprovação do administrador, seu produto ficará visível para interessados.' },
+    { id: 2, q: 'Como posso doar um produto?', r: 'As doações são feitas pelo nosso aplicativo. Baixe o app, faça o cadastro e cadastre os produtos que deseja doar.' },
     { id: 3, q: 'Como entro em contato com quem está doando?', r: 'Ao encontrar um produto de interesse, clique em "Ver Detalhes" e depois em "Entrar em Contato via WhatsApp". Vocês combinam os detalhes diretamente.' },
     { id: 4, q: 'Preciso pagar alguma taxa?', r: 'Não! Nosso serviço é 100% gratuito. Não cobramos taxas para cadastro, doação ou busca de produtos.' },
     { id: 5, q: 'Que tipos de produtos posso doar?', r: 'Roupas, brinquedos, móveis (berços, carrinhos), acessórios, produtos de alimentação e outros itens para bebês. Todos devem estar em bom estado de conservação.' },
