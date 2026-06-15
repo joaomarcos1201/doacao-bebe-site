@@ -6,7 +6,7 @@ import { useConfirm } from '../hooks/useConfirm';
 import { useProdutos } from '../context/ProdutosContext';
 import Notification from '../components/Notification';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { API_URL } from '../config/api';
+import { API_URL, api } from '../config/api';
 
 function Admin() {
   const navigate = useNavigate();
@@ -21,10 +21,18 @@ function Admin() {
   const { notifications, showSuccess, showError, removeNotification } = useNotification();
   const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirm();
 
-  const produtosPendentes = produtos.filter(p => p.statusAnuncio === 'INATIVO');
-  const produtosAprovados = produtos.filter(p => p.statusAnuncio === 'ATIVO');
+  const [pedidos, setPedidos] = useState([]);
+  const [saques, setSaques] = useState([]);
 
-  useEffect(() => { carregarUsuarios(); carregarMensagens(); }, []);
+  const produtosPendentes = produtos.filter(p => p.statusAnuncio === 'EM_ANALISE');
+  const produtosAprovados = produtos.filter(p => !['EM_ANALISE', 'REJEITADO'].includes(p.statusAnuncio));
+
+  useEffect(() => {
+    carregarUsuarios();
+    carregarMensagens();
+    api.todosPedidos().then(setPedidos).catch(() => {});
+    api.todosSaques().then(setSaques).catch(() => {});
+  }, []);
   useEffect(() => {
     const handler = (e) => { if (menuAberto && !e.target.closest('td')) setMenuAberto(null); };
     document.addEventListener('click', handler);
@@ -138,6 +146,8 @@ function Admin() {
         <div style={{ display: 'flex', gap: '8px', marginBottom: '28px', flexWrap: 'wrap' }}>
           {tabBtn('usuarios', `👥 Usuários (${stats.total})`)}
           {tabBtn('produtos', `📦 Produtos (${produtosPendentes.length} pendentes)`)}
+          {tabBtn('pedidos', `🛒 Pedidos (${pedidos.length})`)}
+          {tabBtn('saques', `💸 Saques (${saques.filter(s => s.status === 'PENDENTE').length} pendentes)`)}
           {tabBtn('mensagens', `💬 Mensagens (${mensagens.length})`)}
         </div>
 
@@ -229,6 +239,64 @@ function Admin() {
           </>
         )}
 
+        {/* ABA PEDIDOS */}
+        {aba === 'pedidos' && (
+          <div style={{ backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, overflow: 'hidden' }}>
+            <div style={{ padding: '20px 24px', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
+              <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: 0 }}>Todos os Pedidos ({pedidos.length})</h2>
+            </div>
+            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {pedidos.length === 0 ? (
+                <p style={{ textAlign: 'center', color: isDark ? '#666' : '#aaa', fontSize: '14px', padding: '20px' }}>Nenhum pedido ainda.</p>
+              ) : pedidos.map(p => (
+                <div key={p.id} style={{ padding: '16px', borderRadius: '12px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333' }}>Pedido #{p.id} — {p.produto?.nome}</span>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: p.statusPagamento === 'FINALIZADO' ? '#4caf50' : p.statusPagamento === 'APROVADO' ? '#2196f3' : '#ff9800' }}>{p.statusPagamento}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: isDark ? '#888' : '#666', flexWrap: 'wrap' }}>
+                    <span>Comprador: {p.comprador?.nome}</span>
+                    <span>Vendedor: {p.vendedor?.nome}</span>
+                    <span>Total: R$ {Number(p.valorTotal || 0).toFixed(2)}</span>
+                    {p.statusEnvio && <span>Envio: {p.statusEnvio}</span>}
+                    {p.codigoRastreio && <span>Rastreio: {p.codigoRastreio}</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ABA SAQUES */}
+        {aba === 'saques' && (
+          <div style={{ backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, overflow: 'hidden' }}>
+            <div style={{ padding: '20px 24px', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
+              <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: 0 }}>Saques</h2>
+            </div>
+            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {saques.length === 0 ? (
+                <p style={{ textAlign: 'center', color: isDark ? '#666' : '#aaa', fontSize: '14px', padding: '20px' }}>Nenhum saque solicitado.</p>
+              ) : saques.map(s => (
+                <div key={s.id} style={{ padding: '16px', borderRadius: '12px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <p style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 4px' }}>R$ {Number(s.valor).toFixed(2)} — {s.usuario?.nome}</p>
+                    <p style={{ fontSize: '12px', color: isDark ? '#888' : '#666', margin: 0 }}>{new Date(s.dataSolicitacao).toLocaleDateString('pt-BR')}</p>
+                  </div>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: s.status === 'APROVADO' ? '#4caf50' : s.status === 'REJEITADO' ? '#ef4444' : '#ff9800' }}>{s.status}</span>
+                    {s.status === 'PENDENTE' && (
+                      <>
+                        <button onClick={async () => { await api.resolverSaque(s.id, true); api.todosSaques().then(setSaques); showSuccess('Saque aprovado!'); }} style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', backgroundColor: '#4caf50', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>Aprovar</button>
+                        <button onClick={async () => { await api.resolverSaque(s.id, false); api.todosSaques().then(setSaques); showSuccess('Saque rejeitado.'); }} style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', backgroundColor: '#ef4444', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>Rejeitar</button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ABA PRODUTOS */}
         {aba === 'produtos' && (
           <>
@@ -265,11 +333,11 @@ function Admin() {
                         <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 6px' }}>{p.nome}</h3>
                         <p style={{ fontSize: '13px', color: isDark ? '#888' : '#666', margin: '0 0 12px', lineHeight: '1.5' }}>{p.descricao}</p>
                         <div style={{ display: 'flex', gap: '8px' }}>
-                          <button onClick={() => { aprovarProduto(p.id); showSuccess('Produto aprovado!'); }} style={{
+                          <button onClick={() => { api.alterarStatusProduto(p.id, 'DISPONIVEL').then(() => { aprovarProduto(p.id); showSuccess('Produto aprovado!'); }); }} style={{
                             padding: '8px 16px', borderRadius: '8px', border: 'none',
                             backgroundColor: '#4caf50', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
                           }}>✓ Aprovar</button>
-                          <button onClick={() => showConfirm('Rejeitar Produto', 'Tem certeza?', () => { rejeitarProduto(p.id); showSuccess('Produto rejeitado.'); }, 'Rejeitar', 'Cancelar')} style={{
+                          <button onClick={() => showConfirm('Rejeitar Produto', 'Tem certeza?', () => { api.alterarStatusProduto(p.id, 'REJEITADO').then(() => { rejeitarProduto(p.id); showSuccess('Produto rejeitado.'); }); }, 'Rejeitar', 'Cancelar')} style={{
                             padding: '8px 16px', borderRadius: '8px', border: 'none',
                             backgroundColor: '#ef4444', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
                           }}>✗ Rejeitar</button>

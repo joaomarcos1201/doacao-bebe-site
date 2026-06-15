@@ -14,6 +14,11 @@ import Chat from './pages/Chat';
 import TermosPrivacidade from './pages/TermosPrivacidade';
 import BaixarApp from './pages/BaixarApp';
 import ManualSeguranca from './pages/ManualSeguranca';
+import Checkout from './pages/Checkout';
+import MeusPedidos from './pages/MeusPedidos';
+import MinhasVendas from './pages/MinhasVendas';
+import CadastrarProduto from './pages/CadastrarProduto';
+import Carteira from './pages/Carteira';
 import UserStatusChecker from './components/UserStatusChecker';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -105,6 +110,12 @@ function App() {
                 <Route path="/admin" element={user && (user.isAdmin || user.email === 'admin@alemdopositivo.com') ? <Admin /> : <Navigate to="/login" />} />
                 <Route path="/produto/:id" element={<DetalhesProduto />} />
                 <Route path="/perfil" element={user ? <Perfil user={user} setUser={setUser} /> : <Navigate to="/login" />} />
+
+                <Route path="/checkout" element={user ? <Checkout /> : <Navigate to="/login" />} />
+                <Route path="/meus-pedidos" element={user ? <MeusPedidos /> : <Navigate to="/login" />} />
+                <Route path="/minhas-vendas" element={user ? <MinhasVendas /> : <Navigate to="/login" />} />
+                <Route path="/cadastrar-produto" element={user ? <CadastrarProduto /> : <Navigate to="/login" />} />
+                <Route path="/carteira" element={user ? <Carteira /> : <Navigate to="/login" />} />
 
                 <Route path="/sobre-nos" element={<SobreNos />} />
                 <Route path="/fale-conosco" element={<FaleConosco />} />
