@@ -3,6 +3,7 @@ package com.doacaobebe.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "Anuncio")
@@ -68,6 +69,7 @@ public class Produto {
     @Column(length = 9)
     private String cepOrigem;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendedor_id")
     private Usuario vendedor;

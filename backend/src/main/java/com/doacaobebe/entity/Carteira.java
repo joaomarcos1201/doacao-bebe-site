@@ -1,6 +1,7 @@
 package com.doacaobebe.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 
 @Entity
@@ -11,6 +12,7 @@ public class Carteira {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false, unique = true)
     private Usuario usuario;
