@@ -1,6 +1,7 @@
 package com.doacaobebe.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -40,12 +41,38 @@ public class Produto {
     private LocalDateTime dataAnuncio = LocalDateTime.now();
 
     @Column(nullable = false, length = 20)
-    private String statusAnuncio = "INATIVO";
+    private String statusAnuncio = "EM_ANALISE";
 
-    // CONSTRUTOR
+    // Novos campos marketplace
+    @Column(precision = 10, scale = 2)
+    private BigDecimal preco;
+
+    @Column(precision = 10, scale = 3)
+    private BigDecimal peso;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal altura;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal largura;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal comprimento;
+
+    @Column(length = 100)
+    private String marca;
+
+    @Column(length = 50)
+    private String conservacao;
+
+    @Column(length = 9)
+    private String cepOrigem;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendedor_id")
+    private Usuario vendedor;
+
     public Produto() {}
-
-    // GETTERS E SETTERS
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -79,4 +106,31 @@ public class Produto {
 
     public String getStatusAnuncio() { return statusAnuncio; }
     public void setStatusAnuncio(String statusAnuncio) { this.statusAnuncio = statusAnuncio; }
+
+    public BigDecimal getPreco() { return preco; }
+    public void setPreco(BigDecimal preco) { this.preco = preco; }
+
+    public BigDecimal getPeso() { return peso; }
+    public void setPeso(BigDecimal peso) { this.peso = peso; }
+
+    public BigDecimal getAltura() { return altura; }
+    public void setAltura(BigDecimal altura) { this.altura = altura; }
+
+    public BigDecimal getLargura() { return largura; }
+    public void setLargura(BigDecimal largura) { this.largura = largura; }
+
+    public BigDecimal getComprimento() { return comprimento; }
+    public void setComprimento(BigDecimal comprimento) { this.comprimento = comprimento; }
+
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
+
+    public String getConservacao() { return conservacao; }
+    public void setConservacao(String conservacao) { this.conservacao = conservacao; }
+
+    public String getCepOrigem() { return cepOrigem; }
+    public void setCepOrigem(String cepOrigem) { this.cepOrigem = cepOrigem; }
+
+    public Usuario getVendedor() { return vendedor; }
+    public void setVendedor(Usuario vendedor) { this.vendedor = vendedor; }
 }
