@@ -65,6 +65,10 @@ function Home({ user, setUser }) {
 
   const menuItems = [
     { label: 'Meu Perfil', path: '/perfil', authRequired: true },
+    { label: '📸 Anunciar Produto', path: '/cadastrar-produto', authRequired: true },
+    { label: '📦 Meus Pedidos', path: '/meus-pedidos', authRequired: true },
+    { label: '🏷️ Minhas Vendas', path: '/minhas-vendas', authRequired: true },
+    { label: '💼 Minha Carteira', path: '/carteira', authRequired: true },
     { label: 'Sobre Nós', path: '/sobre-nos' },
     { label: 'Fale Conosco', path: '/fale-conosco' },
     { label: 'FAQ', path: '/faq' },

@@ -84,6 +84,28 @@ function Perfil({ user, setUser }) {
           <p style={{ fontSize: '14px', color: isDark ? '#666' : '#999', margin: 0 }}>{user?.email}</p>
         </div>
 
+        {/* Atalhos rápidos */}
+        <div style={{
+          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
+          border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '16px'
+        }}>
+          <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 14px' }}>Acesso Rápido</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {[
+              { label: '📸 Anunciar Produto', path: '/cadastrar-produto' },
+              { label: '📦 Meus Pedidos', path: '/meus-pedidos' },
+              { label: '🏷️ Minhas Vendas', path: '/minhas-vendas' },
+              { label: '💼 Minha Carteira', path: '/carteira' },
+            ].map(({ label, path }) => (
+              <button key={path} onClick={() => navigate(path)} style={{
+                width: '100%', padding: '12px 16px', borderRadius: '10px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
+                backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2', color: isDark ? '#e0e0e0' : '#333',
+                fontSize: '14px', fontWeight: '500', cursor: 'pointer', textAlign: 'left'
+              }}>{label}</button>
+            ))}
+          </div>
+        </div>
+
         {/* Dados pessoais */}
         <div style={{
           backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', padding: '28px',
