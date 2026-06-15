@@ -20,7 +20,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const carregarProdutos = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/produtos`);
+      const response = await fetch(`${API_URL}/api/products/todos`);
       if (response.ok) {
         const data = await response.json();
         setProdutos(data);
@@ -32,7 +32,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const adicionarProduto = async (novoProduto) => {
     try {
-      const response = await fetch(`${API_URL}/api/produtos`, {
+      const response = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const aprovarProduto = async (produtoId) => {
     try {
-      const response = await fetch(`${API_URL}/api/produtos/${produtoId}/aprovar`, {
+      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=DISPONIVEL`, {
         method: 'PUT',
       });
       if (response.ok) {
@@ -62,8 +62,8 @@ export const ProdutosProvider = ({ children }) => {
 
   const rejeitarProduto = async (produtoId) => {
     try {
-      const response = await fetch(`${API_URL}/api/produtos/${produtoId}`, {
-        method: 'DELETE',
+      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=REJEITADO`, {
+        method: 'PUT',
       });
       if (response.ok) {
         carregarProdutos();
@@ -75,7 +75,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const removerProduto = async (produtoId) => {
     try {
-      const response = await fetch(`${API_URL}/api/produtos/${produtoId}`, {
+      const response = await fetch(`${API_URL}/api/products/${produtoId}`, {
         method: 'DELETE',
       });
       if (response.ok) {

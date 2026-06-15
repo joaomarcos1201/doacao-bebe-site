@@ -41,7 +41,7 @@ function Home({ user, setUser }) {
     const matchPesquisa = produto.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
                          produto.descricao.toLowerCase().includes(pesquisa.toLowerCase());
     const matchCategoria = categoriaFiltro === '' || produto.categoria === categoriaFiltro;
-    const isAprovado = produto.statusAnuncio === 'ATIVO';
+    const isAprovado = produto.statusAnuncio === 'ATIVO' || produto.statusAnuncio === 'DISPONIVEL';
     return matchPesquisa && matchCategoria && isAprovado;
   });
 

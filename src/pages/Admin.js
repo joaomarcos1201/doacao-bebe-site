@@ -24,8 +24,8 @@ function Admin() {
   const [pedidos, setPedidos] = useState([]);
   const [saques, setSaques] = useState([]);
 
-  const produtosPendentes = produtos.filter(p => p.statusAnuncio === 'EM_ANALISE');
-  const produtosAprovados = produtos.filter(p => !['EM_ANALISE', 'REJEITADO'].includes(p.statusAnuncio));
+  const produtosPendentes = produtos.filter(p => p.statusAnuncio === 'EM_ANALISE' || p.statusAnuncio === 'INATIVO');
+  const produtosAprovados = produtos.filter(p => p.statusAnuncio === 'ATIVO' || p.statusAnuncio === 'DISPONIVEL');
 
   useEffect(() => {
     carregarUsuarios();
