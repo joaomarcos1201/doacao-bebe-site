@@ -512,11 +512,8 @@ function Home({ user, setUser }) {
         </div>
       </div>
             {/* PRODUTOS */}
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px' }}>
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          marginBottom: '24px'
-        }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <span style={{ fontSize: '14px', color: isDark ? '#666' : '#999' }}>
             {produtosFiltrados.length} {produtosFiltrados.length === 1 ? 'anúncio encontrado' : 'anúncios encontrados'}
           </span>
@@ -528,7 +525,6 @@ function Home({ user, setUser }) {
             backgroundColor: isDark ? '#141414' : '#fff',
             borderRadius: '16px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
           }}>
-
             <h3 style={{ color: isDark ? '#e0e0e0' : '#333', marginBottom: '8px' }}>Nenhum anúncio encontrado</h3>
             <p style={{ color: isDark ? '#666' : '#999', fontSize: '14px' }}>Tente ajustar os filtros ou a pesquisa</p>
           </div>
@@ -539,28 +535,22 @@ function Home({ user, setUser }) {
             gap: '20px'
           }}>
             {produtosFiltrados.map(produto => (
-              <div key={produto.id} style={{
+              <div key={produto.id} onClick={() => navigate(`/produto/${produto.id}`)} style={{
                 backgroundColor: isDark ? '#161616' : '#ffffff',
                 borderRadius: '20px',
                 border: `1px solid ${isDark ? '#222' : 'rgba(248,215,227,0.6)'}`,
                 overflow: 'hidden', cursor: 'pointer',
                 transition: 'all 0.22s ease',
-                boxShadow: isDark
-                  ? '0 2px 12px rgba(0,0,0,0.3)'
-                  : '0 2px 16px rgba(232,138,162,0.08)'
+                boxShadow: isDark ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 16px rgba(232,138,162,0.08)'
               }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-6px)';
-                  e.currentTarget.style.boxShadow = isDark
-                    ? '0 16px 40px rgba(0,0,0,0.4)'
-                    : '0 16px 40px rgba(232,138,162,0.18)';
+                  e.currentTarget.style.boxShadow = isDark ? '0 16px 40px rgba(0,0,0,0.4)' : '0 16px 40px rgba(232,138,162,0.18)';
                   e.currentTarget.style.borderColor = '#E88AA2';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = isDark
-                    ? '0 2px 12px rgba(0,0,0,0.3)'
-                    : '0 2px 16px rgba(232,138,162,0.08)';
+                  e.currentTarget.style.boxShadow = isDark ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 16px rgba(232,138,162,0.08)';
                   e.currentTarget.style.borderColor = isDark ? '#222' : 'rgba(248,215,227,0.6)';
                 }}
               >
@@ -571,11 +561,8 @@ function Home({ user, setUser }) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
                   {produto.foto ? (
-                    <img
-                      src={`data:image/jpeg;base64,${produto.foto}`}
-                      alt={produto.nome}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                    <img src={`data:image/jpeg;base64,${produto.foto}`} alt={produto.nome}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
                     <span style={{ fontSize: '14px', opacity: 0.4, color: isDark ? '#666' : '#bbb' }}>Sem imagem</span>
                   )}
@@ -588,24 +575,21 @@ function Home({ user, setUser }) {
                       <span style={{
                         padding: '3px 10px', borderRadius: '20px', fontSize: '11px',
                         fontWeight: '600', textTransform: 'capitalize',
-                        backgroundColor: isDark ? '#2a1518' : '#fde8ec',
-                        color: '#c0606a'
+                        backgroundColor: isDark ? '#2a1518' : '#fde8ec', color: '#c0606a'
                       }}>{categoriaLabel[produto.categoria] || produto.categoria}</span>
                     )}
-                    {produto.condicao || produto.estado ? (
+                    {(produto.condicao || produto.estado) && (
                       <span style={{
                         padding: '3px 10px', borderRadius: '20px', fontSize: '11px',
                         fontWeight: '600', textTransform: 'capitalize',
-                        backgroundColor: isDark ? '#1a2a1a' : '#e8f5e9',
-                        color: '#4caf50'
+                        backgroundColor: isDark ? '#1a2a1a' : '#e8f5e9', color: '#4caf50'
                       }}>{produto.condicao || produto.estado}</span>
-                    ) : null}
+                    )}
                   </div>
 
-                  <h3 style={{
-                    fontSize: '16px', fontWeight: '700', margin: '0 0 8px',
-                    color: isDark ? '#f0e0e2' : '#2d1518'
-                  }}>{produto.nome}</h3>
+                  <h3 style={{ fontSize: '16px', fontWeight: '700', margin: '0 0 8px', color: isDark ? '#f0e0e2' : '#2d1518' }}>
+                    {produto.nome}
+                  </h3>
 
                   <p style={{
                     fontSize: '13px', color: isDark ? '#777' : '#999',
@@ -613,17 +597,6 @@ function Home({ user, setUser }) {
                     display: '-webkit-box', WebkitLineClamp: 2,
                     WebkitBoxOrient: 'vertical', overflow: 'hidden'
                   }}>{produto.descricao}</p>
-
-                  <button onClick={() => navigate(`/produto/${produto.id}`)} style={{
-                    width: '100%', padding: '10px',
-                    backgroundColor: '#c0606a', color: 'white',
-                    border: 'none', borderRadius: '10px',
-                    fontSize: '13px', fontWeight: '600', cursor: 'pointer',
-                    transition: 'background 0.2s'
-                  }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#a85058'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#c0606a'}
-                  >Ver Anúncio</button>
                 </div>
               </div>
             ))}
