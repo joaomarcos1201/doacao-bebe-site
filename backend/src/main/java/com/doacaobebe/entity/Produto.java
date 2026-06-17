@@ -32,6 +32,8 @@ public class Produto {
     @Column(length = 100)
     private String doador;
 
+    @Column
+    private Double preco;
     @Lob
     @Column(name = "foto")
     private byte[] foto;
@@ -71,6 +73,8 @@ public class Produto {
     public String getDoador() { return doador; }
     public void setDoador(String doador) { this.doador = doador; }
 
+    public Double getPreco() { return preco; }
+    public void setPreco(Double preco) { this.preco = preco; }
     public byte[] getFoto() { return foto; }
     public void setFoto(byte[] foto) { this.foto = foto; }
 

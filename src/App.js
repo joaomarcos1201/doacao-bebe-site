@@ -14,6 +14,7 @@ import Chat from './pages/Chat';
 import TermosPrivacidade from './pages/TermosPrivacidade';
 import BaixarApp from './pages/BaixarApp';
 import ManualSeguranca from './pages/ManualSeguranca';
+import Doacao from './pages/Doacao';
 import UserStatusChecker from './components/UserStatusChecker';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -113,7 +114,7 @@ function App() {
                 <Route path="/baixar-app" element={<BaixarApp />} />
                 <Route path="/manual-seguranca" element={<ManualSeguranca />} />
 
-                <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+                <Route path="/doacao" element={user ? <Doacao /> : <Navigate to="/login" />} />
                 <Route path="/" element={<Navigate to="/home" />} />
               </Routes>
             </div>

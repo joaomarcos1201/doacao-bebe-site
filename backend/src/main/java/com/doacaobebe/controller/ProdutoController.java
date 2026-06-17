@@ -26,6 +26,7 @@ public class ProdutoController {
             @RequestParam("contato") String contato,
             @RequestParam("cpf") String cpf,
             @RequestParam("doador") String doador,
+            @RequestParam(value = "preco", required = false) Double preco,
             @RequestParam(value = "imagem", required = false) MultipartFile imagem) {
 
         try {
@@ -47,6 +48,7 @@ public class ProdutoController {
             produto.setContato(contato);
             produto.setCpf(cpf);
             produto.setDoador(doador);
+            produto.setPreco(preco);
 
             produtoRepository.save(produto);
 

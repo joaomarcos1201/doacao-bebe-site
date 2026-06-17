@@ -13,7 +13,8 @@ function Doacao() {
   const [estado, setEstado] = useState('');
   const [contato, setContato] = useState('');
   const [cpf, setCpf] = useState('');
-  const [nomeDoador, setNomeDoador] = useState('');
+  const [preco, setPreco] = useState('');
+  const [nomeVendedor, setNomeVendedor] = useState('');
   const [imagem, setImagem] = useState('');
   const [imagemArquivo, setImagemArquivo] = useState(null);
   const { carregarProdutos } = useProdutos();
@@ -23,7 +24,7 @@ function Doacao() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!produto || !categoria || !descricao || !estado || !contato || !cpf || !nomeDoador) return;
+    if (!produto || !categoria || !descricao || !estado || !contato || !cpf || !nomeVendedor) return;
     try {
       const formData = new FormData();
       formData.append('nome', produto);
@@ -32,15 +33,16 @@ function Doacao() {
       formData.append('estado', estado);
       formData.append('contato', contato);
       formData.append('cpf', cpf);
-      formData.append('doador', nomeDoador);
+      formData.append('preco', preco);
+      formData.append('doador', nomeVendedor);
       if (imagemArquivo) formData.append('imagem', imagemArquivo);
 
       const response = await fetch(`${API_URL}/api/produtos`, { method: 'POST', body: formData });
       if (response.ok) {
         await carregarProdutos();
-        showSuccess('Produto enviado para aprovação!');
+        showSuccess('Anúncio enviado para aprovação!');
         setProduto(''); setCategoria(''); setDescricao(''); setEstado('');
-        setContato(''); setCpf(''); setNomeDoador(''); setImagem(''); setImagemArquivo(null);
+        setContato(''); setCpf(''); setNomeVendedor(''); setPreco(''); setImagem(''); setImagemArquivo(null);
         navigate('/home');
       } else {
         const err = await response.text();
@@ -74,7 +76,7 @@ function Doacao() {
           padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
         }}>← Voltar</button>
-        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e8d0d4' : '#c0606a' }}>Doar Produto</span>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e8d0d4' : '#c0606a' }}>Anunciar Produto</span>
         <button onClick={toggleTheme} style={{
           width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'
@@ -85,10 +87,10 @@ function Doacao() {
         {/* Header */}
         <div style={{ marginBottom: '32px' }}>
           <h1 style={{ fontSize: '28px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 8px', letterSpacing: '-0.5px' }}>
-            🎁 Fazer uma doação
+            🏷️ Criar anúncio
           </h1>
           <p style={{ fontSize: '14px', color: isDark ? '#666' : '#999', margin: 0 }}>
-            Ajude outras famílias compartilhando o que você não usa mais
+            Venda suas roupas e objetos seminovos de forma rápida e segura
           </p>
         </div>
 
@@ -101,7 +103,7 @@ function Doacao() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
                 <label style={label}>Nome do Produto *</label>
-                <input type="text" value={produto} onChange={(e) => setProduto(e.target.value)} placeholder="Ex: Carrinho de bebê" style={input} required />
+                <input type="text" value={produto} onChange={(e) => setProduto(e.target.value)} placeholder="Ex: Sofá 2 lugares" style={input} required />
               </div>
               <div>
                 <label style={label}>Categoria *</label>
@@ -124,7 +126,7 @@ function Doacao() {
                 style={{ ...input, resize: 'vertical', fontFamily: 'inherit' }} required />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
                 <label style={label}>Estado do Produto *</label>
                 <select value={estado} onChange={(e) => setEstado(e.target.value)} style={input} required>
@@ -135,6 +137,10 @@ function Doacao() {
                 </select>
               </div>
               <div>
+                <label style={label}>Preço (R$) *</label>
+                <input type="number" min="0" step="0.01" value={preco} onChange={(e) => setPreco(e.target.value)} placeholder="Ex: 25,00" style={input} required />
+              </div>
+              <div>
                 <label style={label}>WhatsApp *</label>
                 <input type="tel" value={contato} onChange={(e) => setContato(e.target.value)} placeholder="(11) 99999-9999" style={input} required />
               </div>
@@ -143,7 +149,7 @@ function Doacao() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
               <div>
                 <label style={label}>Seu Nome *</label>
-                <input type="text" value={nomeDoador} onChange={(e) => setNomeDoador(e.target.value)} placeholder="Nome completo" style={input} required />
+                <input type="text" value={nomeVendedor} onChange={(e) => setNomeVendedor(e.target.value)} placeholder="Nome completo" style={input} required />
               </div>
               <div>
                 <label style={label}>CPF *</label>
@@ -179,7 +185,7 @@ function Doacao() {
             <button type="submit" style={{
               width: '100%', padding: '14px', borderRadius: '10px', border: 'none',
               backgroundColor: '#c0606a', color: 'white', fontSize: '15px', fontWeight: '600', cursor: 'pointer'
-            }}>Enviar Doação</button>
+            }}>Publicar Anúncio</button>
           </form>
         </div>
 
@@ -191,9 +197,9 @@ function Doacao() {
         }}>
           <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 16px' }}>Como funciona?</h3>
           {[
-            { n: '1', text: 'Preencha o formulário com os dados do produto' },
+            { n: '1', text: 'Preencha o formulário com os dados do produto e o preço' },
             { n: '2', text: 'Aguarde a aprovação do administrador' },
-            { n: '3', text: 'Interessados entrarão em contato via WhatsApp' },
+            { n: '3', text: 'Compradores entrarão em contato via WhatsApp' },
           ].map(({ n, text }) => (
             <div key={n} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
               <span style={{

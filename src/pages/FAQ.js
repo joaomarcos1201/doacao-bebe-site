@@ -8,14 +8,14 @@ function FAQ() {
   const [aberta, setAberta] = useState(null);
 
   const perguntas = [
-    { id: 1, q: 'Como funciona o sistema de doações?', r: 'Nosso sistema conecta pessoas que desejam doar produtos para bebês com famílias que precisam. Você pode cadastrar produtos para doação ou buscar itens disponíveis. Todos os produtos passam por aprovação antes de serem publicados.' },
-    { id: 2, q: 'Como posso doar um produto?', r: 'As doações são feitas pelo nosso aplicativo. Baixe o app, faça o cadastro e cadastre os produtos que deseja doar.' },
-    { id: 3, q: 'Como entro em contato com quem está doando?', r: 'Ao encontrar um produto de interesse, clique em "Ver Detalhes" e depois em "Entrar em Contato via WhatsApp". Vocês combinam os detalhes diretamente.' },
-    { id: 4, q: 'Preciso pagar alguma taxa?', r: 'Não! Nosso serviço é 100% gratuito. Não cobramos taxas para cadastro, doação ou busca de produtos.' },
-    { id: 5, q: 'Que tipos de produtos posso doar?', r: 'Roupas, brinquedos, móveis (berços, carrinhos), acessórios, produtos de alimentação e outros itens para bebês. Todos devem estar em bom estado de conservação.' },
-    { id: 6, q: 'Como sei se minha doação foi aprovada?', r: 'Após cadastrar um produto, ele passa por análise do administrador. Produtos aprovados ficam visíveis na página principal.' },
-    { id: 7, q: 'Posso doar produtos usados?', r: 'Sim! Aceitamos produtos novos, semi-novos e usados, desde que estejam em bom estado. Seja honesto sobre o estado do produto na descrição.' },
-    { id: 8, q: 'Como garantir a segurança nas trocas?', r: 'Recomendamos sempre encontros em locais públicos e seguros. Nossa plataforma facilita o contato, mas a responsabilidade pela transação é dos usuários envolvidos.' },
+    { id: 1, q: 'Como funciona a plataforma?', r: 'Nossa plataforma conecta vendedores e compradores de roupas, móveis e objetos seminovos. Você pode anunciar produtos para venda ou buscar itens disponíveis. Todos os anúncios passam por aprovação antes de serem publicados.' },
+    { id: 2, q: 'Como anuncio um produto?', r: 'Pelo nosso site, clique em "Anunciar agora", preencha os dados do produto com fotos, preço e descrição, e aguarde a aprovação.' },
+    { id: 3, q: 'Como entro em contato com quem está vendendo?', r: 'Ao encontrar um produto de interesse, clique em "Ver Anúncio" e depois em "Entrar em Contato via WhatsApp". Vocês combinam os detalhes diretamente.' },
+    { id: 4, q: 'Preciso pagar alguma taxa para anunciar?', r: 'Não! Nosso serviço é gratuito para anunciar. Você negocia o preço diretamente com o comprador.' },
+    { id: 5, q: 'Que tipos de produtos posso vender?', r: 'Roupas, calçados, móveis, eletrodomésticos, eletrônicos, brinquedos, acessórios e outros objetos. Todos devem estar em bom estado de conservação.' },
+    { id: 6, q: 'Como sei se meu anúncio foi aprovado?', r: 'Após cadastrar um produto, ele passa por análise do administrador. Anúncios aprovados ficam visíveis na página principal.' },
+    { id: 7, q: 'Posso vender produtos usados?', r: 'Sim! Aceitamos produtos novos, semi-novos e usados, desde que estejam em bom estado. Seja honesto sobre o estado do produto na descrição.' },
+    { id: 8, q: 'Como garantir a segurança nas transações?', r: 'Recomendamos sempre encontros em locais públicos e seguros. Nossa plataforma facilita o contato, mas a responsabilidade pela transação é dos usuários envolvidos.' },
   ];
 
   return (

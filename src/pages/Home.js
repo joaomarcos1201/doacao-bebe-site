@@ -198,7 +198,7 @@ function Home({ user, setUser }) {
               <div style={{ padding: '10px 16px 6px', fontSize: '10px', fontWeight: '700',
                 color: isDark ? '#555' : '#E88AA2', letterSpacing: '1px', textTransform: 'uppercase'
               }}>Recentes</div>
-              {['Roupas de bebê', 'Brinquedos', 'Berço', 'Carrinho', 'Acessórios'].map((item) => (
+              {['Roupas femininas', 'Sofá', 'Bicicleta', 'Tênis', 'Eletrônicos'].map((item) => (
                 <div key={item} onMouseDown={() => setPesquisa(item)}
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     padding: '9px 16px', cursor: 'pointer', transition: 'background 0.15s' }}
@@ -351,28 +351,20 @@ function Home({ user, setUser }) {
 
         {/* Lado esquerdo */}
         <div style={{ flex: 1, maxWidth: '620px' }}>
-          <div style={{
-            display: 'inline-block', padding: '5px 14px', borderRadius: '20px',
-            backgroundColor: isDark ? 'rgba(232,138,162,0.15)' : 'rgba(232,138,162,0.12)',
-            border: '1px solid rgba(232,138,162,0.3)',
-            color: '#E88AA2', fontSize: '12px', fontWeight: '600',
-            marginBottom: '20px', letterSpacing: '0.8px'
-          }}>DOAÇÕES PARA BEBÊS</div>
-
           <h1 style={{
             fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: '900',
             color: isDark ? '#f5e0e2' : '#1a1a2e',
             margin: '0', lineHeight: '1.2', letterSpacing: '-1px'
           }}>
-            Conectando quem doa<br />com <span style={{ color: '#E88AA2', fontStyle: 'italic' }}>quem precisa</span>
+            Compre ou anuncie seu<br /><span style={{ color: '#E88AA2', fontStyle: 'italic' }}>produto próximo a sua região</span>
           </h1>
 
           <p style={{
             fontSize: '15px', color: isDark ? '#9a7a7e' : '#6B7280',
             margin: '16px 0 32px', lineHeight: '1.7', maxWidth: '420px'
-          }}>Encontre itens para bebês doados por famílias da sua região.<br />Tudo gratuito, com amor.</p>
+          }}>Encontre roupas, móveis e tudo o que precisa para seu bebê perto de você. Simples, rápido e seguro.</p>
 
-          <button onClick={() => navigate('/baixar-app')} style={{
+          <button onClick={() => navigate('/doacao')} style={{
             padding: '14px 28px', borderRadius: '50px',
             backgroundColor: '#E88AA2', color: 'white',
             border: 'none', fontSize: '15px', fontWeight: '600',
@@ -382,10 +374,10 @@ function Home({ user, setUser }) {
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#d4708a'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#E88AA2'; e.currentTarget.style.transform = 'translateY(0)'; }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1.5">
+              <path d="M12 5v14M5 12h14" strokeLinecap="round"/>
             </svg>
-            Quero doar
+            Anunciar agora
           </button>
 
 
@@ -393,9 +385,9 @@ function Home({ user, setUser }) {
           {/* Mini features */}
           <div style={{ display: 'flex', flexDirection: 'row', gap: '70px', marginTop: '120px' }}>
             {[
-              { icon: '♡', title: 'Tudo gratuito', sub: 'Sem custo para quem precisa' },
-              { icon: '✦', title: 'Seguro e confiável', sub: 'Doações verificadas com carinho' },
-              { icon: '⌂', title: 'Comunidade solidária', sub: 'Famílias ajudando outras famílias' },
+              { icon: '🏷️', title: 'Preços justos', sub: 'Negocie diretamente com o vendedor' },
+              { icon: '✦', title: 'Seguro e confiável', sub: 'Anúncios verificados com cuidado' },
+              { icon: '⌂', title: 'Perto de você', sub: 'Compre e venda na sua região' },
             ].map(f => (
               <div key={f.title} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                 <span style={{ fontSize: '18px', color: '#E88AA2', marginTop: '2px' }}>{f.icon}</span>
@@ -416,7 +408,7 @@ function Home({ user, setUser }) {
         }}>
           <img
             src="mae-bebe.jpg"
-            alt="mae-bebe"
+            alt="produtos seminovos"
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
           />
         </div>
@@ -455,11 +447,11 @@ function Home({ user, setUser }) {
       {/* COMO FUNCIONA */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 32px 0' }}>
         <h2 style={{ fontSize: '26px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#1a1a2e', margin: '0 0 6px', letterSpacing: '-0.5px' }}>Como funciona</h2>
-        <p style={{ fontSize: '14px', color: isDark ? '#666' : '#9CA3AF', margin: '0 0 32px' }}>Três passos simples para transformar vidas</p>
+        <p style={{ fontSize: '14px', color: isDark ? '#666' : '#9CA3AF', margin: '0 0 32px' }}>Três passos simples para comprar ou vender</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '56px' }}>
           {[
             {
-              num: '1', title: 'Doe itens', desc: 'Separe itens que seu bebê não usa mais e doe com carinho.',
+              num: '1', title: 'Anuncie seu item', desc: 'Tire fotos, defina o preço e publique em segundos.',
               svg: (
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
                   <rect width="80" height="80" rx="20" fill="#fde8f0"/>
@@ -471,7 +463,7 @@ function Home({ user, setUser }) {
               )
             },
             {
-              num: '2', title: 'Encontre famílias', desc: 'Famílias que precisam encontram o que seu bebê precisa.',
+              num: '2', title: 'Encontre o que quer', desc: 'Busque roupas, móveis e objetos seminovos perto de você.',
               svg: (
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
                   <rect width="80" height="80" rx="20" fill="#fde8f0"/>
@@ -483,7 +475,7 @@ function Home({ user, setUser }) {
               )
             },
             {
-              num: '3', title: 'Ajude quem precisa', desc: 'Seu gesto transforma o dia e a vida de outras famílias.',
+              num: '3', title: 'Negocie e feche', desc: 'Entre em contato pelo WhatsApp e combine a entrega ou retirada.',
               svg: (
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
                   <rect width="80" height="80" rx="20" fill="#fde8f0"/>
@@ -526,7 +518,7 @@ function Home({ user, setUser }) {
           marginBottom: '24px'
         }}>
           <span style={{ fontSize: '14px', color: isDark ? '#666' : '#999' }}>
-            {produtosFiltrados.length} {produtosFiltrados.length === 1 ? 'item encontrado' : 'itens encontrados'}
+            {produtosFiltrados.length} {produtosFiltrados.length === 1 ? 'anúncio encontrado' : 'anúncios encontrados'}
           </span>
         </div>
 
@@ -537,7 +529,7 @@ function Home({ user, setUser }) {
             borderRadius: '16px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
           }}>
 
-            <h3 style={{ color: isDark ? '#e0e0e0' : '#333', marginBottom: '8px' }}>Nenhum item encontrado</h3>
+            <h3 style={{ color: isDark ? '#e0e0e0' : '#333', marginBottom: '8px' }}>Nenhum anúncio encontrado</h3>
             <p style={{ color: isDark ? '#666' : '#999', fontSize: '14px' }}>Tente ajustar os filtros ou a pesquisa</p>
           </div>
         ) : (
@@ -631,7 +623,7 @@ function Home({ user, setUser }) {
                   }}
                     onMouseEnter={(e) => e.target.style.backgroundColor = '#a85058'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = '#c0606a'}
-                  >Ver Detalhes</button>
+                  >Ver Anúncio</button>
                 </div>
               </div>
             ))}

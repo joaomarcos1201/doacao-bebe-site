@@ -35,22 +35,22 @@ function SobreNos() {
             Além do Positivo
           </h1>
           <p style={{ fontSize: '16px', color: isDark ? '#777' : '#999', margin: 0 }}>
-            Conectando famílias através da solidariedade
+            Conectando compradores e vendedores de seminovos
           </p>
         </div>
 
         {[
           {
             title: 'Nossa História',
-            content: 'O Além do Positivo nasceu da necessidade de conectar famílias que precisam de apoio durante a gravidez e primeiros anos de vida do bebê com pessoas dispostas a ajudar através de doações. Fundado em 2024, nosso projeto surgiu da observação de que muitas famílias enfrentam dificuldades para adquirir itens essenciais para bebês, enquanto outras possuem produtos em bom estado que não utilizam mais.'
+            content: 'O Além do Positivo nasceu da ideia de criar um marketplace acessível para compra e venda de roupas, móveis e objetos seminovos. Fundado em 2024, nosso projeto surgiu da observação de que muitas pessoas buscam produtos de qualidade a preços justos, enquanto outras possuem itens em ótimo estado que não utilizam mais. Conectamos essas duas partes de forma simples e segura.'
           },
           {
             title: 'Nosso Objetivo',
-            content: 'Criar uma ponte solidária entre quem pode doar e quem precisa receber, promovendo solidariedade comunitária, sustentabilidade e apoio à maternidade. Acreditamos que pequenos gestos podem transformar vidas.'
+            content: 'Ser a plataforma mais confiável da sua região para compra e venda de seminovos, oferecendo uma experiência simples, segura e transparente. Acreditamos que consumo consciente e preços justos fazem bem para todos.'
           },
           {
             title: 'Nossa Visão',
-            content: 'Queremos ser a plataforma de referência para doações de itens infantis, criando uma comunidade onde a generosidade e a gratidão caminham juntas, construindo um futuro melhor para nossas crianças.'
+            content: 'Queremos ser referência no mercado de usados e seminovos, criando uma comunidade onde vendedores e compradores se encontram com confiança, tornando o consumo mais sustentável e econômico.'
           }
         ].map(({ title, content }) => (
           <div key={title} style={{
@@ -69,9 +69,9 @@ function SobreNos() {
           <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#c0606a', margin: '0 0 20px' }}>Como Funciona</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
             {[
-              { n: '1', title: 'Doar', desc: 'Cadastre produtos que não usa mais' },
-              { n: '2', title: 'Buscar', desc: 'Encontre produtos que precisa' },
-              { n: '3', title: 'Conectar', desc: 'Fale com o doador via WhatsApp' },
+              { n: '1', title: 'Anunciar', desc: 'Cadastre produtos que você quer vender' },
+              { n: '2', title: 'Buscar', desc: 'Encontre produtos que procura' },
+              { n: '3', title: 'Negociar', desc: 'Fale com o vendedor via WhatsApp' },
             ].map(({ n, title, desc }) => (
               <div key={n} style={{
                 padding: '20px', borderRadius: '12px', textAlign: 'center',
@@ -95,7 +95,7 @@ function SobreNos() {
             padding: '12px 28px', borderRadius: '10px', border: '1px solid #c0606a',
             color: '#c0606a', textDecoration: 'none', fontSize: '14px', fontWeight: '600',
             backgroundColor: 'transparent'
-          }}>Ver Produtos</Link>
+          }}>Ver Anúncios</Link>
         </div>
       </div>
     </div>
