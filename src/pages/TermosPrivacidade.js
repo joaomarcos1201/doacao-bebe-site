@@ -18,10 +18,10 @@ function TermosPrivacidade() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0a0a0a' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <nav style={{
         position: 'sticky', top: 0, zIndex: 100,
-        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backgroundColor: isDark ? 'rgba(10,10,10,0.92)' : 'rgba(255,255,255,0.95)',
         backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
         padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
       }}>
@@ -47,7 +47,7 @@ function TermosPrivacidade() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
           {secoes.map(({ n, titulo, texto, lista }) => (
             <div key={n} style={{
-              backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
+              backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '16px', padding: '24px',
               border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
@@ -71,7 +71,7 @@ function TermosPrivacidade() {
         </div>
 
         <div style={{
-          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
+          backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '16px', padding: '24px',
           border: `1px solid #c0606a`, textAlign: 'center'
         }}>
           <p style={{ fontSize: '14px', color: isDark ? '#888' : '#666', margin: '0 0 12px' }}>

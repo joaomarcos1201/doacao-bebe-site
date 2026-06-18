@@ -74,7 +74,7 @@ function Home({ user, setUser }) {
     <div style={{
       minHeight: '100vh',
       background: isDark
-        ? '#0f0f0f'
+        ? '#0a0a0a'
         : 'linear-gradient(160deg, #fff7f9 0%, #fdf0f3 40%, #fce8ed 100%)',
       fontFamily: "'Inter', system-ui, sans-serif"
     }}>
@@ -82,7 +82,7 @@ function Home({ user, setUser }) {
       {/* NAVBAR */}
       <nav style={{
         position: 'sticky', top: 0, zIndex: 1000,
-        backgroundColor: isDark ? 'rgba(10,10,10,0.85)' : 'rgba(255,250,252,0.75)',
+        backgroundColor: isDark ? 'rgba(10,10,10,0.88)' : 'rgba(255,250,252,0.75)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(232,138,162,0.18)'}`,
@@ -261,14 +261,16 @@ function Home({ user, setUser }) {
           {/* Entrar / Sair */}
           {user ? (
             <button onClick={handleLogout} style={{
-              padding: '7px 16px', borderRadius: '10px',
-              border: '1px solid rgba(239,68,68,0.4)', backgroundColor: 'transparent',
-              color: '#ef4444', cursor: 'pointer', fontSize: '13px', fontWeight: '500',
-              transition: 'all 0.2s'
+              padding: '7px 20px', borderRadius: '10px',
+              border: 'none',
+              background: 'linear-gradient(135deg, #E88AA2 0%, #c0606a 100%)',
+              color: 'white', cursor: 'pointer', fontSize: '13px', fontWeight: '600',
+              boxShadow: '0 4px 14px rgba(232,138,162,0.4)',
+              transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: '6px'
             }}
-              onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239,68,68,0.08)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>Sair <LogOut size={13} /></button>
+              onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.88'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            >Sair <LogOut size={13} /></button>
           ) : (
             <button onClick={() => navigate('/login')} style={{
               padding: '7px 20px', borderRadius: '10px',
@@ -294,7 +296,7 @@ function Home({ user, setUser }) {
           }} />
           <div style={{
             position: 'fixed', top: 0, right: 0, height: '100vh', width: '260px',
-            backgroundColor: isDark ? '#141414' : '#fff',
+            backgroundColor: isDark ? '#111111' : '#fff',
             borderLeft: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
             zIndex: 9999, paddingTop: '72px', overflowY: 'auto',
             boxShadow: '-8px 0 32px rgba(0,0,0,0.15)'
@@ -309,7 +311,7 @@ function Home({ user, setUser }) {
                     marginBottom: '4px',
                     transition: 'background 0.15s'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#1e1e1e' : '#fdf0f2'}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#1a1a1a' : '#fdf0f2'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   <span style={{ fontSize: '15px', fontWeight: '500' }}>{item.label}</span>
@@ -324,7 +326,7 @@ function Home({ user, setUser }) {
                     borderTop: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
                     paddingTop: '16px'
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#1e1e1e' : '#fdf0f2'}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#1a1a1a' : '#fdf0f2'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   <span style={{ fontSize: '15px', fontWeight: '600' }}>Administração</span>
@@ -338,7 +340,7 @@ function Home({ user, setUser }) {
       {/* HERO */}
       <div style={{
         background: isDark
-          ? 'linear-gradient(135deg, #1a0a0c 0%, #2d1518 100%)'
+          ? 'linear-gradient(135deg, #0a0a0a 0%, #111111 100%)'
           : 'linear-gradient(160deg, #fff0f4 0%, #fde4ec 60%, #fcd8e4 100%)',
         padding: '0px 48px 60px',
         borderBottom: `1px solid ${isDark ? '#2a1518' : 'rgba(232,138,162,0.15)'}`,
@@ -385,7 +387,7 @@ function Home({ user, setUser }) {
           {/* Mini features */}
           <div style={{ display: 'flex', flexDirection: 'row', gap: '70px', marginTop: '120px' }}>
             {[
-              { icon: '🏷️', title: 'Preços justos', sub: 'Negocie diretamente com o vendedor' },
+              { icon: '◈', title: 'Preços justos', sub: 'Negocie diretamente com o vendedor' },
               { icon: '✦', title: 'Seguro e confiável', sub: 'Anúncios verificados com cuidado' },
               { icon: '⌂', title: 'Perto de você', sub: 'Compre e venda na sua região' },
             ].map(f => (
@@ -416,7 +418,7 @@ function Home({ user, setUser }) {
 
       {/* FILTROS */}
       <div style={{
-        backgroundColor: isDark ? '#141414' : 'rgba(255,255,255,0.7)',
+        backgroundColor: isDark ? '#111111' : 'rgba(255,255,255,0.7)',
         backdropFilter: 'blur(12px)',
         borderBottom: `1px solid ${isDark ? '#2a2a2a' : 'rgba(232,138,162,0.12)'}`,
         padding: '20px 32px'
@@ -428,7 +430,7 @@ function Home({ user, setUser }) {
                 padding: '8px 16px', borderRadius: '12px', fontSize: '13px',
                 fontWeight: '500', cursor: 'pointer', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '7px',
                 border: `1.5px solid ${categoriaFiltro === cat.value ? '#E88AA2' : (isDark ? '#2a2a2a' : '#F0F0F0')}`,
-                backgroundColor: categoriaFiltro === cat.value ? 'rgba(232,138,162,0.1)' : (isDark ? '#1a1a1a' : '#fff'),
+                backgroundColor: categoriaFiltro === cat.value ? 'rgba(232,138,162,0.1)' : (isDark ? '#161616' : '#fff'),
                 color: categoriaFiltro === cat.value ? '#E88AA2' : (isDark ? '#aaa' : '#6B7280'),
                 transition: 'all 0.18s ease',
                 boxShadow: categoriaFiltro === cat.value ? '0 2px 12px rgba(232,138,162,0.2)' : '0 1px 4px rgba(0,0,0,0.04)'
@@ -486,7 +488,7 @@ function Home({ user, setUser }) {
             },
           ].map(step => (
             <div key={step.num} style={{
-              backgroundColor: isDark ? '#161616' : '#fff',
+              backgroundColor: isDark ? '#131313' : '#fff',
               borderRadius: '22px',
               padding: '28px 24px',
               border: `1px solid ${isDark ? '#222' : 'rgba(248,215,227,0.7)'}`,
@@ -522,7 +524,7 @@ function Home({ user, setUser }) {
         {produtosFiltrados.length === 0 ? (
           <div style={{
             textAlign: 'center', padding: '80px 20px',
-            backgroundColor: isDark ? '#141414' : '#fff',
+            backgroundColor: isDark ? '#111111' : '#fff',
             borderRadius: '16px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
           }}>
             <h3 style={{ color: isDark ? '#e0e0e0' : '#333', marginBottom: '8px' }}>Nenhum anúncio encontrado</h3>
@@ -536,7 +538,7 @@ function Home({ user, setUser }) {
           }}>
             {produtosFiltrados.map(produto => (
               <div key={produto.id} onClick={() => navigate(`/produto/${produto.id}`)} style={{
-                backgroundColor: isDark ? '#161616' : '#ffffff',
+                backgroundColor: isDark ? '#131313' : '#ffffff',
                 borderRadius: '20px',
                 border: `1px solid ${isDark ? '#222' : 'rgba(248,215,227,0.6)'}`,
                 overflow: 'hidden', cursor: 'pointer',
@@ -557,7 +559,7 @@ function Home({ user, setUser }) {
                 {/* Imagem */}
                 <div style={{
                   height: '180px', overflow: 'hidden',
-                  backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
+                  backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
                   display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}>
                   {produto.foto ? (
@@ -587,7 +589,7 @@ function Home({ user, setUser }) {
                     )}
                   </div>
 
-                  <h3 style={{ fontSize: '16px', fontWeight: '700', margin: '0 0 8px', color: isDark ? '#f0e0e2' : '#2d1518' }}>
+                  <h3 style={{ fontSize: '16px', fontWeight: '700', margin: '0 0 8px', color: isDark ? '#f0e0e2' : '#1a1a1a' }}>
                     {produto.nome}
                   </h3>
 
@@ -608,7 +610,7 @@ function Home({ user, setUser }) {
       <footer style={{
         borderTop: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
         padding: '32px 24px',
-        backgroundColor: isDark ? '#0f0f0f' : '#fff',
+        backgroundColor: isDark ? '#0a0a0a' : '#fff',
         textAlign: 'center'
       }}>
         <p style={{ color: isDark ? '#444' : '#bbb', fontSize: '13px', margin: '0 0 12px' }}>

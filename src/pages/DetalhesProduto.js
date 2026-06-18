@@ -16,7 +16,7 @@ function DetalhesProduto() {
   // Monta array de imagens (suporte a múltiplas no futuro)
   const fotos = produto?.foto ? [`data:image/jpeg;base64,${produto.foto}`] : [];
 
-  const bg = isDark ? '#141414' : '#f5f0ee';
+  const bg = isDark ? '#111111' : '#f5f0ee';
   const cardBg = isDark ? '#1c1c1c' : '#fdf9f7';
   const border = isDark ? '#2e2e2e' : '#e8ddd8';
   const textPrimary = isDark ? '#e8e0e0' : '#2d2020';

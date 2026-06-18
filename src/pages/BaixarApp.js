@@ -7,10 +7,10 @@ function BaixarApp() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0a0a0a' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <nav style={{
         position: 'sticky', top: 0, zIndex: 100,
-        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backgroundColor: isDark ? 'rgba(10,10,10,0.92)' : 'rgba(255,255,255,0.95)',
         backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
         padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
       }}>
@@ -57,7 +57,7 @@ function BaixarApp() {
           <div style={{
             display: 'flex', alignItems: 'center', gap: '16px',
             padding: '20px 24px', borderRadius: '16px',
-            backgroundColor: isDark ? '#141414' : '#fff',
+            backgroundColor: isDark ? '#111111' : '#fff',
             border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
             opacity: 0.5, cursor: 'not-allowed'
           }}>
@@ -74,7 +74,7 @@ function BaixarApp() {
           <div style={{
             display: 'flex', alignItems: 'center', gap: '16px',
             padding: '20px 24px', borderRadius: '16px',
-            backgroundColor: isDark ? '#141414' : '#fff',
+            backgroundColor: isDark ? '#111111' : '#fff',
             border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
             opacity: 0.5, cursor: 'not-allowed'
           }}>

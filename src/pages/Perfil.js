@@ -48,16 +48,16 @@ function Perfil({ user, setUser }) {
   const input = {
     width: '100%', padding: '12px 16px', borderRadius: '10px', fontSize: '14px',
     border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
-    backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
+    backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
     color: isDark ? '#e0e0e0' : '#333', outline: 'none', boxSizing: 'border-box'
   };
   const label = { display: 'block', fontSize: '13px', fontWeight: '600', color: isDark ? '#ccc' : '#555', marginBottom: '6px' };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0a0a0a' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <nav style={{
         position: 'sticky', top: 0, zIndex: 100,
-        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backgroundColor: isDark ? 'rgba(10,10,10,0.92)' : 'rgba(255,255,255,0.95)',
         backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
         padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
       }}>
@@ -86,7 +86,7 @@ function Perfil({ user, setUser }) {
 
         {/* Dados pessoais */}
         <div style={{
-          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', padding: '28px',
+          backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '20px', padding: '28px',
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '16px'
         }}>
           <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 20px' }}>Dados Pessoais</h3>
@@ -103,7 +103,7 @@ function Perfil({ user, setUser }) {
             </div>
 
             <div style={{
-              backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2', borderRadius: '12px', padding: '20px',
+              backgroundColor: isDark ? '#161616' : '#fdf0f2', borderRadius: '12px', padding: '20px',
               border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '20px'
             }}>
               <h4 style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#ccc' : '#555', margin: '0 0 16px' }}>Alterar Senha</h4>
@@ -145,7 +145,7 @@ function Perfil({ user, setUser }) {
 
         {/* Dicas */}
         <div style={{
-          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
+          backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '16px', padding: '24px',
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
         }}>
           <h3 style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 14px' }}>🔒 Dicas de Segurança</h3>

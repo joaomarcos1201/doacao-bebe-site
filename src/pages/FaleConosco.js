@@ -24,13 +24,13 @@ function FaleConosco() {
   const input = {
     width: '100%', padding: '12px 16px', borderRadius: '10px', fontSize: '14px',
     border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
-    backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
+    backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
     color: isDark ? '#e0e0e0' : '#333', outline: 'none', boxSizing: 'border-box'
   };
 
   if (enviado) return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6' }}>
-      <div style={{ textAlign: 'center', padding: '48px', backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: isDark ? '#0a0a0a' : '#f9f5f6' }}>
+      <div style={{ textAlign: 'center', padding: '48px', backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '20px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
         <div style={{ fontSize: '48px', marginBottom: '16px' }}>✅</div>
         <h2 style={{ color: '#c0606a', marginBottom: '8px' }}>Mensagem enviada!</h2>
         <p style={{ color: isDark ? '#888' : '#999', fontSize: '14px' }}>Retornaremos em breve.</p>
@@ -39,10 +39,10 @@ function FaleConosco() {
   );
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0a0a0a' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <nav style={{
         position: 'sticky', top: 0, zIndex: 100,
-        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backgroundColor: isDark ? 'rgba(10,10,10,0.92)' : 'rgba(255,255,255,0.95)',
         backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
         padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
       }}>
@@ -66,7 +66,7 @@ function FaleConosco() {
         </div>
 
         <div style={{
-          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', padding: '32px',
+          backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '20px', padding: '32px',
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '24px'
         }}>
           <form onSubmit={handleSubmit}>
@@ -98,7 +98,7 @@ function FaleConosco() {
         </div>
 
         <div style={{
-          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
+          backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '16px', padding: '24px',
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
         }}>
           <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 16px' }}>Outras formas de contato</h3>

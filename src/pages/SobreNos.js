@@ -7,10 +7,10 @@ function SobreNos() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0a0a0a' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <nav style={{
         position: 'sticky', top: 0, zIndex: 100,
-        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backgroundColor: isDark ? 'rgba(10,10,10,0.92)' : 'rgba(255,255,255,0.95)',
         backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
         padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
       }}>
@@ -54,7 +54,7 @@ function SobreNos() {
           }
         ].map(({ title, content }) => (
           <div key={title} style={{
-            backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '28px',
+            backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '16px', padding: '28px',
             border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '16px'
           }}>
             <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#c0606a', margin: '0 0 12px' }}>{title}</h2>
@@ -63,7 +63,7 @@ function SobreNos() {
         ))}
 
         <div style={{
-          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '28px',
+          backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '16px', padding: '28px',
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '32px'
         }}>
           <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#c0606a', margin: '0 0 20px' }}>Como Funciona</h2>
@@ -75,7 +75,7 @@ function SobreNos() {
             ].map(({ n, title, desc }) => (
               <div key={n} style={{
                 padding: '20px', borderRadius: '12px', textAlign: 'center',
-                backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
+                backgroundColor: isDark ? '#161616' : '#fdf0f2',
                 border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
               }}>
                 <div style={{

@@ -19,10 +19,10 @@ function FAQ() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0f0f0f' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div style={{ minHeight: '100vh', backgroundColor: isDark ? '#0a0a0a' : '#f9f5f6', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <nav style={{
         position: 'sticky', top: 0, zIndex: 100,
-        backgroundColor: isDark ? 'rgba(18,18,18,0.95)' : 'rgba(255,255,255,0.95)',
+        backgroundColor: isDark ? 'rgba(10,10,10,0.92)' : 'rgba(255,255,255,0.95)',
         backdropFilter: 'blur(20px)', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
         padding: '0 24px', height: '64px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'
       }}>
@@ -48,7 +48,7 @@ function FAQ() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '32px' }}>
           {perguntas.map((item) => (
             <div key={item.id} style={{
-              backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '12px',
+              backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '12px',
               border: `1px solid ${aberta === item.id ? '#c0606a' : (isDark ? '#2a2a2a' : '#f0e6e8')}`,
               overflow: 'hidden', transition: 'border-color 0.2s'
             }}>
@@ -72,7 +72,7 @@ function FAQ() {
         </div>
 
         <div style={{
-          backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '28px',
+          backgroundColor: isDark ? '#111111' : '#fff', borderRadius: '16px', padding: '28px',
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, textAlign: 'center'
         }}>
           <h3 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 8px' }}>Não encontrou sua resposta?</h3>

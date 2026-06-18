@@ -23,21 +23,21 @@ export const ThemeProvider = ({ children }) => {
   };
 
   const theme = {
-    background: isDark ? '#0f0f23' : '#ffffff',
-    cardBackground: isDark ? '#1a1a2e' : '#ffffff',
-    text: isDark ? '#e2e8f0' : '#1a1a1a',
-    textSecondary: isDark ? '#94a3b8' : '#4a4a4a',
-    border: isDark ? '#334155' : '#cccccc',
-    primary: isDark ? '#f472b6' : '#8B4A6B',
-    primaryHover: isDark ? '#ec4899' : '#7a4160',
+    background: isDark ? '#0a0a0a' : '#ffffff',
+    cardBackground: isDark ? '#111111' : '#ffffff',
+    text: isDark ? '#f5f5f5' : '#1a1a1a',
+    textSecondary: isDark ? '#888888' : '#4a4a4a',
+    border: isDark ? '#1f1f1f' : '#cccccc',
+    primary: isDark ? '#E88AA2' : '#c0606a',
+    primaryHover: isDark ? '#d4708a' : '#a85058',
     success: '#22c55e',
     danger: '#ef4444',
     whatsapp: '#25D366',
-    inputBg: isDark ? '#1e293b' : '#ffffff',
-    inputBorder: isDark ? '#475569' : '#cccccc',
-    headerBg: isDark ? 'rgba(15, 15, 35, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-    cardBg: isDark ? 'rgba(26, 26, 46, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-    footerBg: isDark ? 'rgba(15, 15, 35, 0.98)' : 'rgba(255, 255, 255, 0.95)'
+    inputBg: isDark ? '#161616' : '#ffffff',
+    inputBorder: isDark ? '#2a2a2a' : '#cccccc',
+    headerBg: isDark ? 'rgba(10,10,10,0.92)' : 'rgba(255,255,255,0.95)',
+    cardBg: isDark ? 'rgba(17,17,17,0.95)' : 'rgba(255,255,255,0.95)',
+    footerBg: isDark ? 'rgba(10,10,10,0.98)' : 'rgba(255,255,255,0.95)'
   };
 
   return (
