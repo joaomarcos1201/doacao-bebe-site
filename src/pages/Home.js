@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, LogIn, X, Clock, Grid2x2, Shirt, Bed, Baby, Soup, Ellipsis } from 'lucide-react';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
+import { isAprovado } from '../utils/produtoStatus';
 
 function Home({ user, setUser }) {
   const navigate = useNavigate();
@@ -41,8 +42,7 @@ function Home({ user, setUser }) {
     const matchPesquisa = produto.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
                          produto.descricao.toLowerCase().includes(pesquisa.toLowerCase());
     const matchCategoria = categoriaFiltro === '' || produto.categoria === categoriaFiltro;
-    const isAprovado = produto.statusAnuncio === 'ATIVO' || produto.statusAnuncio === 'DISPONIVEL';
-    return matchPesquisa && matchCategoria && isAprovado;
+    return matchPesquisa && matchCategoria && isAprovado(produto);
   });
 
   const categorias = [

@@ -9,4 +9,5 @@ import java.util.List;
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
     List<Produto> findByStatusAnuncio(String statusAnuncio);
     List<Produto> findByStatusAnuncioOrderByDataAnuncioDesc(String statusAnuncio);
+    List<Produto> findByStatusAnuncioInOrderByDataAnuncioDesc(List<String> statusAnuncio);
 }
