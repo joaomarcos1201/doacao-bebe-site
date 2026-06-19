@@ -22,7 +22,7 @@ import Carteira from './pages/Carteira';
 import UserStatusChecker from './components/UserStatusChecker';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ThemeProvider } from './context/ThemeContext';
-import { API_URL } from './config/api';
+import { api } from './config/api';
 import './App.css';
 import './styles/global.css';
 
@@ -32,50 +32,34 @@ function App() {
 
   // Carregar usuário do backend ao iniciar
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetch(`${API_URL}/api/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else if (response.status === 400) {
-          // Verificar se é conta inativa
-          return response.text().then(errorText => {
-            if (errorText.includes('Conta inativa')) {
-              alert('⚠️ Sua conta foi desativada pelo administrador.\n\nEntre em contato conosco para mais informações.');
-              throw new Error('Conta inativa');
-            }
-            throw new Error(errorText || 'Token inválido');
-          });
+    const loadUser = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) { setLoading(false); return; }
+
+      try {
+        const response = await api.me();
+        if (response && response.ok) {
+          const data = await response.json();
+          console.log('DEBUG App - dados recebidos do backend:', data);
+          const userData = { id: data.id, nome: data.nome, email: data.email, isAdmin: data.isAdmin };
+          setUser(userData);
         } else {
-          throw new Error('Token inválido');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
         }
-      })
-      .then(data => {
-        console.log('DEBUG App - dados recebidos do backend:', data);
-        const userData = {
-          id: data.id,
-          nome: data.nome,
-          email: data.email,
-          isAdmin: data.isAdmin
-        };
-        console.log('DEBUG App - userData criado:', userData);
-        setUser(userData);
-      })
-      .catch(error => {
-        console.error('Erro ao carregar usuário:', error);
+      } catch (err) {
+        console.error('Erro ao carregar usuário:', err);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-      })
-      .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
-    }
+        if (err.message && err.message.includes('Conta inativa')) {
+          alert('⚠️ Sua conta foi desativada pelo administrador.\n\nEntre em contato conosco para mais informações.');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
   }, []);
 
 

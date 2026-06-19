@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import Notification from '../components/Notification';
-import { API_URL } from '../config/api';
+import { api } from '../config/api';
 
 function Cadastro() {
   const [nome, setNome] = useState('');
@@ -33,13 +33,27 @@ function Cadastro() {
       return;
     }
     try {
-      const response = await fetch(`${API_URL}/api/auth/cadastro`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, email, cpf, senha }),
-      });
-      if (response.ok) { setShowSuccess(true); setTimeout(() => navigate('/login'), 3000); }
-      else { const err = await response.text(); showError(err || 'Erro no cadastro'); }
-    } catch { showError('Erro de conexão com o servidor'); }
+      const response = await api.cadastro(nome, email, cpf, senha);
+      if (response.ok) {
+        // Salvar token retornado e autenticar automaticamente (reload para App executar efeito de carregamento)
+        const data = await response.json();
+        if (data && data.token) {
+          localStorage.setItem('token', data.token);
+          // Forçar reload para que o App faça o GET /api/auth/me e atualize o estado do usuário
+          window.location.href = '/home';
+          return;
+        }
+        // Fallback: mostrar sucesso e redirecionar para login
+        setShowSuccess(true);
+        setTimeout(() => navigate('/login'), 3000);
+      } else {
+        const err = await response.text();
+        showError(err || 'Erro no cadastro');
+      }
+    } catch (err) {
+      console.error('Erro no cadastro:', err);
+      showError('Erro de conexão com o servidor');
+    }
   };
 
   const input = {

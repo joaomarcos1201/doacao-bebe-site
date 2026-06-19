@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import { sanitizeInput, validateEmail, getSecureHeaders } from '../utils/security';
-import { API_URL } from '../config/api';
+import { sanitizeInput, validateEmail } from '../utils/security';
+import { api } from '../config/api';
 
 function Login({ setUser }) {
   const [email, setEmail] = useState('');
@@ -15,7 +15,6 @@ function Login({ setUser }) {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.clear();
   }, [setUser]);
 
   const handleSubmit = async (e) => {
@@ -26,10 +25,7 @@ function Login({ setUser }) {
     const cleanSenha = sanitizeInput(senha);
     if (!validateEmail(cleanEmail)) { alert('Email inválido'); setLoading(false); return; }
     try {
-      const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST', headers: getSecureHeaders(),
-        body: JSON.stringify({ email: cleanEmail, senha: cleanSenha }),
-      });
+      const response = await api.login(cleanEmail, cleanSenha);
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem('token', data.token);
@@ -41,7 +37,15 @@ function Login({ setUser }) {
           if (window.confirm('⚠️ Conta inativa. Deseja ir para a página de contato?')) navigate('/fale-conosco');
         } else { alert(errorData || 'Erro no login'); }
       }
-    } catch { alert('Erro de conexão com o servidor'); }
+    } catch (err) {
+      console.error('Erro no login:', err);
+      const message = err && err.message ? err.message : 'Erro de conexão com o servidor';
+      if (message === 'timeout') {
+        alert('Servidor indisponível ou tempo limite de conexão atingido. Tente novamente em alguns segundos.');
+      } else {
+        alert(message);
+      }
+    }
     setLoading(false);
   };
 
