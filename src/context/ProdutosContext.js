@@ -49,7 +49,8 @@ export const ProdutosProvider = ({ children }) => {
 
   const aprovarProduto = async (produtoId) => {
     try {
-      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=DISPONIVEL`, {
+      // Regra nova do requisito: aprovação via APROVADO
+      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=APROVADO`, {
         method: 'PUT',
       });
       if (response.ok) {
@@ -62,7 +63,8 @@ export const ProdutosProvider = ({ children }) => {
 
   const rejeitarProduto = async (produtoId) => {
     try {
-      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=REJEITADO`, {
+      // Regra nova do requisito: recusa via REPROVADO
+      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=REPROVADO`, {
         method: 'PUT',
       });
       if (response.ok) {
