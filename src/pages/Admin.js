@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import { useConfirm } from '../hooks/useConfirm';
 import { useProdutos } from '../context/ProdutosContext';
+import { isAprovado, isPendente } from '../utils/produtoStatus';
 import Notification from '../components/Notification';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { API_URL } from '../config/api';
@@ -21,8 +22,8 @@ function Admin() {
   const { notifications, showSuccess, showError, removeNotification } = useNotification();
   const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirm();
 
-  const produtosPendentes = produtos.filter(p => p.statusAnuncio === 'INATIVO');
-  const produtosAprovados = produtos.filter(p => p.statusAnuncio === 'ATIVO');
+  const produtosPendentes = produtos.filter(isPendente);
+  const produtosAprovados = produtos.filter(isAprovado);
 
   useEffect(() => { carregarUsuarios(); carregarMensagens(); }, []);
   useEffect(() => {
