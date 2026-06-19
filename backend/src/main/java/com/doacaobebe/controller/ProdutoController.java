@@ -11,12 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin(origins = "*")
 public class ProdutoController {
+
+    // Status equivalentes acumulados no banco ao longo do tempo.
+    private static final List<String> STATUS_APROVADOS = Arrays.asList("ATIVO", "APROVADO", "DISPONIVEL");
+    private static final List<String> STATUS_PENDENTES = Arrays.asList("INATIVO", "EM_ANALISE", "PENDENTE");
 
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -78,7 +83,7 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<List<Produto>> listarDisponiveis() {
         return ResponseEntity.ok(
-                produtoRepository.findByStatusAnuncioOrderByDataAnuncioDesc("DISPONIVEL")
+                produtoRepository.findByStatusAnuncioInOrderByDataAnuncioDesc(STATUS_APROVADOS)
         );
     }
 
@@ -97,7 +102,7 @@ public class ProdutoController {
     @GetMapping("/pendentes")
     public ResponseEntity<List<Produto>> listarPendentes() {
         return ResponseEntity.ok(
-                produtoRepository.findByStatusAnuncioOrderByDataAnuncioDesc("EM_ANALISE")
+                produtoRepository.findByStatusAnuncioInOrderByDataAnuncioDesc(STATUS_PENDENTES)
         );
     }
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { API_URL, api } from '../config/api';
+import { isAprovado } from '../utils/produtoStatus';
 
 function DetalhesProduto() {
   const { id } = useParams();
@@ -85,7 +86,7 @@ function DetalhesProduto() {
     </div>
   );
 
-  const disponivel = produto.statusAnuncio === 'DISPONIVEL';
+  const disponivel = isAprovado(produto);
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: bg, fontFamily: "'Inter', system-ui, sans-serif" }}>

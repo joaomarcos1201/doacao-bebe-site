@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import { useConfirm } from '../hooks/useConfirm';
 import { useProdutos } from '../context/ProdutosContext';
+import { isAprovado, isPendente } from '../utils/produtoStatus';
 import Notification from '../components/Notification';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { API_URL, api } from '../config/api';
@@ -24,8 +25,8 @@ function Admin() {
   const [pedidos, setPedidos] = useState([]);
   const [saques, setSaques] = useState([]);
 
-  const produtosPendentes = produtos.filter(p => p.statusAnuncio === 'EM_ANALISE' || p.statusAnuncio === 'INATIVO');
-  const produtosAprovados = produtos.filter(p => p.statusAnuncio === 'ATIVO' || p.statusAnuncio === 'DISPONIVEL');
+  const produtosPendentes = produtos.filter(isPendente);
+  const produtosAprovados = produtos.filter(isAprovado);
 
   useEffect(() => {
     carregarUsuarios();
