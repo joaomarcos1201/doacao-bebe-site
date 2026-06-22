@@ -5,7 +5,9 @@ import com.doacaobebe.entity.Produto;
 import com.doacaobebe.entity.Usuario;
 import com.doacaobebe.repository.ProdutoRepository;
 import com.doacaobebe.repository.UsuarioRepository;
+import com.doacaobebe.repository.PedidoRepository;
 import com.doacaobebe.service.JwtService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,10 @@ public class ProdutoController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
 
     @PostMapping
     public ResponseEntity<?> cadastrarProduto(
@@ -84,8 +90,10 @@ public class ProdutoController {
 
     @GetMapping("/todos")
     public ResponseEntity<List<Produto>> listarTodos() {
-        return ResponseEntity.ok(produtoRepository.findAll());
+        // Evita retornar produtos ocultados
+        return ResponseEntity.ok(produtoRepository.findAllByStatusVisibilidadeNot("REMOVIDO"));
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
@@ -113,7 +121,32 @@ public class ProdutoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> remover(@PathVariable Integer id) {
+        System.out.println("🗑️ DELETE /api/products/" + id + " recebido pelo ProdutoController");
+        boolean existe = produtoRepository.existsById(id);
+        System.out.println("🗑️ Produto existe antes do delete? " + existe);
+
+        if (!existe) {
+            return ResponseEntity.notFound().body("Produto não encontrado. ID=" + id);
+        }
+
+        // Se houver Pedido vinculado, não apagar fisicamente (evita FK)
+        if (pedidoRepository.existsByProduto_Id(id)) {
+            Produto produto = produtoRepository.findById(id).orElse(null);
+            if (produto == null) {
+                return ResponseEntity.notFound().body("Produto não encontrado. ID=" + id);
+            }
+
+            produto.setStatusVisibilidade("REMOVIDO");
+            produtoRepository.save(produto);
+            return ResponseEntity.ok("Produto ocultado por possuir histórico de pedidos");
+        }
+
         produtoRepository.deleteById(id);
-        return ResponseEntity.ok("Produto removido.");
+        System.out.println("🗑️ Delete executado para ID=" + id);
+
+        boolean existeDepois = produtoRepository.existsById(id);
+        System.out.println("🗑️ Produto existe após o delete? " + existeDepois);
+
+        return ResponseEntity.ok("Produto removido com sucesso");
     }
 }

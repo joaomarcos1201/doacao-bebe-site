@@ -1,10 +1,9 @@
-# TODO - Avaliação com Tela/Modal de Detalhes (Admin)
+# TODO
 
-## Passo a passo
-- [ ] 1) Implementar endpoint/fluxo de UI: adicionar botão "Ver Detalhes" na lista de produtos pendentes do Admin.
-- [ ] 2) Criar componente/modal dedicado para exibir todos os detalhes do produto para o Admin.
-- [ ] 3) Integrar botões do modal: ✅ Aprovar Produto e ❌ Recusar Produto chamando `PUT /api/products/{id}/status?status=APROVADO|REPROVADO` via funções existentes (sem duplicar lógica).
-- [ ] 4) Garantir que após resposta da API a lista de produtos do admin seja atualizada automaticamente.
-- [ ] 5) Regra de UX: impedir aprovação/recusa sem antes visualizar os detalhes.
-- [ ] 6) Validar que não foi alterada a lógica de criação de produto (backend intacto) e que a identidade visual do admin foi preservada.
+- [x] Ajustar UX do Admin para aguardar `removerProduto` antes de mostrar sucesso (evita inconsistência de UI).
+- [ ] Adicionar logs e checagem no backend para o `DELETE /api/products/{id}` (realizado em ProdutoController).
+- [ ] Rebuild backend e testar delete no Admin, observando logs do backend.
+- [ ] Se os logs mostrarem `existe=true` e `existeDepois=false`, corrigir no front (recarga/listagem).
+- [ ] Se `existe=true` e `existeDepois=true`, investigar camada de persistência/constraints e ambiente/banco.
+- [ ] Se `existe=false`, validar se o Admin está exibindo IDs corretos (dados retornados em `/api/products/todos`).
 

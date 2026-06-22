@@ -361,20 +361,20 @@ function Home({ user, setUser }) {
             border: '1px solid rgba(232,138,162,0.3)',
             color: '#E88AA2', fontSize: '12px', fontWeight: '600',
             marginBottom: '20px', letterSpacing: '0.8px'
-          }}>DOAÇÕES PARA BEBÊS</div>
+          }} ></div>
 
           <h1 style={{
             fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: '900',
             color: isDark ? '#f5e0e2' : '#1a1a2e',
             margin: '0', lineHeight: '1.2', letterSpacing: '-1px'
           }}>
-            Conectando quem doa<br />com <span style={{ color: '#E88AA2', fontStyle: 'italic' }}>quem precisa</span>
+            Encontre roupas e acessórios para o seu bebê
           </h1>
 
           <p style={{
             fontSize: '15px', color: isDark ? '#9a7a7e' : '#6B7280',
             margin: '16px 0 32px', lineHeight: '1.7', maxWidth: '420px'
-          }}>Encontre itens para bebês doados por famílias da sua região.<br />Tudo gratuito, com amor.</p>
+          }}>Descubra peças lindas, confortáveis e com ótimo preço em sua região.</p>
 
           <button onClick={() => navigate('/baixar-app')} style={{
             padding: '14px 28px', borderRadius: '50px',
@@ -389,7 +389,7 @@ function Home({ user, setUser }) {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
-            Quero doar
+            quero vender +
           </button>
 
 
@@ -397,11 +397,11 @@ function Home({ user, setUser }) {
           {/* Mini features */}
           <div style={{ display: 'flex', flexDirection: 'row', gap: '70px', marginTop: '120px' }}>
             {[
-              { icon: '♡', title: 'Tudo gratuito', sub: 'Sem custo para quem precisa' },
-              { icon: '✦', title: 'Seguro e confiável', sub: 'Doações verificadas com carinho' },
-              { icon: '⌂', title: 'Comunidade solidária', sub: 'Famílias ajudando outras famílias' },
+              { icon: '♡', title: 'Preços acessíveis', sub: 'Peças com ótimo custo-benefício' },
+              { icon: '✦', title: 'Compra segura', sub: 'Anúncios verificados com cuidado' },
+              { icon: '⌂', title: 'Comunidade de pais', sub: 'Encontre tudo para o bebê com facilidade' },
             ].map(f => (
-              <div key={f.title} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+              <div key={f.title} style={{ display: 'flex', alignItems:  'flex-start', gap: '10px' }}>
                 <span style={{ fontSize: '18px', color: '#E88AA2', marginTop: '2px' }}>{f.icon}</span>
                 <div>
                   <div style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#eee' : '#1a1a2e' }}>{f.title}</div>
@@ -463,7 +463,7 @@ function Home({ user, setUser }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '56px' }}>
           {[
             {
-              num: '1', title: 'Doe itens', desc: 'Separe itens que seu bebê não usa mais e doe com carinho.',
+              num: '1', title: 'Anuncie seus itens', desc: 'Cadastre roupas e acessórios que estão em bom estado para vender.',
               svg: (
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
                   <rect width="80" height="80" rx="20" fill="#fde8f0"/>
@@ -475,7 +475,7 @@ function Home({ user, setUser }) {
               )
             },
             {
-              num: '2', title: 'Encontre famílias', desc: 'Famílias que precisam encontram o que seu bebê precisa.',
+              num: '2', title: 'Encontre peças', desc: 'Busque por tamanho, estilo e categoria para achar o que precisa.',
               svg: (
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
                   <rect width="80" height="80" rx="20" fill="#fde8f0"/>
@@ -487,7 +487,7 @@ function Home({ user, setUser }) {
               )
             },
             {
-              num: '3', title: 'Ajude quem precisa', desc: 'Seu gesto transforma o dia e a vida de outras famílias.',
+              num: '3', title: 'Combine a compra', desc: 'Finalize a negociação direto com o vendedor pelo WhatsApp.',
               svg: (
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
                   <rect width="80" height="80" rx="20" fill="#fde8f0"/>

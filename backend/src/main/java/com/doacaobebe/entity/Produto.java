@@ -44,6 +44,12 @@ public class Produto {
     @Column(nullable = false, length = 20)
     private String statusAnuncio = "EM_ANALISE";
 
+    // Controle de visibilidade (soft delete)
+    // Valores válidos: PENDENTE | ONLINE | REMOVIDO
+    @Column(nullable = false, length = 20)
+    private String statusVisibilidade = "ONLINE";
+
+
     // Novos campos marketplace
     @Column(precision = 10, scale = 2)
     private BigDecimal preco;
@@ -108,6 +114,10 @@ public class Produto {
 
     public String getStatusAnuncio() { return statusAnuncio; }
     public void setStatusAnuncio(String statusAnuncio) { this.statusAnuncio = statusAnuncio; }
+
+    public String getStatusVisibilidade() { return statusVisibilidade; }
+    public void setStatusVisibilidade(String statusVisibilidade) { this.statusVisibilidade = statusVisibilidade; }
+
 
     public BigDecimal getPreco() { return preco; }
     public void setPreco(BigDecimal preco) { this.preco = preco; }

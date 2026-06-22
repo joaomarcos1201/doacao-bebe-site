@@ -8,4 +8,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByCompradorIdOrderByCreatedAtDesc(Integer compradorId);
     List<Pedido> findByVendedorIdOrderByCreatedAtDesc(Integer vendedorId);
     List<Pedido> findByStatusEnvio(String statusEnvio);
+
+    // Soft delete de Produto: verifica se existem pedidos vinculados ao produto
+    boolean existsByProduto_Id(Integer produtoId);
 }
+

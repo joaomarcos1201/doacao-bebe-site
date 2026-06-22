@@ -333,7 +333,7 @@ function Admin() {
                         <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 6px' }}>{p.nome}</h3>
                         <p style={{ fontSize: '13px', color: isDark ? '#888' : '#666', margin: '0 0 12px', lineHeight: '1.5' }}>{p.descricao}</p>
                         <div style={{ display: 'flex', gap: '8px' }}>
-                          <button onClick={() => { api.alterarStatusProduto(p.id, 'DISPONIVEL').then(() => { aprovarProduto(p.id); showSuccess('Produto aprovado!'); }); }} style={{
+                          <button onClick={() => { aprovarProduto(p.id); showSuccess('Produto aprovado!'); }} style={{
                             padding: '8px 16px', borderRadius: '8px', border: 'none',
                             backgroundColor: '#4caf50', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
                           }}>✓ Aprovar</button>
@@ -372,7 +372,10 @@ function Admin() {
                           <span style={{ fontSize: '14px', fontWeight: '600', color: isDark ? '#e0e0e0' : '#333' }}>{p.nome}</span>
                           <span style={{ fontSize: '12px', color: isDark ? '#666' : '#aaa', marginLeft: '8px' }}>{p.categoria}</span>
                         </div>
-                        <button onClick={() => showConfirm('Remover Produto', 'Tem certeza?', () => { removerProduto(p.id); showSuccess('Produto removido!'); }, 'Remover', 'Cancelar')} style={{
+                        <button onClick={() => showConfirm('Remover Produto', 'Tem certeza?', async () => {
+                          await removerProduto(p.id);
+                          showSuccess('Produto removido!');
+                        }, 'Remover', 'Cancelar')} style={{
                           padding: '6px 12px', borderRadius: '6px', border: '1px solid #ef4444',
                           backgroundColor: 'transparent', color: '#ef4444', fontSize: '12px', fontWeight: '600', cursor: 'pointer'
                         }}>Remover</button>
