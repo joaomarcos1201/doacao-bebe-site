@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { API_URL, api } from '../config/api';
+import { API_URL } from '../config/api';
 
 const ProdutosContext = createContext();
 
@@ -49,9 +49,13 @@ export const ProdutosProvider = ({ children }) => {
 
   const aprovarProduto = async (produtoId) => {
     try {
-      // Aprovar definindo status para DISPONIVEL (consistente com backend e listagens)
-      await api.alterarStatusProduto(produtoId, 'DISPONIVEL');
-      carregarProdutos();
+      // Regra nova do requisito: aprovação via APROVADO
+      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=APROVADO`, {
+        method: 'PUT',
+      });
+      if (response.ok) {
+        carregarProdutos();
+      }
     } catch (error) {
       console.error('Erro ao aprovar produto:', error);
     }
@@ -59,9 +63,13 @@ export const ProdutosProvider = ({ children }) => {
 
   const rejeitarProduto = async (produtoId) => {
     try {
-      // Rejeitar definindo status para REJEITADO (consistente com Admin.js)
-      await api.alterarStatusProduto(produtoId, 'REJEITADO');
-      carregarProdutos();
+      // Regra nova do requisito: recusa via REPROVADO
+      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=REPROVADO`, {
+        method: 'PUT',
+      });
+      if (response.ok) {
+        carregarProdutos();
+      }
     } catch (error) {
       console.error('Erro ao rejeitar produto:', error);
     }
