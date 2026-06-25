@@ -32,7 +32,6 @@ public class ProdutoController {
     @Autowired
     private PedidoRepository pedidoRepository;
 
-
     @PostMapping
     public ResponseEntity<?> cadastrarProduto(
             @RequestParam("nome") String nome,
@@ -52,6 +51,7 @@ public class ProdutoController {
         try {
             String token = authHeader.replace("Bearer ", "");
             String email = jwtService.extractEmail(token);
+
             Usuario vendedor = usuarioRepository.findByEmail(email)
                     .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
@@ -76,8 +76,10 @@ public class ProdutoController {
 
             produtoRepository.save(produto);
             return ResponseEntity.ok("Produto cadastrado e enviado para análise.");
+
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao cadastrar produto: " + e.getMessage());
+            return ResponseEntity.badRequest()
+                    .body("Erro ao cadastrar produto: " + e.getMessage());
         }
     }
 
@@ -90,10 +92,10 @@ public class ProdutoController {
 
     @GetMapping("/todos")
     public ResponseEntity<List<Produto>> listarTodos() {
-        // Evita retornar produtos ocultados
-        return ResponseEntity.ok(produtoRepository.findAllByStatusVisibilidadeNot("REMOVIDO"));
+        return ResponseEntity.ok(
+                produtoRepository.findAllByStatusVisibilidadeNot("REMOVIDO")
+        );
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
@@ -110,42 +112,46 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<String> alterarStatus(@PathVariable Integer id, @RequestParam String status) {
+    public ResponseEntity<String> alterarStatus(
+            @PathVariable Integer id,
+            @RequestParam String status) {
+
         Produto produto = produtoRepository.findById(id).orElse(null);
-        if (produto == null) return ResponseEntity.notFound().build();
+
+        if (produto == null) {
+            return ResponseEntity.notFound().build();
+        }
 
         produto.setStatusAnuncio(status.toUpperCase());
         produtoRepository.save(produto);
+
         return ResponseEntity.ok("Status atualizado para: " + status);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> remover(@PathVariable Integer id) {
-        System.out.println("🗑️ DELETE /api/products/" + id + " recebido pelo ProdutoController");
+
         boolean existe = produtoRepository.existsById(id);
-        System.out.println("🗑️ Produto existe antes do delete? " + existe);
 
         if (!existe) {
-            return ResponseEntity.notFound().body("Produto não encontrado. ID=" + id);
+            return ResponseEntity.status(404).body("Produto não encontrado. ID=" + id);
         }
 
-        // Se houver Pedido vinculado, não apagar fisicamente (evita FK)
         if (pedidoRepository.existsByProduto_Id(id)) {
+
             Produto produto = produtoRepository.findById(id).orElse(null);
+
             if (produto == null) {
-                return ResponseEntity.notFound().body("Produto não encontrado. ID=" + id);
+                return ResponseEntity.status(404).body("Produto não encontrado. ID=" + id);
             }
 
             produto.setStatusVisibilidade("REMOVIDO");
             produtoRepository.save(produto);
+
             return ResponseEntity.ok("Produto ocultado por possuir histórico de pedidos");
         }
 
         produtoRepository.deleteById(id);
-        System.out.println("🗑️ Delete executado para ID=" + id);
-
-        boolean existeDepois = produtoRepository.existsById(id);
-        System.out.println("🗑️ Produto existe após o delete? " + existeDepois);
 
         return ResponseEntity.ok("Produto removido com sucesso");
     }
