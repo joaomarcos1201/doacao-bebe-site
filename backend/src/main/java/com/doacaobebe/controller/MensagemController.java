@@ -50,7 +50,7 @@ public class MensagemController {
 
             mensagemRepository.save(msg);
             
-            return ResponseEntity.ok().body("{\"message\": \"Mensagem enviada com sucesso!\"}");
+            return ResponseEntity.ok("{\"message\": \"Mensagem enviada com sucesso!\"}");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("{\"error\": \"Erro ao enviar mensagem: " + e.getMessage() + "\"}");
