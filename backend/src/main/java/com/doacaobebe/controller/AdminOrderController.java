@@ -29,7 +29,8 @@ public class AdminOrderController {
     private CarteiraService carteiraService;
 
     private Usuario extrairUsuario(String authHeader) {
-        String email = jwtService.extractEmail(authHeader.replace("Bearer ", ""));
+        String token = authHeader.replace("Bearer ", "");
+        String email = jwtService.extractEmail(token);
         return usuarioRepository.findByEmail(email).orElseThrow();
     }
 
@@ -52,16 +53,14 @@ public class AdminOrderController {
                 return ResponseEntity.notFound().build();
             }
 
-            // validações corretas
-            if (!"PAGO".equalsIgnoreCase(pedido.getStatusPagamento())) {
-                return ResponseEntity.badRequest().body("Pagamento não está em PAGO.");
-            }
-
+            // REGRA CORRETA DO FLUXO
+            // só libera se estiver FINALIZADO
             if (!"FINALIZADO".equalsIgnoreCase(pedido.getStatusPagamento())) {
-                return ResponseEntity.badRequest().body("Pedido não está em FINALIZADO.");
+                return ResponseEntity.badRequest()
+                        .body("Pedido não está finalizado.");
             }
 
-            // libera saldo
+            // libera saldo para o vendedor
             carteiraService.liberarSaldo(
                     pedido.getVendedor(),
                     pedido,

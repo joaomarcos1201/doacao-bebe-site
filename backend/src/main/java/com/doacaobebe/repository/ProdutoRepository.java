@@ -10,14 +10,17 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
     List<Produto> findByStatusAnuncio(String statusAnuncio);
     List<Produto> findByStatusAnuncioOrderByDataAnuncioDesc(String statusAnuncio);
 
-    // Bloqueia itens removidos em consultas públicas/Admin
-    List<Produto> findByStatusAnuncioOrderByDataAnuncioDescAndStatusVisibilidadeNot(String statusAnuncio, String statusVisibilidade);
+    // statusAnuncio = parâmetro, statusVisibilidade != parâmetro, ordena por dataAnuncio desc
+    List<Produto> findByStatusAnuncioAndStatusVisibilidadeNotOrderByDataAnuncioDesc(String statusAnuncio, String statusVisibilidade);
+
+
 
     // fallback para evitar retorno de REMOVIDO ao listar todos
     List<Produto> findAllByStatusVisibilidadeNot(String statusVisibilidade);
 
-    // opcional: helper para o listar /todos
+    // helper para o listar /todos com ordenação
     List<Produto> findAllByStatusVisibilidadeNotOrderByDataAnuncioDesc(String statusVisibilidade);
 
 }
+
 
