@@ -151,7 +151,9 @@ public class PedidoService {
     }
 
     public List<Pedido> listarPedidosComprador(Integer compradorId) {
-        return pedidoRepository.findByCompradorIdOrderByCreatedAtDesc(compradorId);
+        return pedidoRepository.findByCompradorIdOrderByCreatedAtDesc(compradorId).stream()
+                .filter(this::pedidoVisivelParaComprador)
+                .toList();
     }
 
     public List<Pedido> listarPedidosVendedor(Integer vendedorId) {
@@ -167,8 +169,50 @@ public class PedidoService {
                 .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado."));
     }
 
+    @Transactional
+    public Pedido cancelarPedido(Long id, Integer compradorId) {
+        Pedido pedido = buscarPorId(id);
+
+        if (!pedido.getComprador().getId().equals(compradorId)) {
+            throw new SecurityException("Pedido não pertence ao usuário autenticado.");
+        }
+
+        String statusPagamento = pedido.getStatusPagamento();
+        String statusEnvio = pedido.getStatusEnvio();
+
+        if ("CANCELADO".equalsIgnoreCase(statusPagamento) || "DEVOLVIDO".equalsIgnoreCase(statusPagamento)) {
+            throw new IllegalStateException("Pedido já foi cancelado ou devolvido.");
+        }
+
+        if ("FINALIZADO".equalsIgnoreCase(statusPagamento) || "ENTREGUE".equalsIgnoreCase(statusEnvio)) {
+            throw new IllegalStateException("Pedido entregue não pode ser cancelado.");
+        }
+
+        pedido.setStatusPagamento("CANCELADO");
+        if (statusEnvio != null && !statusEnvio.isBlank()) {
+            pedido.setStatusEnvio("CANCELADO");
+        }
+
+        Produto produto = pedido.getProduto();
+        if (produto != null && "RESERVADO".equalsIgnoreCase(produto.getStatusAnuncio())) {
+            produto.setStatusAnuncio("DISPONIVEL");
+            produtoRepository.save(produto);
+        }
+
+        return pedidoRepository.save(pedido);
+    }
+
     private boolean isDisponivelParaCompra(Produto produto) {
         String status = produto.getStatusAnuncio();
         return "DISPONIVEL".equals(status) || "ATIVO".equals(status) || "APROVADO".equals(status);
+    }
+
+    private boolean pedidoVisivelParaComprador(Pedido pedido) {
+        String statusPagamento = pedido.getStatusPagamento();
+        String statusEnvio = pedido.getStatusEnvio();
+        return !"CANCELADO".equalsIgnoreCase(statusPagamento)
+                && !"DEVOLVIDO".equalsIgnoreCase(statusPagamento)
+                && !"CANCELADO".equalsIgnoreCase(statusEnvio)
+                && !"DEVOLVIDO".equalsIgnoreCase(statusEnvio);
     }
 }

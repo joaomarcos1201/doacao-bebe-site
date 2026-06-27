@@ -134,6 +134,11 @@ export const api = {
   meusPedidos: () =>
     fetchWithTimeout(`${API_URL}/api/orders`, { headers: authHeaders() }).then(r => r.json()),
 
+  cancelarPedido: (id) =>
+    fetchWithTimeout(`${API_URL}/api/orders/${id}/cancel`, {
+      method: 'PUT', headers: authHeaders()
+    }).then(r => r.json()),
+
   minhasVendas: () =>
     fetchWithTimeout(`${API_URL}/api/orders/vendas`, { headers: authHeaders() }).then(r => r.json()),
 

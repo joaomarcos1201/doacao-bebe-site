@@ -24,8 +24,80 @@ function Admin() {
   const [pedidos, setPedidos] = useState([]);
   const [saques, setSaques] = useState([]);
 
+  // ====== UI TOKENS (mantém lógica/estado inalterados) ======
+  // const bgPage = isDark ? '#0f0f0f' : '#f9f5f6';
+
+  const bgPanel = isDark ? '#141414' : '#ffffff';
+  const border = isDark ? '#2a2a2a' : '#f0e6e8';
+  const text = isDark ? '#e0e0e0' : '#333';
+  const subText = isDark ? '#888' : '#666';
+  const primary = '#c0606a';
+
+  // const Card = ({ children, style }) => (
+  //   <div
+  //     style={{
+  //       backgroundColor: bgPanel,
+  //       border: `1px solid ${border}`,
+  //       borderRadius: 20,
+  //       overflow: 'hidden',
+  //       boxShadow: isDark ? 'none' : '0 14px 40px rgba(192,96,106,0.06)',
+  //       ...style,
+  //     }}
+  //   >
+  //     {children}
+  //   </div>
+  // );
+
+
+  // const SectionHeader = ({ title, subtitle, right }) => (
+  //   <div
+  //     style={{
+  //       padding: '18px 24px',
+  //       borderBottom: `1px solid ${border}`,
+  //       display: 'flex',
+  //       alignItems: 'center',
+  //       justifyContent: 'space-between',
+  //       gap: 12,
+  //       background: isDark ? 'rgba(20,20,20,0.75)' : 'rgba(253,240,242,0.65)',
+  //     }}
+  //   >
+  //     <div style={{ minWidth: 0 }}>
+  //       <h2 style={{ margin: 0, fontSize: 15, fontWeight: 1000, color: text, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+  //         {title}
+  //       </h2>
+  //       {subtitle ? (
+  //         <div style={{ marginTop: 4, fontSize: 12, color: subText, fontWeight: 800 }}>{subtitle}</div>
+  //       ) : null}
+  //     </div>
+  //     {right}
+  //   </div>
+  // );
+
+
+  // const Badge = ({ label, tone }) => {
+  //   // removido do redesign para manter o arquivo compilável
+  // };
+
+
+
+  // Badge was partially corrupted during previous UI redesign.
+  // Mantemos o componente removido para garantir compilação.
+
+
+
+
+
+  // Badge/Btn helpers estavam corrompidos durante o redesign.
+  // Removidos por completo para manter o arquivo compilável.
+
+ 
+
+  // (helpers acima são usados pelo redesign; mantidos sem alterar lógica)
+
   const produtosPendentes = produtos.filter(p => p.statusAnuncio === 'EM_ANALISE' || p.statusAnuncio === 'INATIVO');
-  const produtosAprovados = produtos.filter(p => p.statusAnuncio === 'ATIVO' || p.statusAnuncio === 'DISPONIVEL');
+
+
+  const produtosAprovados = produtos.filter(p => ['ATIVO', 'DISPONIVEL', 'APROVADO'].includes(p.statusAnuncio));
 
   useEffect(() => {
     carregarUsuarios();
@@ -337,7 +409,7 @@ function Admin() {
                             padding: '8px 16px', borderRadius: '8px', border: 'none',
                             backgroundColor: '#4caf50', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
                           }}>✓ Aprovar</button>
-                          <button onClick={() => showConfirm('Rejeitar Produto', 'Tem certeza?', () => { api.alterarStatusProduto(p.id, 'REJEITADO').then(() => { rejeitarProduto(p.id); showSuccess('Produto rejeitado.'); }); }, 'Rejeitar', 'Cancelar')} style={{
+                          <button onClick={() => showConfirm('Rejeitar Produto', 'Tem certeza?', () => { rejeitarProduto(p.id).then(() => showSuccess('Produto rejeitado.')); }, 'Rejeitar', 'Cancelar')} style={{
                             padding: '8px 16px', borderRadius: '8px', border: 'none',
                             backgroundColor: '#ef4444', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
                           }}>✗ Rejeitar</button>

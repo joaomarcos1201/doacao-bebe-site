@@ -125,3 +125,240 @@ body {
   cursor: pointer;
   margin-top: 10px;
 }
+
+.pedido-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.pedido-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(192, 96, 106, 0.12);
+}
+
+.pedido-values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pedido-toggle-btn,
+.pedido-action-btn {
+  min-height: 40px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pedido-toggle-btn {
+  width: 100%;
+  cursor: pointer;
+}
+
+.pedido-toggle-btn:hover,
+.pedido-action-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(192, 96, 106, 0.12);
+}
+
+.pedido-action-btn:disabled {
+  opacity: 0.58;
+}
+
+.pedido-track-section {
+  margin-top: 18px;
+  padding-top: 18px;
+  animation: pedidoTrackIn 0.28s ease both;
+}
+
+.pedido-timeline-wrap {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(82px, 1fr));
+  gap: 10px;
+  padding: 10px 0 20px;
+  margin-bottom: 8px;
+}
+
+.pedido-timeline-line {
+  position: absolute;
+  left: 42px;
+  right: 42px;
+  top: 28px;
+  height: 3px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.pedido-timeline-progress {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.55s ease;
+}
+
+.pedido-timeline-step {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.25;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.pedido-timeline-step.is-disabled {
+  opacity: 0.55;
+}
+
+.pedido-step-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.pedido-envio-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.pedido-info-card {
+  border-radius: 10px;
+  padding: 12px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pedido-info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.pedido-action-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pedido-action-btn {
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.pedido-cancel-btn {
+  width: 100%;
+  min-height: 40px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(239, 68, 68, 0.55);
+  background-color: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.pedido-cancel-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background-color: rgba(239, 68, 68, 0.14);
+  box-shadow: 0 8px 20px rgba(239, 68, 68, 0.12);
+}
+
+.pedido-cancel-btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.99);
+}
+
+.pedido-cancel-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.pedido-loading {
+  min-height: 150px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.pedido-loader-icon {
+  animation: pedidoSpin 0.9s linear infinite;
+}
+
+@keyframes pedidoSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pedidoTrackIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 760px) {
+  .pedido-values-grid,
+  .pedido-envio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pedido-timeline-wrap {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 4px 0 14px 2px;
+  }
+
+  .pedido-timeline-line {
+    left: 18px;
+    right: auto;
+    top: 22px;
+    bottom: 26px;
+    width: 3px;
+    height: auto;
+  }
+
+  .pedido-timeline-progress {
+    width: 100% !important;
+    height: var(--pedido-progress-height, 0);
+  }
+
+  .pedido-timeline-step {
+    min-height: 40px;
+    flex-direction: row;
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .pedido-action-row {
+    flex-direction: column;
+  }
+
+  .pedido-action-btn {
+    width: 100%;
+  }
+}

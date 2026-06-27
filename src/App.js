@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import Home from './pages/Home';
-import Admin from './pages/Admin';
+import Admin from './pages/Admin.js';
+
+
 import DetalhesProduto from './pages/DetalhesProduto';
 import Perfil from './pages/Perfil';
 import RecuperarSenha from './pages/RecuperarSenha';
@@ -92,6 +94,8 @@ function App() {
                 <Route path="/cadastro" element={<Cadastro />} />
                 <Route path="/home" element={<Home user={user} setUser={setUser} />} />
                 <Route path="/admin" element={user && (user.isAdmin || user.email === 'admin@alemdopositivo.com') ? <Admin /> : <Navigate to="/login" />} />
+
+
                 <Route path="/produto/:id" element={<DetalhesProduto />} />
                 <Route path="/perfil" element={user ? <Perfil user={user} setUser={setUser} /> : <Navigate to="/login" />} />
 

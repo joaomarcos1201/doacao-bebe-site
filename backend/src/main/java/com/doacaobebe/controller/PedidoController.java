@@ -52,4 +52,21 @@ public class PedidoController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<?> cancelar(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String email = jwtService.extractEmail(authHeader.replace("Bearer ", ""));
+            Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
+            return ResponseEntity.ok(pedidoService.cancelarPedido(id, usuario.getId()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (SecurityException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao cancelar pedido: " + e.getMessage());
+        }
+    }
 }
