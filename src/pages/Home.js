@@ -361,13 +361,7 @@ function Home({ user, setUser }) {
 
         {/* Lado esquerdo */}
         <div style={{ flex: 1, maxWidth: '620px' }}>
-          <div style={{
-            display: 'inline-block', padding: '5px 14px', borderRadius: '20px',
-            backgroundColor: isDark ? 'rgba(232,138,162,0.15)' : 'rgba(232,138,162,0.12)',
-            border: '1px solid rgba(232,138,162,0.3)',
-            color: '#E88AA2', fontSize: '12px', fontWeight: '600',
-            marginBottom: '20px', letterSpacing: '0.8px'
-          }} ></div>
+
 
           <h1 style={{
             fontSize: 'clamp(28px, 3.5vw, 48px)', fontWeight: '900',
@@ -382,7 +376,7 @@ function Home({ user, setUser }) {
             margin: '16px 0 32px', lineHeight: '1.7', maxWidth: '420px'
           }}>Descubra peças lindas, confortáveis e com ótimo preço em sua região.</p>
 
-          <button onClick={() => navigate('/baixar-app')} style={{
+          <button onClick={() => navigate('/cadastrar-produto')} style={{
             padding: '14px 28px', borderRadius: '50px',
             backgroundColor: '#E88AA2', color: 'white',
             border: 'none', fontSize: '15px', fontWeight: '600',
@@ -392,10 +386,7 @@ function Home({ user, setUser }) {
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#d4708a'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#E88AA2'; e.currentTarget.style.transform = 'translateY(0)'; }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-            quero vender +
+            Quero vender +
           </button>
 
 
@@ -403,12 +394,11 @@ function Home({ user, setUser }) {
           {/* Mini features */}
           <div style={{ display: 'flex', flexDirection: 'row', gap: '70px', marginTop: '120px' }}>
             {[
-              { icon: '♡', title: 'Preços acessíveis', sub: 'Peças com ótimo custo-benefício' },
-              { icon: '✦', title: 'Compra segura', sub: 'Anúncios verificados com cuidado' },
-              { icon: '⌂', title: 'Comunidade de pais', sub: 'Encontre tudo para o bebê com facilidade' },
+              { title: 'Preços acessíveis', sub: 'Peças com ótimo custo-benefício' },
+              { title: 'Compra segura', sub: 'Anúncios verificados com cuidado' },
+              { title: 'Comunidade de pais', sub: 'Encontre tudo para o bebê com facilidade' },
             ].map(f => (
               <div key={f.title} style={{ display: 'flex', alignItems:  'flex-start', gap: '10px' }}>
-                <span style={{ fontSize: '18px', color: '#E88AA2', marginTop: '2px' }}>{f.icon}</span>
                 <div>
                   <div style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#eee' : '#1a1a2e' }}>{f.title}</div>
                   <div style={{ fontSize: '13px', color: isDark ? '#777' : '#9CA3AF', lineHeight: '1.5', marginTop: '4px' }}>{f.sub}</div>

@@ -24,7 +24,7 @@ function CadastrarProduto() {
 
   const [form, setForm] = useState({
     nome: '', descricao: '', categoria: '', marca: '', conservacao: '',
-    preco: '', peso: '', altura: '', largura: '', comprimento: '', cepOrigem: ''
+    preco: '', cepOrigem: ''
   });
 
   const bg = isDark ? '#0f0f0f' : '#f9f5f6';
@@ -52,7 +52,7 @@ function CadastrarProduto() {
     e.preventDefault();
     setErro(''); setLoading(true);
 
-    const required = ['nome', 'descricao', 'categoria', 'conservacao', 'preco', 'peso', 'altura', 'largura', 'comprimento', 'cepOrigem'];
+    const required = ['nome', 'descricao', 'categoria', 'conservacao', 'preco', 'cepOrigem'];
     const missing = required.filter(k => !form[k]);
     if (missing.length > 0) { setErro('Preencha todos os campos obrigatórios.'); setLoading(false); return; }
 
@@ -89,7 +89,7 @@ function CadastrarProduto() {
           <button onClick={() => navigate('/home')} style={{ padding: '12px 24px', borderRadius: '12px', border: 'none', backgroundColor: '#c0606a', color: 'white', fontSize: '14px', fontWeight: '700', cursor: 'pointer' }}>
             Ir para Home
           </button>
-          <button onClick={() => { setSucesso(false); setForm({ nome: '', descricao: '', categoria: '', marca: '', conservacao: '', preco: '', peso: '', altura: '', largura: '', comprimento: '', cepOrigem: '' }); setImagem(null); setPreviewImg(null); }} style={{ padding: '12px 24px', borderRadius: '12px', border: `1px solid ${border}`, backgroundColor: 'transparent', color: text, fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+          <button onClick={() => { setSucesso(false); setForm({ nome: '', descricao: '', categoria: '', marca: '', conservacao: '', preco: '', cepOrigem: '' }); setImagem(null); setPreviewImg(null); }} style={{ padding: '12px 24px', borderRadius: '12px', border: `1px solid ${border}`, backgroundColor: 'transparent', color: text, fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
             Cadastrar Outro
           </button>
         </div>
@@ -168,24 +168,6 @@ function CadastrarProduto() {
             <div>
               {label('Preço (R$)')}
               <input type="number" min="0" step="0.01" value={form.preco} onChange={e => set('preco', e.target.value)} placeholder="0,00" style={inputStyle} />
-            </div>
-          </div>
-
-          {/* Dimensões */}
-          <div>
-            {label('Dimensões para Frete')}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '10px' }}>
-              {[
-                { k: 'peso', p: 'Peso (kg)' },
-                { k: 'altura', p: 'Altura (cm)' },
-                { k: 'largura', p: 'Largura (cm)' },
-                { k: 'comprimento', p: 'Comp. (cm)' },
-              ].map(({ k, p }) => (
-                <div key={k}>
-                  <p style={{ fontSize: '11px', color: sub, margin: '0 0 4px' }}>{p}</p>
-                  <input type="number" min="0" step="0.1" value={form[k]} onChange={e => set(k, e.target.value)} placeholder="0" style={inputStyle} />
-                </div>
-              ))}
             </div>
           </div>
 
