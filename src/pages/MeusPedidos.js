@@ -152,11 +152,16 @@ function MeusPedidos() {
   };
 
   const cancelarPedido = async (pedido) => {
-    setCancelandoId(pedido.id);
+    const pedidoId = pedido?.id;
+    if (!pedidoId) {
+      showError('ID do pedido inválido.');
+      return;
+    }
+    setCancelandoId(pedidoId);
     try {
-      await api.cancelarPedido(pedido.id);
-      setPedidos(prev => prev.filter(item => item.id !== pedido.id));
-      setPedidoAberto(prev => (prev === pedido.id ? null : prev));
+      await api.cancelarPedido(pedidoId);
+      setPedidos(prev => prev.filter(item => item.id !== pedidoId));
+      setPedidoAberto(prev => (prev === pedidoId ? null : prev));
       showSuccess('Pedido cancelado com sucesso.');
     } catch (error) {
       showError(error.message || 'Não foi possível cancelar o pedido.');

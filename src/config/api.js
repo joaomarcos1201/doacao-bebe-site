@@ -21,7 +21,7 @@ const getApiUrl = () => {
 export const API_URL = getApiUrl();
 
 console.log('🔧 API URL configurada:', API_URL);
-const DEFAULT_TIMEOUT = 30000; // 30s
+const DEFAULT_TIMEOUT = 60000; // 60s (Render free tier pode demorar até 50s para acordar)
 
 const authHeaders = () => ({
   'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -39,7 +39,7 @@ const fetchWithTimeout = (url, options = {}, timeout = DEFAULT_TIMEOUT) => {
   return fetch(url, { ...options, signal })
     .then(async response => {
       const duration = Date.now() - start;
-      if (duration > 5000) {
+      if (duration > 15000) {
         console.warn('🟠 API slow response (possible cold start):', url, 'duration_ms=', duration);
       }
 
@@ -78,7 +78,7 @@ const fetchWithTimeout = (url, options = {}, timeout = DEFAULT_TIMEOUT) => {
           }
           break;
         case 404:
-          message = 'Recurso não encontrado.';
+          message = bodyText || 'Recurso não encontrado.';
           break;
         case 500:
           message = 'Erro interno no servidor. Tente novamente mais tarde.';
@@ -137,7 +137,7 @@ export const api = {
   cancelarPedido: (id) =>
     fetchWithTimeout(`${API_URL}/api/orders/${id}/cancel`, {
       method: 'PUT', headers: authHeaders()
-    }).then(r => r.json()),
+    }).then(r => r.text().then(t => { try { return JSON.parse(t); } catch { return t; } })),
 
   minhasVendas: () =>
     fetchWithTimeout(`${API_URL}/api/orders/vendas`, { headers: authHeaders() }).then(r => r.json()),

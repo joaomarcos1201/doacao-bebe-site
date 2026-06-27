@@ -5,7 +5,7 @@ export const useConfirm = () => {
     isOpen: false,
     title: '',
     message: '',
-    onConfirm: null,
+    onConfirm: { fn: null },
     confirmText: 'Confirmar',
     cancelText: 'Cancelar'
   });
@@ -15,15 +15,15 @@ export const useConfirm = () => {
       isOpen: true,
       title,
       message,
-      onConfirm,
+      onConfirm: { fn: onConfirm },
       confirmText,
       cancelText
     });
   };
 
   const handleConfirm = () => {
-    if (confirmState.onConfirm) {
-      confirmState.onConfirm();
+    if (confirmState.onConfirm?.fn) {
+      confirmState.onConfirm.fn();
     }
     setConfirmState(prev => ({ ...prev, isOpen: false }));
   };

@@ -59,8 +59,11 @@ public class PedidoController {
             @RequestHeader("Authorization") String authHeader) {
         try {
             String email = jwtService.extractEmail(authHeader.replace("Bearer ", ""));
-            Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
+            Usuario usuario = usuarioRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
             return ResponseEntity.ok(pedidoService.cancelarPedido(id, usuario.getId()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (SecurityException e) {
