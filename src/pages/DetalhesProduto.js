@@ -85,7 +85,7 @@ function DetalhesProduto() {
     </div>
   );
 
-  const disponivel = produto.statusAnuncio === 'DISPONIVEL';
+  const disponivel = ['ATIVO', 'DISPONIVEL', 'APROVADO'].includes((produto.statusAnuncio || '').toUpperCase());
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: bg, fontFamily: "'Inter', system-ui, sans-serif" }}>

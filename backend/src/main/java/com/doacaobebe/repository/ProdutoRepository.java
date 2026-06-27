@@ -9,6 +9,7 @@ import java.util.List;
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
     List<Produto> findByStatusAnuncio(String statusAnuncio);
     List<Produto> findByStatusAnuncioOrderByDataAnuncioDesc(String statusAnuncio);
+    List<Produto> findByStatusAnuncioInAndStatusVisibilidadeNotOrderByDataAnuncioDesc(List<String> statusAnuncio, String statusVisibilidade);
 
     // statusAnuncio = parâmetro, statusVisibilidade != parâmetro, ordena por dataAnuncio desc
     List<Produto> findByStatusAnuncioAndStatusVisibilidadeNotOrderByDataAnuncioDesc(String statusAnuncio, String statusVisibilidade);

@@ -3,7 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { API_URL } from '../config/api';
 
-const CATEGORIAS = ['Roupas', 'Sapatos', 'Brinquedos', 'Acessórios', 'Berço/Cama', 'Carrinho', 'Alimentação', 'Higiene', 'Outros'];
+const CATEGORIAS = [
+  { value: 'roupas', label: 'Roupas' },
+  { value: 'brinquedos', label: 'Brinquedos' },
+  { value: 'moveis', label: 'Berco/Cama e Moveis' },
+  { value: 'acessorios', label: 'Acessorios' },
+  { value: 'alimentacao', label: 'Alimentacao' },
+  { value: 'outros', label: 'Outros' },
+];
 const CONSERVACOES = ['Novo', 'Seminovo', 'Bom Estado', 'Com Marcas de Uso'];
 
 function CadastrarProduto() {
@@ -140,7 +147,7 @@ function CadastrarProduto() {
               {label('Categoria')}
               <select value={form.categoria} onChange={e => set('categoria', e.target.value)} style={inputStyle}>
                 <option value="">Selecione</option>
-                {CATEGORIAS.map(c => <option key={c} value={c}>{c}</option>)}
+                {CATEGORIAS.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
               </select>
             </div>
             <div>

@@ -49,8 +49,8 @@ export const ProdutosProvider = ({ children }) => {
 
   const aprovarProduto = async (produtoId) => {
     try {
-      // Regra nova do requisito: aprovação via APROVADO
-      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=APROVADO`, {
+      // Produto aprovado fica disponível para aparecer na Home e ser comprado.
+      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=DISPONIVEL`, {
         method: 'PUT',
       });
       if (response.ok) {

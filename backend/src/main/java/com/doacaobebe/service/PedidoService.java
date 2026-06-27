@@ -41,7 +41,7 @@ public class PedidoService {
         Produto produto = produtoRepository.findById(request.getProdutoId())
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
 
-        if (!"DISPONIVEL".equals(produto.getStatusAnuncio())) {
+        if (!isDisponivelParaCompra(produto)) {
             throw new IllegalStateException("Produto não está disponível para compra.");
         }
 
@@ -165,5 +165,10 @@ public class PedidoService {
     public Pedido buscarPorId(Long id) {
         return pedidoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Pedido não encontrado."));
+    }
+
+    private boolean isDisponivelParaCompra(Produto produto) {
+        String status = produto.getStatusAnuncio();
+        return "DISPONIVEL".equals(status) || "ATIVO".equals(status) || "APROVADO".equals(status);
     }
 }

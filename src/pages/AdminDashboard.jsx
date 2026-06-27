@@ -225,8 +225,7 @@ function AdminDashboard() {
         onApprove={async (produtoId) => {
           // Regra: abrir modal e então aprovar/rejeitar
           // Use endpoints já existentes (produtos context)
-          // Aprovar produto deve setar APROVADO; depois o backend/refletores mostrarão ONLINE se aplicável.
-          await api.alterarStatusProduto(produtoId, 'APROVADO');
+          await api.alterarStatusProduto(produtoId, 'DISPONIVEL');
           await carregarProdutos();
           closeModal();
           await carregarTudo();

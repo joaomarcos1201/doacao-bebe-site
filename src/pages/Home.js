@@ -37,11 +37,16 @@ function Home({ user, setUser }) {
     navigate('/home');
   };
 
+  const normalizar = (valor = '') =>
+    valor.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+  const statusDisponiveis = ['ATIVO', 'DISPONIVEL', 'APROVADO'];
+
   const produtosFiltrados = produtos.filter(produto => {
-    const matchPesquisa = produto.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
-                         produto.descricao.toLowerCase().includes(pesquisa.toLowerCase());
-    const matchCategoria = categoriaFiltro === '' || produto.categoria === categoriaFiltro;
-    const isAprovado = produto.statusAnuncio === 'ATIVO' || produto.statusAnuncio === 'DISPONIVEL';
+    const matchPesquisa = normalizar(produto.nome).includes(normalizar(pesquisa)) ||
+                         normalizar(produto.descricao).includes(normalizar(pesquisa));
+    const matchCategoria = categoriaFiltro === '' || normalizar(produto.categoria) === categoriaFiltro;
+    const isAprovado = statusDisponiveis.includes((produto.statusAnuncio || '').toUpperCase());
     return matchPesquisa && matchCategoria && isAprovado;
   });
 
@@ -268,11 +273,12 @@ function Home({ user, setUser }) {
               padding: '7px 16px', borderRadius: '10px',
               border: '1px solid rgba(239,68,68,0.4)', backgroundColor: 'transparent',
               color: '#ef4444', cursor: 'pointer', fontSize: '13px', fontWeight: '500',
-              transition: 'all 0.2s'
+              transition: 'all 0.2s',
+              display: 'flex', alignItems: 'center', gap: '6px'
             }}
               onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(239,68,68,0.08)'; }}
               onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}
-            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>Sair <LogOut size={13} /></button>
+            >Sair <LogOut size={13} /></button>
           ) : (
             <button onClick={() => navigate('/login')} style={{
               padding: '7px 20px', borderRadius: '10px',

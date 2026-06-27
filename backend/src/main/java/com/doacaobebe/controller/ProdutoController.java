@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/products")
@@ -86,7 +87,10 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<List<Produto>> listarDisponiveis() {
         return ResponseEntity.ok(
-                produtoRepository.findByStatusAnuncioOrderByDataAnuncioDesc("DISPONIVEL")
+                produtoRepository.findByStatusAnuncioInAndStatusVisibilidadeNotOrderByDataAnuncioDesc(
+                        List.of("DISPONIVEL", "ATIVO", "APROVADO"),
+                        "REMOVIDO"
+                )
         );
     }
 
@@ -122,10 +126,21 @@ public class ProdutoController {
             return ResponseEntity.notFound().build();
         }
 
-        produto.setStatusAnuncio(status.toUpperCase());
+        produto.setStatusAnuncio(normalizarStatus(status));
         produtoRepository.save(produto);
 
-        return ResponseEntity.ok("Status atualizado para: " + status);
+        return ResponseEntity.ok("Status atualizado para: " + produto.getStatusAnuncio());
+    }
+
+    private String normalizarStatus(String status) {
+        String statusNormalizado = status == null ? "" : status.trim().toUpperCase(Locale.ROOT);
+        if ("APROVADO".equals(statusNormalizado)) {
+            return "DISPONIVEL";
+        }
+        if ("REJEITADO".equals(statusNormalizado)) {
+            return "REPROVADO";
+        }
+        return statusNormalizado;
     }
 
     @DeleteMapping("/{id}")
