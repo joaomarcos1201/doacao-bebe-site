@@ -483,7 +483,7 @@ function Home({ user, setUser }) {
               )
             },
             {
-              num: '3', title: 'Combine a compra', desc: 'Finalize a negociação direto com o vendedor pelo WhatsApp.',
+              num: '3', title: 'Combine a compra', desc: 'Combine a sua compra pelo nosso chat.',
               svg: (
                 <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
                   <rect width="80" height="80" rx="20" fill="#fde8f0"/>
