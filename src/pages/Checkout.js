@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { api } from '../config/api';
+import { consultarCep } from '../utils/cep';
+import PainelEntrega from '../components/PainelEntrega';
+import FormEndereco from '../components/FormEndereco';
 
 function Checkout() {
   const { isDark } = useTheme();
@@ -10,8 +13,11 @@ function Checkout() {
   const { produto } = location.state || {};
 
   const [cep, setCep] = useState('');
+  const [erroCep, setErroCep] = useState('');
+  const [endereco, setEndereco] = useState({ logradouro: '', numero: '', complemento: '', bairro: '', cidade: '', estado: '' });
   const [etapa, setEtapa] = useState('cep'); // cep | resumo | pix
   const [frete, setFrete] = useState(null);
+  const [entrega, setEntrega] = useState(null); // { endereco, opcoes }
   const [checkout, setCheckout] = useState(null);
   const [copiado, setCopiado] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,12 +31,18 @@ function Checkout() {
 
   useEffect(() => { if (!produto) navigate('/home'); }, [produto, navigate]);
 
-  const calcularFrete = async () => {
-    if (cep.replace(/\D/g, '').length !== 8) { setErro('CEP inválido.'); return; }
-    setLoading(true); setErro('');
+  const calcularFrete = async (enderecoConfirmado) => {
+    setLoading(true); setErro(''); setEntrega(null);
     try {
-      const data = await api.calcularFrete(produto.id, cep.replace(/\D/g, ''));
-      setFrete(data.valorFrete);
+      const [resultado, data] = await Promise.all([
+        consultarCep(cep),
+        api.calcularFrete(produto.id, cep.replace(/\D/g, '')),
+      ]);
+      if (!resultado.valido) { setErro(resultado.erro); return; }
+      const valorFrete = data.valorFrete ?? 0;
+      const { opcoes } = await consultarCep(cep, valorFrete);
+      setFrete(valorFrete);
+      setEntrega({ endereco: enderecoConfirmado, opcoes });
       setEtapa('resumo');
     } catch { setErro('Erro ao calcular frete. Tente novamente.'); }
     finally { setLoading(false); }
@@ -97,28 +109,35 @@ function Checkout() {
         {/* ETAPA CEP */}
         {etapa === 'cep' && (
           <div>
-            <p style={{ fontSize: '14px', color: sub, marginBottom: '16px' }}>Informe seu CEP para calcular o frete:</p>
-            <input
-              value={cep}
-              onChange={e => setCep(e.target.value.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2').slice(0, 9))}
-              placeholder="00000-000"
-              style={{
-                width: '100%', padding: '14px 16px', borderRadius: '12px', fontSize: '18px', fontWeight: '600',
-                border: `2px solid ${erro ? '#ef4444' : border}`, backgroundColor: isDark ? '#1a1a1a' : '#f9f5f6',
-                color: text, outline: 'none', boxSizing: 'border-box', letterSpacing: '2px', textAlign: 'center'
-              }}
+            <p style={{ fontSize: '14px', color: sub, marginBottom: '16px' }}>Informe seu endereço de entrega:</p>
+            <FormEndereco
+              cep={cep} onCepChange={setCep}
+              endereco={endereco} onEnderecoChange={setEndereco}
+              onEnderecoValido={calcularFrete}
+              isDark={isDark} border={border} text={text} sub={sub}
+              erroCep={erroCep} onErroCep={setErroCep}
             />
-            {erro && <p style={{ color: '#ef4444', fontSize: '13px', marginTop: '8px' }}>{erro}</p>}
-            <button onClick={calcularFrete} disabled={loading} style={{
-              width: '100%', marginTop: '20px', padding: '16px', borderRadius: '12px', border: 'none',
-              backgroundColor: '#c0606a', color: 'white', fontSize: '15px', fontWeight: '700', cursor: 'pointer'
-            }}>{loading ? 'Calculando...' : 'Calcular Frete →'}</button>
+            {erro && <p style={{ color: '#ef4444', fontSize: '13px', marginTop: '12px' }}>{erro}</p>}
+            {loading && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '12px', color: sub, fontSize: '13px' }}>
+                <span style={{ display: 'inline-block', width: '14px', height: '14px', border: `2px solid ${border}`, borderTopColor: '#c0606a', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+                Calculando frete...
+              </div>
+            )}
           </div>
         )}
 
         {/* ETAPA RESUMO */}
         {etapa === 'resumo' && (
           <div>
+            {entrega && (
+              <PainelEntrega
+                endereco={entrega.endereco}
+                opcoes={entrega.opcoes}
+                isDark={isDark} border={border} text={text} sub={sub}
+                onOpcaoSelecionada={(opcao) => setFrete(opcao.valor)}
+              />
+            )}
             {[
               { label: 'Produto', valor: produto.preco },
               { label: 'Frete', valor: frete },
@@ -137,10 +156,10 @@ function Checkout() {
               width: '100%', marginTop: '8px', padding: '16px', borderRadius: '12px', border: 'none',
               backgroundColor: '#c0606a', color: 'white', fontSize: '15px', fontWeight: '700', cursor: 'pointer'
             }}>{loading ? 'Gerando PIX...' : '💳 Gerar PIX'}</button>
-            <button onClick={() => setEtapa('cep')} style={{
+            <button onClick={() => { setEtapa('cep'); setEntrega(null); setFrete(null); setErro(''); }} style={{
               width: '100%', marginTop: '10px', padding: '12px', borderRadius: '12px', border: `1px solid ${border}`,
               backgroundColor: 'transparent', color: sub, fontSize: '14px', cursor: 'pointer'
-            }}>Alterar CEP</button>
+            }}>✏️ Alterar endereço</button>
           </div>
         )}
 

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { API_URL, api } from '../config/api';
+import { formatarCep, validarFormatoCep, consultarCep } from '../utils/cep';
+import PainelEntrega from '../components/PainelEntrega';
 
 function DetalhesProduto() {
   const { id } = useParams();
@@ -12,8 +14,10 @@ function DetalhesProduto() {
   const [loading, setLoading] = useState(true);
   const [cepFrete, setCepFrete] = useState('');
   const [frete, setFrete] = useState(null);
+  const [entrega, setEntrega] = useState(null); // { endereco, opcoes }
   const [calcFrete, setCalcFrete] = useState(false);
   const [loadFrete, setLoadFrete] = useState(false);
+  const [erroFrete, setErroFrete] = useState('');
 
   const bg = isDark ? '#0f0f0f' : '#f9f5f6';
   const card = isDark ? '#141414' : '#fff';
@@ -32,12 +36,17 @@ function DetalhesProduto() {
   const formatBRL = (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
   const calcularFrete = async () => {
-    if (cepFrete.replace(/\D/g, '').length !== 8) return;
-    setLoadFrete(true);
+    if (!validarFormatoCep(cepFrete)) return;
+    setLoadFrete(true); setErroFrete(''); setEntrega(null); setFrete(null);
     try {
+      const resultado = await consultarCep(cepFrete);
+      if (!resultado.valido) { setErroFrete(resultado.erro); return; }
       const data = await api.calcularFrete(produto.id, cepFrete.replace(/\D/g, ''));
-      setFrete(data.valorFrete);
-    } catch {}
+      const valorFrete = data.valorFrete ?? 0;
+      const { endereco, opcoes } = await consultarCep(cepFrete, valorFrete);
+      setFrete(valorFrete);
+      setEntrega({ endereco, opcoes });
+    } catch { setErroFrete('Erro ao calcular frete. Tente novamente.'); }
     finally { setLoadFrete(false); }
   };
 
@@ -142,15 +151,37 @@ function DetalhesProduto() {
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <input
                     value={cepFrete}
-                    onChange={e => { setCepFrete(e.target.value.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2').slice(0, 9)); setFrete(null); }}
+                    onChange={e => { setCepFrete(formatarCep(e.target.value)); setFrete(null); setEntrega(null); setErroFrete(''); }}
                     placeholder="00000-000"
                     style={{ flex: 1, padding: '10px 12px', borderRadius: '8px', fontSize: '14px', border: `1px solid ${border}`, backgroundColor: isDark ? '#2a2a2a' : '#fff', color: text, outline: 'none' }}
                   />
-                  <button onClick={calcularFrete} disabled={loadFrete} style={{ padding: '10px 16px', borderRadius: '8px', border: 'none', backgroundColor: '#c0606a', color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
-                    {loadFrete ? '...' : 'Calcular'}
+                  <button onClick={calcularFrete} disabled={loadFrete || !validarFormatoCep(cepFrete)} style={{ padding: '10px 16px', borderRadius: '8px', border: 'none', backgroundColor: validarFormatoCep(cepFrete) ? '#c0606a' : '#ccc', color: 'white', fontSize: '13px', fontWeight: '700', cursor: validarFormatoCep(cepFrete) ? 'pointer' : 'not-allowed', whiteSpace: 'nowrap' }}>
+                    {loadFrete ? (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ display: 'inline-block', width: '12px', height: '12px', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+                        Calculando
+                      </span>
+                    ) : 'Calcular'}
                   </button>
                 </div>
-                {frete !== null && (
+                {erroFrete && <p style={{ fontSize: '13px', color: '#ef4444', margin: '8px 0 0' }}>{erroFrete}</p>}
+                {entrega && (
+                  <PainelEntrega
+                    endereco={entrega.endereco}
+                    opcoes={entrega.opcoes}
+                    isDark={isDark} border={border} text={text} sub={sub}
+                    onOpcaoSelecionada={(opcao) => setFrete(opcao.valor)}
+                  />
+                )}
+                <a
+                  href="https://buscacepinter.correios.com.br/app/endereco/index.php"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'inline-block', marginTop: '6px', fontSize: '12px', color: '#c0606a', textDecoration: 'none', opacity: 0.85 }}
+                  onMouseEnter={e => e.target.style.textDecoration = 'underline'}
+                  onMouseLeave={e => e.target.style.textDecoration = 'none'}
+                >Não sei meu CEP</a>
+                {frete !== null && !entrega && (
                   <p style={{ fontSize: '14px', color: '#4caf50', fontWeight: '700', margin: '10px 0 0' }}>
                     Frete: {formatBRL(frete)}
                     {produto.preco && <span style={{ color: sub, fontWeight: '400' }}> · Total: {formatBRL(Number(produto.preco) + Number(frete))}</span>}
