@@ -1,6 +1,36 @@
 import React from 'react';
 
-export default function AdminProductsTable({ isDark, produtos, onView, compact }) {
+export default function AdminProductsTable({ isDark, produtos, onView, compact, backendOnline }) {
+  const border = isDark ? '#2a2a2a' : '#f0e6e8';
+  const sub = isDark ? '#666' : '#999';
+
+  const statusColor = (s) => {
+    const st = (s || '').toUpperCase();
+    if (st === 'EM_ANALISE') return '#ff9800';
+    if (st === 'APROVADO' || st === 'DISPONIVEL') return '#4caf50';
+    if (st === 'REPROVADO') return '#ef4444';
+    return '#2196f3';
+  };
+
+  const EmptyState = () => (
+    <tr>
+      <td colSpan={5} style={{ padding: '32px 18px', textAlign: 'center' }}>
+        {backendOnline === false ? (
+          <div>
+            <div style={{ fontSize: 28, marginBottom: 8 }}>⚠️</div>
+            <div style={{ fontWeight: 700, color: '#ef4444', fontSize: 14, marginBottom: 4 }}>Sem conexão com o servidor</div>
+            <div style={{ color: sub, fontSize: 12 }}>O backend está offline. Reative o serviço no Render e clique em Atualizar.</div>
+          </div>
+        ) : (
+          <div>
+            <div style={{ fontSize: 28, marginBottom: 8 }}>✅</div>
+            <div style={{ fontWeight: 700, color: isDark ? '#e0e0e0' : '#333', fontSize: 14, marginBottom: 4 }}>Nenhum produto pendente</div>
+            <div style={{ color: sub, fontSize: 12 }}>Todos os anúncios foram revisados.</div>
+          </div>
+        )}
+      </td>
+    </tr>
+  );
   return (
     <div style={{ width: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
@@ -32,16 +62,11 @@ export default function AdminProductsTable({ isDark, produtos, onView, compact }
           </thead>
           <tbody>
             {produtos.length === 0 ? (
-              <tr>
-                <td colSpan={5} style={{ padding: 18, textAlign: 'center', color: isDark ? '#888' : '#aaa', fontWeight: 900 }}>
-                  Nenhum produto pendente
-                </td>
-              </tr>
+              <EmptyState />
             ) : (
               produtos.map(p => {
                 const status = (p.statusAnuncio || '').toUpperCase();
-                const statusColor =
-                  status === 'EM_ANALISE' ? '#ff9800' : status === 'APROVADO' ? '#4caf50' : status === 'REPROVADO' ? '#ef4444' : '#2196f3';
+                const cor = statusColor(status);
 
                 return (
                   <tr key={p.id} style={{ borderTop: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
@@ -67,9 +92,9 @@ export default function AdminProductsTable({ isDark, produtos, onView, compact }
                           borderRadius: 999,
                           fontSize: 11,
                           fontWeight: 1000,
-                          backgroundColor: `${statusColor}15`,
-                          color: statusColor,
-                          border: `1px solid ${statusColor}`,
+                          backgroundColor: `${cor}15`,
+                          color: cor,
+                          border: `1px solid ${cor}`,
                         }}
                       >
                         {status}

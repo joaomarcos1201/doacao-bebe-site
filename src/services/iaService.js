@@ -7,47 +7,47 @@
 export const CATEGORIAS_MAP = {
   passeio: {
     label: 'Passeio',
-    icon: '🛒',
+    icon: null,
     subcategorias: ['Carrinhos de Bebê', 'Bebê Conforto', 'Cadeirinha para Carro', 'Berço Portátil'],
   },
   quarto: {
     label: 'Quarto do Bebê',
-    icon: '🛏️',
+    icon: null,
     subcategorias: ['Berços', 'Mini Berços', 'Cercados', 'Trocadores', 'Móbiles'],
   },
   alimentacao: {
     label: 'Alimentação',
-    icon: '🍼',
+    icon: null,
     subcategorias: ['Mamadeiras', 'Chupetas', 'Esterilizadores', 'Aquecedores', 'Pratos e Talheres', 'Copos de Treinamento'],
   },
   higiene: {
     label: 'Higiene e Cuidados',
-    icon: '🧴',
+    icon: null,
     subcategorias: ['Kit Higiene', 'Fraldas', 'Lixeiras para Fraldas', 'Toalhas', 'Escovas', 'Kit de Cuidados'],
   },
   roupas: {
     label: 'Roupas',
-    icon: '👕',
+    icon: null,
     subcategorias: ['Bodies', 'Macacões', 'Vestidos', 'Conjuntos', 'Meias e Toucas', 'Calçados', 'Casacos', 'Enxoval'],
   },
   brinquedos: {
     label: 'Brinquedos',
-    icon: '🧸',
+    icon: null,
     subcategorias: ['Tapetes de Atividades', 'Chocalhos', 'Mordedores', 'Brinquedos Educativos', 'Livros Infantis'],
   },
   maternidade: {
     label: 'Maternidade',
-    icon: '🤱',
+    icon: null,
     subcategorias: ['Bolsas Maternidade', 'Almofadas de Amamentação', 'Bombas Tira-Leite', 'Sutiãs', 'Cintas Pós-Parto', 'Kits Maternidade'],
   },
   banho: {
     label: 'Banho',
-    icon: '🛁',
+    icon: null,
     subcategorias: ['Banheiras', 'Cadeiras de Banho', 'Toalhas com Capuz', 'Kits de Banho'],
   },
   alimentacaobebe: {
     label: 'Cadeiras e Andadores',
-    icon: '🪑',
+    icon: null,
     subcategorias: ['Cadeiras de Alimentação', 'Cadeirinhas de Descanso', 'Andadores'],
   },
 };

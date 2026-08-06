@@ -96,7 +96,9 @@ function AdminDashboard() {
       setBackendOnline(true);
 
       // Usuários
-      const rUsuarios = await fetch(`${API_URL}/api/usuarios`);
+      const rUsuarios = await fetch(`${API_URL}/api/usuarios`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
       const usuarios = rUsuarios.ok ? await rUsuarios.json() : [];
       setUsuariosCount(usuarios.length);
 
@@ -180,6 +182,7 @@ function AdminDashboard() {
                   isDark={isDark}
                   produtos={produtosPendentes}
                   onView={openProduct}
+                  backendOnline={backendOnline}
                   compact
                 />
               </div>
@@ -192,6 +195,7 @@ function AdminDashboard() {
                 isDark={isDark}
                 produtos={produtosPendentes}
                 onView={openProduct}
+                backendOnline={backendOnline}
               />
             </div>
           )}

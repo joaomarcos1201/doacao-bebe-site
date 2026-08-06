@@ -25,23 +25,17 @@ function Login({ setUser }) {
     const cleanSenha = sanitizeInput(senha);
     if (!validateEmail(cleanEmail)) { alert('Email inválido'); setLoading(false); return; }
     try {
-      const response = await api.login(cleanEmail, cleanSenha);
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        setUser({ id: data.id, email: data.email, nome: data.nome, isAdmin: data.isAdmin });
-        navigate(data.isAdmin ? '/admin' : '/home');
-      } else {
-        const errorData = await response.text();
-        if (errorData.includes('Conta inativa')) {
-          if (window.confirm('⚠️ Conta inativa. Deseja ir para a página de contato?')) navigate('/fale-conosco');
-        } else { alert(errorData || 'Erro no login'); }
-      }
+      const data = await api.login(cleanEmail, cleanSenha).then(r => r.json());
+      localStorage.setItem('token', data.token);
+      setUser({ id: data.id, email: data.email, nome: data.nome, isAdmin: data.isAdmin });
+      navigate(data.isAdmin ? '/admin' : '/home');
     } catch (err) {
       console.error('Erro no login:', err);
-      const message = err && err.message ? err.message : 'Erro de conexão com o servidor';
+      const message = err?.message || 'Erro de conexão com o servidor';
       if (message === 'timeout') {
-        alert('Servidor indisponível ou tempo limite de conexão atingido. Tente novamente em alguns segundos.');
+        alert('Servidor indisponível. Tente novamente em alguns segundos.');
+      } else if (message.includes('Conta inativa')) {
+        if (window.confirm('Conta inativa. Deseja ir para a página de contato?')) navigate('/fale-conosco');
       } else {
         alert(message);
       }

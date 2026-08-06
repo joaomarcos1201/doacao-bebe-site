@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Shirt, BedDouble, Baby, UtensilsCrossed, MoreHorizontal, ShoppingBag, Puzzle, Droplets } from 'lucide-react';
+import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Shirt, BedDouble, Baby, UtensilsCrossed, MoreHorizontal, ShoppingBag, Puzzle, Droplets, Camera } from 'lucide-react';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -39,6 +39,17 @@ function Home({ user, setUser }) {
 
   const normalizar = (valor = '') =>
     valor.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+  const tempoRelativo = (data) => {
+    if (!data) return null;
+    const diff = Math.floor((Date.now() - new Date(data)) / 1000);
+    if (diff < 60) return 'agora mesmo';
+    if (diff < 3600) return `há ${Math.floor(diff / 60)} min`;
+    if (diff < 86400) return `há ${Math.floor(diff / 3600)}h`;
+    if (diff < 172800) return 'ontem';
+    if (diff < 604800) return `há ${Math.floor(diff / 86400)} dias`;
+    return new Date(data).toLocaleDateString('pt-BR');
+  };
 
   const statusDisponiveis = ['ATIVO', 'DISPONIVEL', 'APROVADO'];
 
@@ -395,7 +406,7 @@ function Home({ user, setUser }) {
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#d4708a'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = '#E88AA2'; e.currentTarget.style.transform = 'translateY(0)'; }}
           >
-            Quero vender +
+            Anunciar Produto
           </button>
 
 
@@ -567,98 +578,75 @@ function Home({ user, setUser }) {
         ) : (
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '20px'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+            gap: '16px'
           }}>
             {produtosFiltrados.map(produto => (
-              <div key={produto.id} style={{
-                backgroundColor: isDark ? '#161616' : '#ffffff',
-                borderRadius: '20px',
-                border: `1px solid ${isDark ? '#222' : 'rgba(248,215,227,0.6)'}`,
-                overflow: 'hidden', cursor: 'pointer',
-                transition: 'all 0.22s ease',
-                boxShadow: isDark
-                  ? '0 2px 12px rgba(0,0,0,0.3)'
-                  : '0 2px 16px rgba(232,138,162,0.08)'
-              }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-6px)';
-                  e.currentTarget.style.boxShadow = isDark
-                    ? '0 16px 40px rgba(0,0,0,0.4)'
-                    : '0 16px 40px rgba(232,138,162,0.18)';
+              <div
+                key={produto.id}
+                onClick={() => navigate(`/produto/${produto.id}`)}
+                style={{
+                  backgroundColor: isDark ? '#161616' : '#ffffff',
+                  borderRadius: '16px',
+                  border: `1px solid ${isDark ? '#222' : 'rgba(248,215,227,0.6)'}`,
+                  overflow: 'hidden', cursor: 'pointer',
+                  transition: 'all 0.22s ease',
+                  boxShadow: isDark ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 12px rgba(0,0,0,0.06)',
+                  display: 'flex', flexDirection: 'column',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                  e.currentTarget.style.boxShadow = isDark ? '0 12px 32px rgba(0,0,0,0.45)' : '0 12px 32px rgba(232,138,162,0.18)';
                   e.currentTarget.style.borderColor = '#E88AA2';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={e => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = isDark
-                    ? '0 2px 12px rgba(0,0,0,0.3)'
-                    : '0 2px 16px rgba(232,138,162,0.08)';
+                  e.currentTarget.style.boxShadow = isDark ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 12px rgba(0,0,0,0.06)';
                   e.currentTarget.style.borderColor = isDark ? '#222' : 'rgba(248,215,227,0.6)';
                 }}
               >
                 {/* Imagem */}
-                <div style={{
-                  height: '180px', overflow: 'hidden',
-                  backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}>
+                <div style={{ height: '190px', overflow: 'hidden', backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2', flexShrink: 0, position: 'relative' }}>
                   {produto.foto ? (
                     <img
                       src={`data:image/jpeg;base64,${produto.foto}`}
                       alt={produto.nome}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s ease' }}
+                      onMouseEnter={e => e.target.style.transform = 'scale(1.04)'}
+                      onMouseLeave={e => e.target.style.transform = 'scale(1)'}
                     />
                   ) : (
-                    <span style={{ fontSize: '14px', opacity: 0.4, color: isDark ? '#666' : '#bbb' }}>Sem imagem</span>
+                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Camera size={32} color={isDark ? '#333' : '#ddd'} strokeWidth={1} />
+                    </div>
                   )}
                 </div>
 
                 {/* Conteúdo */}
-                <div style={{ padding: '16px' }}>
-                  <div style={{ display: 'flex', gap: '6px', marginBottom: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
-                    {produto.categoria && (
-                      <span style={{
-                        padding: '3px 10px', borderRadius: '99px', fontSize: '11px',
-                        fontWeight: '600', textTransform: 'capitalize',
-                        backgroundColor: isDark ? '#2a1518' : '#fde8ec',
-                        color: '#c0606a', display: 'inline-flex', alignItems: 'center', gap: '4px'
-                      }}>
-                        <span style={{ display: 'flex', opacity: 0.8 }}>{categoriaIcone[produto.categoria]}</span>
-                        {categoriaLabel[produto.categoria] || produto.categoria}
-                      </span>
-                    )}
-                    {produto.condicao || produto.estado ? (
-                      <span style={{
-                        padding: '3px 10px', borderRadius: '99px', fontSize: '11px',
-                        fontWeight: '600', textTransform: 'capitalize',
-                        backgroundColor: isDark ? '#1a2a1a' : '#e8f5e9',
-                        color: '#4caf50'
-                      }}>{produto.condicao || produto.estado}</span>
-                    ) : null}
+                <div style={{ padding: '12px 14px 14px', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                  <p style={{
+                    fontSize: '13px', fontWeight: '600', color: isDark ? '#e0e0e0' : '#374151',
+                    margin: 0, lineHeight: '1.4',
+                    display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'
+                  }}>{produto.nome}</p>
+
+                  <p style={{ fontSize: '20px', fontWeight: '700', color: '#c0606a', margin: '4px 0 0', lineHeight: 1 }}>
+                    {produto.preco ? `R$ ${Number(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : 'Consultar'}
+                  </p>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
+                    <MapPin size={11} color={isDark ? '#555' : '#9CA3AF'} strokeWidth={2} />
+                    <span style={{ fontSize: '11px', color: isDark ? '#555' : '#9CA3AF' }}>
+                      {produto.cepOrigem ? produto.cepOrigem : 'Brasil'}
+                    </span>
                   </div>
 
-                  <h3 style={{
-                    fontSize: '16px', fontWeight: '700', margin: '0 0 8px',
-                    color: isDark ? '#f0e0e2' : '#2d1518'
-                  }}>{produto.nome}</h3>
-
-                  <p style={{
-                    fontSize: '13px', color: isDark ? '#777' : '#999',
-                    margin: '0 0 16px', lineHeight: '1.5',
-                    display: '-webkit-box', WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical', overflow: 'hidden'
-                  }}>{produto.descricao}</p>
-
-                  <button onClick={() => navigate(`/produto/${produto.id}`)} style={{
-                    width: '100%', padding: '10px',
-                    backgroundColor: '#c0606a', color: 'white',
-                    border: 'none', borderRadius: '10px',
-                    fontSize: '13px', fontWeight: '600', cursor: 'pointer',
-                    transition: 'background 0.2s'
-                  }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = '#a85058'}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = '#c0606a'}
-                  >Ver Detalhes</button>
+                  {produto.dataAnuncio && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#444' : '#C4C4C4'} strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <span style={{ fontSize: '11px', color: isDark ? '#444' : '#C4C4C4' }}>{tempoRelativo(produto.dataAnuncio)}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CATEGORIAS_MAP } from '../../services/iaService';
+import { CircleAlert, TriangleAlert, CircleCheck } from 'lucide-react';
 
 export default function ValidacaoAnuncio({ form, fotos, avisosIA, isDark }) {
   const avisos = [...(avisosIA || [])];
@@ -20,14 +20,20 @@ export default function ValidacaoAnuncio({ form, fotos, avisosIA, isDark }) {
   if (avisos.length === 0) {
     return (
       <div style={{
-        display: 'flex', alignItems: 'center', gap: '10px',
-        backgroundColor: isDark ? '#0a2a1a' : '#f0fdf4',
-        border: '1px solid #22c55e', borderRadius: '12px', padding: '14px 16px',
+        display: 'flex', alignItems: 'center', gap: '12px',
+        backgroundColor: isDark ? '#0a2a1a' : '#F0FDF4',
+        border: '1.5px solid #22C55E', borderRadius: '14px', padding: '16px',
       }}>
-        <span style={{ fontSize: '20px' }}>✅</span>
+        <div style={{
+          width: '40px', height: '40px', borderRadius: '10px',
+          backgroundColor: isDark ? '#14532D' : '#DCFCE7',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        }}>
+          <CircleCheck size={20} color="#16A34A" strokeWidth={2} />
+        </div>
         <div>
-          <div style={{ fontSize: '14px', fontWeight: '700', color: '#16a34a' }}>Anúncio pronto para publicar!</div>
-          <div style={{ fontSize: '12px', color: isDark ? '#4ade80' : '#15803d' }}>Todas as informações estão completas.</div>
+          <div style={{ fontSize: '14px', fontWeight: '700', color: '#16A34A' }}>Anúncio pronto para publicar!</div>
+          <div style={{ fontSize: '12px', color: isDark ? '#4ADE80' : '#15803D', marginTop: '2px' }}>Todas as informações estão completas.</div>
         </div>
       </div>
     );
@@ -37,22 +43,22 @@ export default function ValidacaoAnuncio({ form, fotos, avisosIA, isDark }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       {erros.map((a, i) => (
         <div key={i} style={{
-          display: 'flex', alignItems: 'flex-start', gap: '8px',
-          backgroundColor: isDark ? '#2a0a0a' : '#fef2f2',
-          border: '1px solid #fca5a5', borderRadius: '10px', padding: '10px 12px',
+          display: 'flex', alignItems: 'flex-start', gap: '10px',
+          backgroundColor: isDark ? '#2a0a0a' : '#FEF2F2',
+          border: '1px solid #FCA5A5', borderRadius: '10px', padding: '12px 14px',
         }}>
-          <span style={{ fontSize: '14px', marginTop: '1px' }}>❌</span>
-          <span style={{ fontSize: '13px', color: isDark ? '#fca5a5' : '#dc2626' }}>{a.msg}</span>
+          <CircleAlert size={15} color="#DC2626" strokeWidth={2} style={{ flexShrink: 0, marginTop: '1px' }} />
+          <span style={{ fontSize: '13px', color: isDark ? '#FCA5A5' : '#DC2626', lineHeight: '1.4' }}>{a.msg}</span>
         </div>
       ))}
       {alertas.map((a, i) => (
         <div key={i} style={{
-          display: 'flex', alignItems: 'flex-start', gap: '8px',
-          backgroundColor: isDark ? '#2a1a00' : '#fffbeb',
-          border: '1px solid #fcd34d', borderRadius: '10px', padding: '10px 12px',
+          display: 'flex', alignItems: 'flex-start', gap: '10px',
+          backgroundColor: isDark ? '#2a1a00' : '#FFFBEB',
+          border: '1px solid #FCD34D', borderRadius: '10px', padding: '12px 14px',
         }}>
-          <span style={{ fontSize: '14px', marginTop: '1px' }}>⚠️</span>
-          <span style={{ fontSize: '13px', color: isDark ? '#fcd34d' : '#92400e' }}>{a.msg}</span>
+          <TriangleAlert size={15} color="#D97706" strokeWidth={2} style={{ flexShrink: 0, marginTop: '1px' }} />
+          <span style={{ fontSize: '13px', color: isDark ? '#FCD34D' : '#92400E', lineHeight: '1.4' }}>{a.msg}</span>
         </div>
       ))}
     </div>

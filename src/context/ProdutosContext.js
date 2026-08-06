@@ -20,7 +20,9 @@ export const ProdutosProvider = ({ children }) => {
 
   const carregarProdutos = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products/todos`);
+      const response = await fetch(`${API_URL}/api/products/todos`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
       if (response.ok) {
         const data = await response.json();
         setProdutos(data);

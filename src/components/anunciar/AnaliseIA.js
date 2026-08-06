@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Sparkles } from 'lucide-react';
 
 const ETAPAS = [
   'Analisando suas fotos...',
@@ -22,9 +23,11 @@ export default function AnaliseIA({ isDark }) {
   }, []);
 
   const bg = isDark ? '#1a1a1a' : '#fff';
-  const border = isDark ? '#2a2a2a' : '#f0e6e8';
-  const sub = isDark ? '#888' : '#888';
-  const text = isDark ? '#e0e0e0' : '#333';
+  const border = isDark ? '#2a2a2a' : '#E5E7EB';
+  const sub = isDark ? '#666' : '#9CA3AF';
+  const text = isDark ? '#e0e0e0' : '#374151';
+  const skeletonBg = isDark ? '#2a2a2a' : '#F3F4F6';
+  const skeletonShine = isDark ? '#333' : '#E5E7EB';
 
   return (
     <div style={{
@@ -32,51 +35,46 @@ export default function AnaliseIA({ isDark }) {
       border: `1px solid ${border}`, padding: '32px 28px',
       textAlign: 'center',
     }}>
-      {/* Ícone animado */}
       <div style={{
-        width: '72px', height: '72px', borderRadius: '50%',
-        background: 'linear-gradient(135deg, #c0606a, #e8909a)',
+        width: '64px', height: '64px', borderRadius: '16px',
+        background: 'linear-gradient(135deg, #F48FB1, #c0606a)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: '32px', margin: '0 auto 20px',
+        margin: '0 auto 20px',
         animation: 'iaPulse 1.4s ease-in-out infinite',
-      }}>✨</div>
+      }}>
+        <Sparkles size={28} color="#fff" strokeWidth={1.5} />
+      </div>
 
-      <h3 style={{ fontSize: '18px', fontWeight: '800', color: text, margin: '0 0 6px' }}>
+      <h3 style={{ fontSize: '17px', fontWeight: '700', color: text, margin: '0 0 6px' }}>
         IA analisando suas fotos
       </h3>
-      <p style={{ fontSize: '14px', color: '#c0606a', fontWeight: '600', margin: '0 0 24px', minHeight: '20px' }}>
+      <p style={{ fontSize: '13px', color: '#c0606a', fontWeight: '600', margin: '0 0 24px', minHeight: '20px' }}>
         {ETAPAS[etapa]}
       </p>
 
-      {/* Barra de progresso */}
       <div style={{
-        width: '100%', height: '6px', borderRadius: '99px',
-        backgroundColor: isDark ? '#2a2a2a' : '#f0e6e8', overflow: 'hidden', marginBottom: '24px',
+        width: '100%', height: '4px', borderRadius: '99px',
+        backgroundColor: isDark ? '#2a2a2a' : '#F3F4F6', overflow: 'hidden', marginBottom: '28px',
       }}>
         <div style={{
           height: '100%', borderRadius: '99px',
-          background: 'linear-gradient(90deg, #c0606a, #e8909a)',
-          width: `${progresso}%`,
-          transition: 'width 0.35s ease',
+          background: 'linear-gradient(90deg, #F48FB1, #c0606a)',
+          width: `${progresso}%`, transition: 'width 0.35s ease',
         }} />
       </div>
 
-      {/* Skeleton cards */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', textAlign: 'left' }}>
         {[...Array(4)].map((_, i) => (
-          <div key={i} style={{
-            backgroundColor: isDark ? '#222' : '#f9f5f6',
-            borderRadius: '12px', padding: '14px',
-          }}>
+          <div key={i} style={{ backgroundColor: skeletonBg, borderRadius: '12px', padding: '14px' }}>
             <div style={{
-              height: '10px', borderRadius: '6px', marginBottom: '8px',
-              backgroundColor: isDark ? '#333' : '#ecdde0',
-              width: '60%', animation: 'skeletonShimmer 1.5s ease-in-out infinite',
+              height: '8px', borderRadius: '6px', marginBottom: '10px',
+              backgroundColor: skeletonShine, width: '55%',
+              animation: 'skeletonShimmer 1.5s ease-in-out infinite',
             }} />
             <div style={{
-              height: '14px', borderRadius: '6px',
-              backgroundColor: isDark ? '#2a2a2a' : '#f0e6e8',
-              width: '80%', animation: 'skeletonShimmer 1.5s ease-in-out infinite 0.2s',
+              height: '12px', borderRadius: '6px',
+              backgroundColor: isDark ? '#333' : '#E5E7EB', width: '80%',
+              animation: `skeletonShimmer 1.5s ease-in-out infinite ${i * 0.15}s`,
             }} />
           </div>
         ))}
@@ -84,8 +82,8 @@ export default function AnaliseIA({ isDark }) {
 
       <style>{`
         @keyframes iaPulse {
-          0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192,96,106,0.4); }
-          50% { transform: scale(1.08); box-shadow: 0 0 0 12px rgba(192,96,106,0); }
+          0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(192,96,106,0.3); }
+          50% { transform: scale(1.06); box-shadow: 0 0 0 10px rgba(192,96,106,0); }
         }
         @keyframes skeletonShimmer {
           0%, 100% { opacity: 0.5; }
