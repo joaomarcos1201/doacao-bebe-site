@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, LogIn, X, Clock, Grid2x2, Shirt, Bed, Baby, Soup, Ellipsis } from 'lucide-react';
+import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Shirt, BedDouble, Baby, UtensilsCrossed, MoreHorizontal, ShoppingBag, Puzzle, Droplets } from 'lucide-react';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -60,12 +60,21 @@ function Home({ user, setUser }) {
   ];
 
   const categoriaLabel = {
-    roupas: '🧺 Roupas',
-    brinquedos: '🪀 Brinquedos',
-    moveis: '🪑 Móveis',
-    acessorios: '🍼 Acessórios',
-    alimentacao: '🥣 Alimentação',
-    outros: '📦 Outros',
+    roupas: 'Roupas',
+    brinquedos: 'Brinquedos',
+    moveis: 'Móveis',
+    acessorios: 'Acessórios',
+    alimentacao: 'Alimentação',
+    outros: 'Outros',
+  };
+
+  const categoriaIcone = {
+    roupas: <Shirt size={13} strokeWidth={2} />,
+    brinquedos: <Puzzle size={13} strokeWidth={2} />,
+    moveis: <BedDouble size={13} strokeWidth={2} />,
+    acessorios: <ShoppingBag size={13} strokeWidth={2} />,
+    alimentacao: <UtensilsCrossed size={13} strokeWidth={2} />,
+    outros: <MoreHorizontal size={13} strokeWidth={2} />,
   };
 
   const menuItems = [
@@ -430,24 +439,39 @@ function Home({ user, setUser }) {
         padding: '20px 32px'
       }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
-            {[{ value: '', label: 'Todos', icon: <Grid2x2 size={18} strokeWidth={1.8} /> }, { value: 'roupas', label: 'Roupas', icon: <Shirt size={18} strokeWidth={1.8} /> }, { value: 'brinquedos', label: 'Brinquedos', icon: <Baby size={18} strokeWidth={1.8} /> }, { value: 'moveis', label: 'Móveis', icon: <Bed size={18} strokeWidth={1.8} /> }, { value: 'acessorios', label: 'Acessórios', icon: <Baby size={18} strokeWidth={1.8} /> }, { value: 'alimentacao', label: 'Alimentação', icon: <Soup size={18} strokeWidth={1.8} /> }, { value: 'outros', label: 'Outros', icon: <Ellipsis size={18} strokeWidth={1.8} /> }].map(cat => (
-              <button key={cat.value} onClick={() => setCategoriaFiltro(cat.value)} style={{
-                padding: '8px 16px', borderRadius: '12px', fontSize: '13px',
-                fontWeight: '500', cursor: 'pointer', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '7px',
-                border: `1.5px solid ${categoriaFiltro === cat.value ? '#E88AA2' : (isDark ? '#2a2a2a' : '#F0F0F0')}`,
-                backgroundColor: categoriaFiltro === cat.value ? 'rgba(232,138,162,0.1)' : (isDark ? '#1a1a1a' : '#fff'),
-                color: categoriaFiltro === cat.value ? '#E88AA2' : (isDark ? '#aaa' : '#6B7280'),
-                transition: 'all 0.18s ease',
-                boxShadow: categoriaFiltro === cat.value ? '0 2px 12px rgba(232,138,162,0.2)' : '0 1px 4px rgba(0,0,0,0.04)'
-              }}
-                onMouseEnter={(e) => { if (categoriaFiltro !== cat.value) e.currentTarget.style.borderColor = '#F8D7E3'; }}
-                onMouseLeave={(e) => { if (categoriaFiltro !== cat.value) e.currentTarget.style.borderColor = isDark ? '#2a2a2a' : '#F0F0F0'; }}
-              >
-                <span style={{ color: categoriaFiltro === cat.value ? '#E88AA2' : (isDark ? '#aaa' : '#9CA3AF'), display: 'flex' }}>{cat.icon}</span>
-                <span>{cat.label}</span>
-              </button>
-            ))}
+          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
+            {[
+              { value: '', label: 'Todos', icon: <LayoutGrid size={15} strokeWidth={2} /> },
+              { value: 'roupas', label: 'Roupas', icon: <Shirt size={15} strokeWidth={2} /> },
+              { value: 'brinquedos', label: 'Brinquedos', icon: <Puzzle size={15} strokeWidth={2} /> },
+              { value: 'moveis', label: 'Móveis', icon: <BedDouble size={15} strokeWidth={2} /> },
+              { value: 'acessorios', label: 'Acessórios', icon: <ShoppingBag size={15} strokeWidth={2} /> },
+              { value: 'alimentacao', label: 'Alimentação', icon: <UtensilsCrossed size={15} strokeWidth={2} /> },
+              { value: 'outros', label: 'Outros', icon: <MoreHorizontal size={15} strokeWidth={2} /> },
+            ].map(cat => {
+              const ativo = categoriaFiltro === cat.value;
+              return (
+                <button key={cat.value} onClick={() => setCategoriaFiltro(cat.value)} style={{
+                  padding: '9px 18px', borderRadius: '99px', fontSize: '13px',
+                  fontWeight: ativo ? '700' : '500', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: '7px',
+                  border: 'none',
+                  background: ativo
+                    ? 'linear-gradient(135deg, #E88AA2 0%, #c0606a 100%)'
+                    : (isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'),
+                  color: ativo ? '#fff' : (isDark ? '#999' : '#6B7280'),
+                  boxShadow: ativo ? '0 4px 14px rgba(232,138,162,0.35)' : 'none',
+                  transition: 'all 0.2s ease',
+                  transform: ativo ? 'translateY(-1px)' : 'none',
+                }}
+                  onMouseEnter={(e) => { if (!ativo) { e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.09)' : 'rgba(232,138,162,0.1)'; e.currentTarget.style.color = isDark ? '#ddd' : '#c0606a'; } }}
+                  onMouseLeave={(e) => { if (!ativo) { e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)'; e.currentTarget.style.color = isDark ? '#999' : '#6B7280'; } }}
+                >
+                  <span style={{ display: 'flex', opacity: ativo ? 1 : 0.7 }}>{cat.icon}</span>
+                  <span>{cat.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -591,18 +615,21 @@ function Home({ user, setUser }) {
 
                 {/* Conteúdo */}
                 <div style={{ padding: '16px' }}>
-                  <div style={{ display: 'flex', gap: '6px', marginBottom: '10px', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '6px', marginBottom: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
                     {produto.categoria && (
                       <span style={{
-                        padding: '3px 10px', borderRadius: '20px', fontSize: '11px',
+                        padding: '3px 10px', borderRadius: '99px', fontSize: '11px',
                         fontWeight: '600', textTransform: 'capitalize',
                         backgroundColor: isDark ? '#2a1518' : '#fde8ec',
-                        color: '#c0606a'
-                      }}>{categoriaLabel[produto.categoria] || produto.categoria}</span>
+                        color: '#c0606a', display: 'inline-flex', alignItems: 'center', gap: '4px'
+                      }}>
+                        <span style={{ display: 'flex', opacity: 0.8 }}>{categoriaIcone[produto.categoria]}</span>
+                        {categoriaLabel[produto.categoria] || produto.categoria}
+                      </span>
                     )}
                     {produto.condicao || produto.estado ? (
                       <span style={{
-                        padding: '3px 10px', borderRadius: '20px', fontSize: '11px',
+                        padding: '3px 10px', borderRadius: '99px', fontSize: '11px',
                         fontWeight: '600', textTransform: 'capitalize',
                         backgroundColor: isDark ? '#1a2a1a' : '#e8f5e9',
                         color: '#4caf50'
