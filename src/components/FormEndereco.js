@@ -30,7 +30,7 @@ function Campo({ campo, value, onChange, isDark, border, text, sub, erro, autoFi
   const readOnly = campo.autoFill && autoFilled && !!value;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-      <label style={{ fontSize: '12px', fontWeight: '600', color: sub, display: 'flex', alignItems: 'center', gap: '4px' }}>
+      <label style={{ fontSize: '12px', fontWeight: '600', color: sub, display: 'flex', alignItems: 'flex-start', gap: '4px', flexWrap: 'wrap' }}>
         {campo.label}
         {campo.key !== 'complemento' && <span style={{ color: '#ef4444' }}>*</span>}
         {readOnly && (
@@ -182,7 +182,7 @@ function FormEndereco({ cep, onCepChange, endereco, onEnderecoChange, onEndereco
           </div>
 
           {/* Linha: cidade + estado */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px', gap: '12px', marginBottom: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 100px', gap: '12px', marginBottom: '20px' }}>
             {[CAMPOS[4], CAMPOS[5]].map(c => (
               <Campo key={c.key} campo={c} value={endereco[c.key] || ''} onChange={handleCampo}
                 isDark={isDark} border={border} text={text} sub={sub}

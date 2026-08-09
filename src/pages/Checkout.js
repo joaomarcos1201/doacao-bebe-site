@@ -12,7 +12,7 @@ function Checkout() {
   const location = useLocation();
   const { produto } = location.state || {};
 
-  const [cep, setCep] = useState('');
+  const [cep, setCep] = useState(localStorage.getItem('cep_entrega') || '');
   const [erroCep, setErroCep] = useState('');
   const [endereco, setEndereco] = useState({ logradouro: '', numero: '', complemento: '', bairro: '', cidade: '', estado: '' });
   const [etapa, setEtapa] = useState('cep'); // cep | resumo | pix

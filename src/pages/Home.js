@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Shirt, BedDouble, Baby, UtensilsCrossed, MoreHorizontal, ShoppingBag, Puzzle, Droplets, Camera } from 'lucide-react';
+import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Shirt, BedDouble, UtensilsCrossed, MoreHorizontal, ShoppingBag, Puzzle, Heart, ChevronRight, ChevronLeft, Baby, Droplets, Footprints, Armchair, Milk } from 'lucide-react';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
+import CardProduto from '../components/CardProduto';
+
+const SECOES_CATEGORIAS = [
+  { id: 'roupas-gestante', label: 'Roupas para Gestantes',    icone: Shirt,         valores: ['roupas gestante', 'roupa gestante', 'roupas para gestante'] },
+  { id: 'roupas-bebe',    label: 'Roupas para Bebê',         icone: Baby,          valores: ['roupas', 'roupa', 'roupas bebe', 'roupa bebe'] },
+  { id: 'carrinhos',      label: 'Carrinhos e Acessórios',   icone: ShoppingBag,   valores: ['carrinho', 'carrinhos', 'acessorios carrinho'] },
+  { id: 'moveis',         label: 'Berços e Móveis',          icone: Armchair,      valores: ['moveis', 'berco', 'bercos', 'cama', 'quarto'] },
+  { id: 'amamentacao',    label: 'Itens para Amamentação',   icone: Milk,          valores: ['amamentacao', 'alimentacao', 'mamadeira'] },
+  { id: 'higiene',        label: 'Higiene e Cuidados',        icone: Droplets,      valores: ['higiene', 'cuidados', 'banho'] },
+  { id: 'calcados',       label: 'Calçados',                  icone: Footprints,    valores: ['calcados', 'sapatos', 'tenis', 'sandalia'] },
+  { id: 'bolsas',         label: 'Bolsas e Acessórios',       icone: ShoppingBag,   valores: ['bolsas', 'bolsa', 'acessorios'] },
+  { id: 'brinquedos',     label: 'Brinquedos',                icone: Puzzle,        valores: ['brinquedos', 'brinquedo'] },
+  { id: 'outros',         label: 'Outros Produtos',           icone: MoreHorizontal,valores: ['outros'] },
+];
 
 function Home({ user, setUser }) {
   const navigate = useNavigate();
-  const { produtos, removerProduto } = useProdutos();
+  const { produtos } = useProdutos();
   const { theme, isDark, toggleTheme } = useTheme();
   const [pesquisa, setPesquisa] = useState('');
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const [menuAberto, setMenuAberto] = useState(false);
   const [estadoFiltro, setEstadoFiltro] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+  const carrosselRefs = useRef({});
 
   const estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
 
@@ -39,17 +54,6 @@ function Home({ user, setUser }) {
 
   const normalizar = (valor = '') =>
     valor.toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-
-  const tempoRelativo = (data) => {
-    if (!data) return null;
-    const diff = Math.floor((Date.now() - new Date(data)) / 1000);
-    if (diff < 60) return 'agora mesmo';
-    if (diff < 3600) return `há ${Math.floor(diff / 60)} min`;
-    if (diff < 86400) return `há ${Math.floor(diff / 3600)}h`;
-    if (diff < 172800) return 'ontem';
-    if (diff < 604800) return `há ${Math.floor(diff / 86400)} dias`;
-    return new Date(data).toLocaleDateString('pt-BR');
-  };
 
   const statusDisponiveis = ['ATIVO', 'DISPONIVEL', 'APROVADO'];
 
@@ -94,6 +98,7 @@ function Home({ user, setUser }) {
     { label: '📦 Meus Pedidos', path: '/meus-pedidos', authRequired: true },
     { label: '🏷️ Minhas Vendas', path: '/minhas-vendas', authRequired: true },
     { label: '💼 Minha Carteira', path: '/carteira', authRequired: true },
+    { label: '♡ Meus Favoritos', path: '/favoritos', authRequired: true },
     { label: 'Sobre Nós', path: '/sobre-nos' },
     { label: 'Fale Conosco', path: '/fale-conosco' },
     { label: 'FAQ', path: '/faq' },
@@ -554,103 +559,130 @@ function Home({ user, setUser }) {
           ))}
         </div>
       </div>
-            {/* PRODUTOS */}
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '32px 24px' }}>
-        <div style={{
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          marginBottom: '24px'
-        }}>
-          <span style={{ fontSize: '14px', color: isDark ? '#666' : '#999' }}>
-            {produtosFiltrados.length} {produtosFiltrados.length === 1 ? 'item encontrado' : 'itens encontrados'}
-          </span>
-        </div>
+      {/* SEÇÕES POR CATEGORIA */}
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px 60px' }}>
 
-        {produtosFiltrados.length === 0 ? (
-          <div style={{
-            textAlign: 'center', padding: '80px 20px',
-            backgroundColor: isDark ? '#141414' : '#fff',
-            borderRadius: '16px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`
-          }}>
-
-            <h3 style={{ color: isDark ? '#e0e0e0' : '#333', marginBottom: '8px' }}>Nenhum item encontrado</h3>
-            <p style={{ color: isDark ? '#666' : '#999', fontSize: '14px' }}>Tente ajustar os filtros ou a pesquisa</p>
-          </div>
+        {/* Se há pesquisa ou filtro ativo, mostra grid filtrado */}
+        {(pesquisa || categoriaFiltro) ? (
+          <>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <span style={{ fontSize: '14px', color: isDark ? '#666' : '#999' }}>
+                {produtosFiltrados.length} {produtosFiltrados.length === 1 ? 'item encontrado' : 'itens encontrados'}
+              </span>
+              <button onClick={() => { setPesquisa(''); setCategoriaFiltro(''); }}
+                style={{ fontSize: '12px', color: '#c0606a', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}>
+                Limpar filtros
+              </button>
+            </div>
+            {produtosFiltrados.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '80px 20px', backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
+                <h3 style={{ color: isDark ? '#e0e0e0' : '#333', marginBottom: '8px' }}>Nenhum item encontrado</h3>
+                <p style={{ color: isDark ? '#666' : '#999', fontSize: '14px' }}>Tente ajustar os filtros ou a pesquisa</p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
+                {produtosFiltrados.map(p => <CardProduto key={p.id} produto={p} />)}
+              </div>
+            )}
+          </>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-            gap: '16px'
-          }}>
-            {produtosFiltrados.map(produto => (
-              <div
-                key={produto.id}
-                onClick={() => navigate(`/produto/${produto.id}`)}
-                style={{
-                  backgroundColor: isDark ? '#161616' : '#ffffff',
-                  borderRadius: '16px',
-                  border: `1px solid ${isDark ? '#222' : 'rgba(248,215,227,0.6)'}`,
-                  overflow: 'hidden', cursor: 'pointer',
-                  transition: 'all 0.22s ease',
-                  boxShadow: isDark ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 12px rgba(0,0,0,0.06)',
-                  display: 'flex', flexDirection: 'column',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = 'translateY(-5px)';
-                  e.currentTarget.style.boxShadow = isDark ? '0 12px 32px rgba(0,0,0,0.45)' : '0 12px 32px rgba(232,138,162,0.18)';
-                  e.currentTarget.style.borderColor = '#E88AA2';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = isDark ? '0 2px 12px rgba(0,0,0,0.3)' : '0 2px 12px rgba(0,0,0,0.06)';
-                  e.currentTarget.style.borderColor = isDark ? '#222' : 'rgba(248,215,227,0.6)';
-                }}
-              >
-                {/* Imagem */}
-                <div style={{ height: '190px', overflow: 'hidden', backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2', flexShrink: 0, position: 'relative' }}>
-                  {produto.foto ? (
-                    <img
-                      src={`data:image/jpeg;base64,${produto.foto}`}
-                      alt={produto.nome}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s ease' }}
-                      onMouseEnter={e => e.target.style.transform = 'scale(1.04)'}
-                      onMouseLeave={e => e.target.style.transform = 'scale(1)'}
-                    />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Camera size={32} color={isDark ? '#333' : '#ddd'} strokeWidth={1} />
+          /* Seções por categoria */
+          SECOES_CATEGORIAS.map(secao => {
+            const Icone = secao.icone;
+            const produtosDaSecao = produtos.filter(p =>
+              statusDisponiveis.includes((p.statusAnuncio || '').toUpperCase()) &&
+              secao.valores.some(v => normalizar(p.categoria) === v)
+            );
+            if (produtosDaSecao.length === 0) return null;
+            const scroll = (dir) => {
+              const el = carrosselRefs.current[secao.id];
+              if (el) el.scrollBy({ left: dir * 440, behavior: 'smooth' });
+            };
+            return (
+              <div key={secao.id} style={{ marginBottom: '48px' }}>
+                {/* Cabeçalho */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{
+                      width: '34px', height: '34px', borderRadius: '9px',
+                      border: `1px solid ${isDark ? '#2a2a2a' : 'rgba(232,138,162,0.25)'}`,
+                      backgroundColor: isDark ? '#1a1a1a' : '#fff',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                    }}>
+                      <Icone size={15} color="#c0606a" strokeWidth={1.8} />
                     </div>
-                  )}
+                    <div>
+                      <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0e0e2' : '#1a1a2e', margin: 0, letterSpacing: '-0.2px' }}>
+                        {secao.label}
+                      </h2>
+                      <p style={{ fontSize: '11px', color: isDark ? '#555' : '#9CA3AF', margin: 0 }}>
+                        {produtosDaSecao.length} {produtosDaSecao.length === 1 ? 'produto' : 'produtos'}
+                      </p>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {produtosDaSecao.length > 3 && (
+                      <>
+                        <button onClick={() => scroll(-1)} style={{
+                          width: '30px', height: '30px', borderRadius: '50%', border: `1px solid ${isDark ? '#2a2a2a' : 'rgba(192,96,106,0.2)'}`,
+                          backgroundColor: isDark ? '#1a1a1a' : '#fff', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s'
+                        }}
+                          onMouseEnter={e => e.currentTarget.style.borderColor = '#c0606a'}
+                          onMouseLeave={e => e.currentTarget.style.borderColor = isDark ? '#2a2a2a' : 'rgba(192,96,106,0.2)'}
+                        >
+                          <ChevronLeft size={14} color="#c0606a" strokeWidth={2.5} />
+                        </button>
+                        <button onClick={() => scroll(1)} style={{
+                          width: '30px', height: '30px', borderRadius: '50%', border: `1px solid ${isDark ? '#2a2a2a' : 'rgba(192,96,106,0.2)'}`,
+                          backgroundColor: isDark ? '#1a1a1a' : '#fff', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s'
+                        }}
+                          onMouseEnter={e => e.currentTarget.style.borderColor = '#c0606a'}
+                          onMouseLeave={e => e.currentTarget.style.borderColor = isDark ? '#2a2a2a' : 'rgba(192,96,106,0.2)'}
+                        >
+                          <ChevronRight size={14} color="#c0606a" strokeWidth={2.5} />
+                        </button>
+                      </>
+                    )}
+                    {produtosDaSecao.length > 4 && (
+                      <button
+                        onClick={() => setCategoriaFiltro(secao.valores[0])}
+                        style={{
+                          fontSize: '12px', fontWeight: '600', color: '#c0606a',
+                          background: 'none', border: `1px solid rgba(192,96,106,0.25)`,
+                          borderRadius: '20px', padding: '5px 12px', cursor: 'pointer',
+                          display: 'flex', alignItems: 'center', gap: '3px', transition: 'all 0.15s'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(192,96,106,0.07)'}
+                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
+                      >
+                        Ver todos <ChevronRight size={12} strokeWidth={2.5} />
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                {/* Conteúdo */}
-                <div style={{ padding: '12px 14px 14px', display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
-                  <p style={{
-                    fontSize: '13px', fontWeight: '600', color: isDark ? '#e0e0e0' : '#374151',
-                    margin: 0, lineHeight: '1.4',
-                    display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'
-                  }}>{produto.nome}</p>
-
-                  <p style={{ fontSize: '20px', fontWeight: '700', color: '#c0606a', margin: '4px 0 0', lineHeight: 1 }}>
-                    {produto.preco ? `R$ ${Number(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : 'Consultar'}
-                  </p>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '6px' }}>
-                    <MapPin size={11} color={isDark ? '#555' : '#9CA3AF'} strokeWidth={2} />
-                    <span style={{ fontSize: '11px', color: isDark ? '#555' : '#9CA3AF' }}>
-                      {produto.cepOrigem ? produto.cepOrigem : 'Brasil'}
-                    </span>
-                  </div>
-
-                  {produto.dataAnuncio && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={isDark ? '#444' : '#C4C4C4'} strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                      <span style={{ fontSize: '11px', color: isDark ? '#444' : '#C4C4C4' }}>{tempoRelativo(produto.dataAnuncio)}</span>
+                {/* Carrossel */}
+                <div
+                  ref={el => carrosselRefs.current[secao.id] = el}
+                  className="carrossel-hide-scroll"
+                  style={{
+                    display: 'flex', gap: '14px',
+                    overflowX: 'auto', scrollSnapType: 'x mandatory',
+                    paddingBottom: '8px',
+                    scrollbarWidth: 'none', msOverflowStyle: 'none',
+                  }}
+                >
+                  {produtosDaSecao.map(p => (
+                    <div key={p.id} style={{ flexShrink: 0, width: '210px', scrollSnapAlign: 'start' }}>
+                      <CardProduto produto={p} />
                     </div>
-                  )}
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })
         )}
       </div>
 

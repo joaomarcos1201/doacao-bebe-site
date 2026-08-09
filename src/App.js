@@ -21,9 +21,11 @@ import MeusPedidos from './pages/MeusPedidos';
 import MinhasVendas from './pages/MinhasVendas';
 import CadastrarProduto from './pages/CadastrarProduto';
 import Carteira from './pages/Carteira';
+import Favoritos from './pages/Favoritos';
 import UserStatusChecker from './components/UserStatusChecker';
 import { ProdutosProvider } from './context/ProdutosContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { FavoritosProvider } from './context/FavoritosContext';
 import { api } from './config/api';
 import './App.css';
 import './styles/global.css';
@@ -86,6 +88,7 @@ function App() {
   return (
     <ThemeProvider>
         <ProdutosProvider>
+          <FavoritosProvider user={user}>
           <Router>
             <div className="App">
               {user && <UserStatusChecker user={user} setUser={setUser} />}
@@ -104,6 +107,7 @@ function App() {
                 <Route path="/minhas-vendas" element={user ? <MinhasVendas /> : <Navigate to="/login" />} />
                 <Route path="/cadastrar-produto" element={user ? <CadastrarProduto /> : <Navigate to="/login" />} />
                 <Route path="/carteira" element={user ? <Carteira /> : <Navigate to="/login" />} />
+                <Route path="/favoritos" element={user ? <Favoritos /> : <Navigate to="/login" />} />
 
                 <Route path="/sobre-nos" element={<SobreNos />} />
                 <Route path="/fale-conosco" element={<FaleConosco />} />
@@ -117,6 +121,7 @@ function App() {
               </Routes>
             </div>
           </Router>
+          </FavoritosProvider>
         </ProdutosProvider>
     </ThemeProvider>
   );

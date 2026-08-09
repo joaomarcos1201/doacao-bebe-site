@@ -38,6 +38,18 @@ public class Produto {
     @Column(name = "foto")
     private byte[] foto;
 
+    @Lob
+    @Column(name = "foto2")
+    private byte[] foto2;
+
+    @Lob
+    @Column(name = "foto3")
+    private byte[] foto3;
+
+    @Lob
+    @Column(name = "foto4")
+    private byte[] foto4;
+
     @Column(name = "dataAnuncio")
     private LocalDateTime dataAnuncio = LocalDateTime.now();
 
@@ -108,6 +120,15 @@ public class Produto {
 
     public byte[] getFoto() { return foto; }
     public void setFoto(byte[] foto) { this.foto = foto; }
+
+    public byte[] getFoto2() { return foto2; }
+    public void setFoto2(byte[] foto2) { this.foto2 = foto2; }
+
+    public byte[] getFoto3() { return foto3; }
+    public void setFoto3(byte[] foto3) { this.foto3 = foto3; }
+
+    public byte[] getFoto4() { return foto4; }
+    public void setFoto4(byte[] foto4) { this.foto4 = foto4; }
 
     public LocalDateTime getDataAnuncio() { return dataAnuncio; }
     public void setDataAnuncio(LocalDateTime dataAnuncio) { this.dataAnuncio = dataAnuncio; }

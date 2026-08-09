@@ -63,3 +63,7 @@ option {
   from { opacity: 0; transform: translateY(-8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+
+/* Esconder scrollbar dos carrosseis */
+.carrossel-hide-scroll::-webkit-scrollbar { display: none; }

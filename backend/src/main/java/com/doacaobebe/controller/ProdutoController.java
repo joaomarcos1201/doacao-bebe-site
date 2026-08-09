@@ -47,6 +47,9 @@ public class ProdutoController {
             @RequestParam(value = "comprimento", required = false) java.math.BigDecimal comprimento,
             @RequestParam("cepOrigem") String cepOrigem,
             @RequestParam(value = "imagem", required = false) MultipartFile imagem,
+            @RequestParam(value = "imagem_1", required = false) MultipartFile imagem1,
+            @RequestParam(value = "imagem_2", required = false) MultipartFile imagem2,
+            @RequestParam(value = "imagem_3", required = false) MultipartFile imagem3,
             @RequestHeader("Authorization") String authHeader) {
 
         try {
@@ -73,6 +76,15 @@ public class ProdutoController {
 
             if (imagem != null && !imagem.isEmpty()) {
                 produto.setFoto(imagem.getBytes());
+            }
+            if (imagem1 != null && !imagem1.isEmpty()) {
+                produto.setFoto2(imagem1.getBytes());
+            }
+            if (imagem2 != null && !imagem2.isEmpty()) {
+                produto.setFoto3(imagem2.getBytes());
+            }
+            if (imagem3 != null && !imagem3.isEmpty()) {
+                produto.setFoto4(imagem3.getBytes());
             }
 
             produtoRepository.save(produto);

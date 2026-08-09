@@ -172,4 +172,20 @@ export const api = {
     fetchWithTimeout(`${API_URL}/api/products/${id}/status?status=${status}`, {
       method: 'PUT', headers: authHeaders()
     }).then(r => r.text()),
+
+  favoritosIds: () =>
+    fetchWithTimeout(`${API_URL}/api/favoritos/ids`, { headers: authHeaders() }).then(r => r.json()),
+
+  favoritos: () =>
+    fetchWithTimeout(`${API_URL}/api/favoritos`, { headers: authHeaders() }).then(r => r.json()),
+
+  favoritarProduto: (produtoId) =>
+    fetchWithTimeout(`${API_URL}/api/favoritos/${produtoId}`, {
+      method: 'POST', headers: authHeaders()
+    }).then(r => r.json()),
+
+  desfavoritarProduto: (produtoId) =>
+    fetchWithTimeout(`${API_URL}/api/favoritos/${produtoId}`, {
+      method: 'DELETE', headers: authHeaders()
+    }).then(r => r.json()),
 };
