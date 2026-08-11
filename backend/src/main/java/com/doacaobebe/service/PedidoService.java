@@ -146,8 +146,9 @@ public class PedidoService {
         pedido.getProduto().setStatusAnuncio("VENDIDO");
         produtoRepository.save(pedido.getProduto());
         pedidoRepository.save(pedido);
-
-        carteiraService.liberarSaldo(pedido.getVendedor(), pedido, pedido.getValorProduto());
+        
+        // Saldo NÃO é liberado automaticamente
+        // Aguarda liberação administrativa via AdminOrderController
     }
 
     public List<Pedido> listarPedidosComprador(Integer compradorId) {

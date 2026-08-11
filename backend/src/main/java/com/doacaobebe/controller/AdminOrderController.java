@@ -59,6 +59,12 @@ public class AdminOrderController {
                 return ResponseEntity.badRequest()
                         .body("Pedido não está finalizado.");
             }
+            
+            // Verificar se já está LIBERADO
+            if ("LIBERADO".equalsIgnoreCase(pedido.getStatusPagamento())) {
+                return ResponseEntity.badRequest()
+                        .body("Pedido já teve o saldo liberado.");
+            }
 
             // libera saldo para o vendedor
             carteiraService.liberarSaldo(

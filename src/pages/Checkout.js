@@ -21,6 +21,8 @@ function Checkout() {
   const [checkout, setCheckout] = useState(null);
   const [copiado, setCopiado] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [simulando, setSimulando] = useState(false);
+  const [pagamentoAprovado, setPagamentoAprovado] = useState(false);
   const [erro, setErro] = useState('');
 
   const bg = isDark ? '#0f0f0f' : '#f9f5f6';
@@ -62,6 +64,18 @@ function Checkout() {
     navigator.clipboard.writeText(checkout.pixCopiaCola);
     setCopiado(true);
     setTimeout(() => setCopiado(false), 3000);
+  };
+
+  const simularPagamento = async () => {
+    setSimulando(true); setErro('');
+    try {
+      await api.simularPagamento(checkout.pagamentoId);
+      setPagamentoAprovado(true);
+    } catch (e) {
+      setErro(e.message || 'Erro ao simular pagamento.');
+    } finally {
+      setSimulando(false);
+    }
   };
 
   const formatBRL = (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -166,23 +180,55 @@ function Checkout() {
         {/* ETAPA PIX */}
         {etapa === 'pix' && checkout && (
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '48px', marginBottom: '8px' }}>📱</div>
+            <div style={{ fontSize: '48px', marginBottom: '8px' }}>
+              {pagamentoAprovado ? '✅' : '📱'}
+            </div>
             <h2 style={{ fontSize: '18px', fontWeight: '800', color: text, margin: '0 0 8px' }}>Pedido #{checkout.pedidoId}</h2>
             <p style={{ fontSize: '24px', fontWeight: '800', color: '#c0606a', margin: '0 0 24px' }}>{formatBRL(checkout.valorTotal)}</p>
 
-            <div style={{ padding: '16px', borderRadius: '12px', backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2', border: `1px solid ${border}`, marginBottom: '20px' }}>
-              <p style={{ fontSize: '12px', color: sub, margin: '0 0 8px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700' }}>PIX Copia e Cola</p>
-              <p style={{ fontSize: '11px', color: sub, wordBreak: 'break-all', margin: '0 0 12px', lineHeight: '1.6' }}>{checkout.pixCopiaCola}</p>
-              <button onClick={copiarPix} style={{
-                padding: '10px 20px', borderRadius: '8px', border: 'none',
-                backgroundColor: copiado ? '#4caf50' : '#c0606a',
-                color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer', transition: 'background 0.3s'
-              }}>{copiado ? '✓ Copiado!' : 'Copiar Código'}</button>
-            </div>
+            {pagamentoAprovado ? (
+              <div style={{ padding: '20px', borderRadius: '12px', backgroundColor: 'rgba(76,175,80,0.1)', border: '1px solid #4caf50', marginBottom: '20px' }}>
+                <p style={{ fontSize: '15px', fontWeight: '700', color: '#4caf50', margin: '0 0 4px' }}>Pagamento aprovado!</p>
+                <p style={{ fontSize: '13px', color: sub, margin: 0 }}>O produto foi reservado e o saldo do vendedor foi retido.</p>
+              </div>
+            ) : (
+              <>
+                <div style={{ padding: '16px', borderRadius: '12px', backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2', border: `1px solid ${border}`, marginBottom: '20px' }}>
+                  <p style={{ fontSize: '12px', color: sub, margin: '0 0 8px', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '700' }}>PIX Copia e Cola</p>
+                  <p style={{ fontSize: '11px', color: sub, wordBreak: 'break-all', margin: '0 0 12px', lineHeight: '1.6' }}>{checkout.pixCopiaCola}</p>
+                  <button onClick={copiarPix} style={{
+                    padding: '10px 20px', borderRadius: '8px', border: 'none',
+                    backgroundColor: copiado ? '#4caf50' : '#c0606a',
+                    color: 'white', fontSize: '13px', fontWeight: '700', cursor: 'pointer', transition: 'background 0.3s'
+                  }}>{copiado ? '✓ Copiado!' : 'Copiar Código'}</button>
+                </div>
 
-            <p style={{ fontSize: '12px', color: sub, lineHeight: '1.6' }}>
-              Após o pagamento, você receberá a confirmação automaticamente. O produto ficará reservado para você.
-            </p>
+                <p style={{ fontSize: '12px', color: sub, lineHeight: '1.6' }}>
+                  Após o pagamento, você receberá a confirmação automaticamente. O produto ficará reservado para você.
+                </p>
+
+                {checkout.pagamentoId?.startsWith('MOCK_') && (
+                  <>
+                    <div style={{ margin: '20px 0 8px', borderTop: `1px dashed ${border}`, paddingTop: '20px' }}>
+                      <p style={{ fontSize: '11px', color: '#ff9800', fontWeight: '700', margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>⚠️ Ambiente de Desenvolvimento</p>
+                      <button
+                        onClick={simularPagamento}
+                        disabled={simulando}
+                        style={{
+                          width: '100%', padding: '14px', borderRadius: '12px', border: '2px dashed #ff9800',
+                          backgroundColor: 'transparent', color: '#ff9800',
+                          fontSize: '14px', fontWeight: '700', cursor: simulando ? 'not-allowed' : 'pointer',
+                          opacity: simulando ? 0.6 : 1
+                        }}
+                      >
+                        {simulando ? 'Processando...' : '🧪 Simular Pagamento'}
+                      </button>
+                    </div>
+                    {erro && <p style={{ color: '#ef4444', fontSize: '13px', marginTop: '8px' }}>{erro}</p>}
+                  </>
+                )}
+              </>
+            )}
 
             <button onClick={() => navigate('/meus-pedidos')} style={{
               width: '100%', marginTop: '20px', padding: '14px', borderRadius: '12px', border: `1px solid ${border}`,

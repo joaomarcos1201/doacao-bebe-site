@@ -49,12 +49,27 @@ public class CarteiraService {
     @Transactional
     public void liberarSaldo(Usuario vendedor, Pedido pedido, BigDecimal valorProduto) {
         Carteira carteira = obterOuCriar(vendedor);
+        
+        // Verificar se o saldo já foi liberado para este pedido
+        boolean jaLiberado = movimentacaoRepository.findByUsuarioIdOrderByCreatedAtDesc(vendedor.getId())
+                .stream()
+                .anyMatch(m -> "VENDA".equals(m.getTipo()) && "LIBERADO".equals(m.getStatus())
+                        && pedido.equals(m.getPedido()));
+        
+        if (jaLiberado) {
+            throw new IllegalStateException("Saldo já foi liberado para este pedido.");
+        }
+        
+        // Verificar se há saldo retido suficiente
+        if (carteira.getSaldoRetido().compareTo(valorProduto) < 0) {
+            throw new IllegalStateException("Saldo retido insuficiente para liberação.");
+        }
 
         BigDecimal comissao = valorProduto.multiply(COMISSAO_PERCENTUAL).setScale(2, RoundingMode.HALF_UP);
         BigDecimal valorLiquido = valorProduto.subtract(comissao);
 
         // Remove do retido e adiciona ao liberado
-        carteira.setSaldoRetido(carteira.getSaldoRetido().subtract(valorProduto).max(BigDecimal.ZERO));
+        carteira.setSaldoRetido(carteira.getSaldoRetido().subtract(valorProduto));
         carteira.setSaldoLiberado(carteira.getSaldoLiberado().add(valorLiquido));
         carteiraRepository.save(carteira);
 

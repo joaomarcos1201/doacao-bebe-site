@@ -168,6 +168,16 @@ export const api = {
   todosPedidos: () =>
     fetchWithTimeout(`${API_URL}/api/orders/admin`, { headers: authHeaders() }).then(r => r.json()),
 
+  simularPagamento: (pagamentoId) =>
+    fetchWithTimeout(`${API_URL}/api/dev/simulate-payment/${pagamentoId}`, {
+      method: 'POST', headers: authHeaders()
+    }).then(r => r.text()),
+
+  liberarPagamento: (pedidoId) =>
+    fetchWithTimeout(`${API_URL}/api/admin/orders/${pedidoId}/release-payment`, {
+      method: 'PUT', headers: authHeaders()
+    }).then(r => r.text().then(t => { try { return JSON.parse(t); } catch { return t; } })),
+
   alterarStatusProduto: (id, status) =>
     fetchWithTimeout(`${API_URL}/api/products/${id}/status?status=${status}`, {
       method: 'PUT', headers: authHeaders()

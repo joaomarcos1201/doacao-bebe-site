@@ -324,7 +324,7 @@ function Admin() {
                 <div key={p.id} style={{ padding: '16px', borderRadius: '12px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <span style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333' }}>Pedido #{p.id} — {p.produto?.nome}</span>
-                    <span style={{ fontSize: '12px', fontWeight: '700', color: p.statusPagamento === 'FINALIZADO' ? '#4caf50' : p.statusPagamento === 'APROVADO' ? '#2196f3' : '#ff9800' }}>{p.statusPagamento}</span>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: p.statusPagamento === 'FINALIZADO' ? '#4caf50' : p.statusPagamento === 'APROVADO' ? '#2196f3' : p.statusPagamento === 'LIBERADO' ? '#9c27b0' : '#ff9800' }}>{p.statusPagamento}</span>
                   </div>
                   <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: isDark ? '#888' : '#666', flexWrap: 'wrap' }}>
                     <span>Comprador: {p.comprador?.nome}</span>
@@ -333,6 +333,29 @@ function Admin() {
                     {p.statusEnvio && <span>Envio: {p.statusEnvio}</span>}
                     {p.codigoRastreio && <span>Rastreio: {p.codigoRastreio}</span>}
                   </div>
+                  {p.statusPagamento === 'FINALIZADO' && (
+                    <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'flex-end' }}>
+                      <button onClick={() => showConfirm(
+                        'Liberar Saldo',
+                        `Deseja liberar o saldo de R$ ${Number(p.valorProduto || 0).toFixed(2)} para o vendedor ${p.vendedor?.nome}?\nProduto: ${p.produto?.nome}\nComissão: 10% (R$ ${Number(p.valorProduto || 0) * 0.1})`,
+                        async () => {
+                          try {
+                            await api.liberarPagamento(p.id);
+                            showSuccess('Saldo liberado com sucesso!');
+                            // Atualizar lista de pedidos
+                            api.todosPedidos().then(setPedidos);
+                          } catch (err) {
+                            showError(err.message || 'Erro ao liberar saldo.');
+                          }
+                        },
+                        'Liberar',
+                        'Cancelar'
+                      )} style={{
+                        padding: '8px 16px', borderRadius: '8px', border: 'none',
+                        backgroundColor: '#4caf50', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
+                      }}>💰 Liberar Saldo</button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
