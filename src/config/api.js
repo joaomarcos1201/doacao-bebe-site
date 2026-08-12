@@ -173,6 +173,11 @@ export const api = {
       method: 'POST', headers: authHeaders()
     }).then(r => r.text()),
 
+  simularEntrega: (pedidoId) =>
+    fetchWithTimeout(`${API_URL}/api/dev/simulate-delivery/${pedidoId}`, {
+      method: 'POST', headers: authHeaders()
+    }).then(r => r.text()),
+
   liberarPagamento: (pedidoId) =>
     fetchWithTimeout(`${API_URL}/api/admin/orders/${pedidoId}/release-payment`, {
       method: 'PUT', headers: authHeaders()

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { API_URL } from '../config/api';
+import { API_URL, api } from '../config/api';
 
 const ProdutosContext = createContext();
 
@@ -20,9 +20,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const carregarProdutos = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products/todos`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
+      const response = await fetch(`${API_URL}/api/products/todos`);
       if (response.ok) {
         const data = await response.json();
         setProdutos(data);
@@ -51,13 +49,9 @@ export const ProdutosProvider = ({ children }) => {
 
   const aprovarProduto = async (produtoId) => {
     try {
-      // Produto aprovado fica disponível para aparecer na Home e ser comprado.
-      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=DISPONIVEL`, {
-        method: 'PUT',
-      });
-      if (response.ok) {
-        carregarProdutos();
-      }
+      // Aprovar definindo status para DISPONIVEL (consistente com backend e listagens)
+      await api.alterarStatusProduto(produtoId, 'DISPONIVEL');
+      carregarProdutos();
     } catch (error) {
       console.error('Erro ao aprovar produto:', error);
     }
@@ -65,13 +59,9 @@ export const ProdutosProvider = ({ children }) => {
 
   const rejeitarProduto = async (produtoId) => {
     try {
-      // Regra nova do requisito: recusa via REPROVADO
-      const response = await fetch(`${API_URL}/api/products/${produtoId}/status?status=REPROVADO`, {
-        method: 'PUT',
-      });
-      if (response.ok) {
-        carregarProdutos();
-      }
+      // Rejeitar definindo status para REJEITADO (consistente com Admin.js)
+      await api.alterarStatusProduto(produtoId, 'REJEITADO');
+      carregarProdutos();
     } catch (error) {
       console.error('Erro ao rejeitar produto:', error);
     }

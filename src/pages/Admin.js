@@ -342,7 +342,6 @@ function Admin() {
                           try {
                             await api.liberarPagamento(p.id);
                             showSuccess('Saldo liberado com sucesso!');
-                            // Atualizar lista de pedidos
                             api.todosPedidos().then(setPedidos);
                           } catch (err) {
                             showError(err.message || 'Erro ao liberar saldo.');
@@ -354,6 +353,28 @@ function Admin() {
                         padding: '8px 16px', borderRadius: '8px', border: 'none',
                         backgroundColor: '#4caf50', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
                       }}>💰 Liberar Saldo</button>
+                    </div>
+                  )}
+                  {p.statusPagamento === 'APROVADO' && p.codigoRastreio?.startsWith('MOCK') && (
+                    <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'flex-end' }}>
+                      <button onClick={() => showConfirm(
+                        'Simular Entrega',
+                        `Simular entrega do pedido #${p.id}?\nProduto: ${p.produto?.nome}\nComprador: ${p.comprador?.nome}`,
+                        async () => {
+                          try {
+                            await api.simularEntrega(p.id);
+                            showSuccess('Entrega simulada! Pedido finalizado.');
+                            api.todosPedidos().then(setPedidos);
+                          } catch (err) {
+                            showError(err.message || 'Erro ao simular entrega.');
+                          }
+                        },
+                        'Simular',
+                        'Cancelar'
+                      )} style={{
+                        padding: '8px 16px', borderRadius: '8px', border: 'none',
+                        backgroundColor: '#ff9800', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
+                      }}>🚚 Simular Entrega</button>
                     </div>
                   )}
                 </div>
