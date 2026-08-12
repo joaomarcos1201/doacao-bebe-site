@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import { useConfirm } from '../hooks/useConfirm';
@@ -162,12 +163,11 @@ function Admin() {
     } catch { showError('Erro de conexão.'); }
   }, 'Confirmar', 'Cancelar');
 
-  const card = (value, label, color, emoji) => (
+  const card = (value, label, color) => (
     <div style={{
       backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
       border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, textAlign: 'center'
     }}>
-      <div style={{ fontSize: '28px', marginBottom: '8px' }}>{emoji}</div>
       <div style={{ fontSize: '28px', fontWeight: '800', color, marginBottom: '4px' }}>{value}</div>
       <div style={{ fontSize: '13px', color: isDark ? '#666' : '#999' }}>{label}</div>
     </div>
@@ -200,12 +200,13 @@ function Admin() {
           padding: '8px 16px', borderRadius: '8px', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
           backgroundColor: 'transparent', color: isDark ? '#aaa' : '#888', cursor: 'pointer', fontSize: '13px'
         }}>← Voltar</button>
-        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e8d0d4' : '#c0606a' }}>⚙️ Administração</span>
+        <span style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e8d0d4' : '#c0606a' }}>Administração</span>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button onClick={toggleTheme} style={{
             width: '36px', height: '36px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`,
-            backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px'
-          }}>{isDark ? '☀️' : '🌙'}</button>
+            backgroundColor: 'transparent', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }}>{isDark ? <Sun size={16} color="#f0c060" strokeWidth={2} /> : <Moon size={16} color="#c0606a" strokeWidth={2} />}</button>
           <button onClick={() => { localStorage.clear(); navigate('/login'); }} style={{
             padding: '8px 16px', borderRadius: '8px', border: '1px solid #ef4444',
             backgroundColor: 'transparent', color: '#ef4444', cursor: 'pointer', fontSize: '13px', fontWeight: '500'
@@ -216,21 +217,21 @@ function Admin() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px' }}>
         {/* Abas */}
         <div style={{ display: 'flex', gap: '8px', marginBottom: '28px', flexWrap: 'wrap' }}>
-          {tabBtn('usuarios', `👥 Usuários (${stats.total})`)}
-          {tabBtn('produtos', `📦 Produtos (${produtosPendentes.length} pendentes)`)}
-          {tabBtn('pedidos', `🛒 Pedidos (${pedidos.length})`)}
-          {tabBtn('saques', `💸 Saques (${saques.filter(s => s.status === 'PENDENTE').length} pendentes)`)}
-          {tabBtn('mensagens', `💬 Mensagens (${mensagens.length})`)}
+          {tabBtn('usuarios', `Usuários (${stats.total})`)}
+          {tabBtn('produtos', `Produtos (${produtosPendentes.length} pendentes)`)}
+          {tabBtn('pedidos', `Pedidos (${pedidos.length})`)}
+          {tabBtn('saques', `Saques (${saques.filter(s => s.status === 'PENDENTE').length} pendentes)`)}
+          {tabBtn('mensagens', `Mensagens (${mensagens.length})`)}
         </div>
 
         {/* ABA USUÁRIOS */}
         {aba === 'usuarios' && (
           <>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '28px' }}>
-              {card(stats.total, 'Total', '#c0606a', '👥')}
-              {card(stats.ativos, 'Ativos', '#4caf50', '✅')}
-              {card(stats.inativos, 'Inativos', '#ef4444', '⛔')}
-              {card(stats.admins, 'Admins', '#ff9800', '⭐')}
+              {card(stats.total, 'Total', '#c0606a')}
+              {card(stats.ativos, 'Ativos', '#4caf50')}
+              {card(stats.inativos, 'Inativos', '#ef4444')}
+              {card(stats.admins, 'Admins', '#ff9800')}
             </div>
             <div style={{
               backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px',
@@ -271,7 +272,7 @@ function Admin() {
                           }}>{(u.statusUsuario === 'ATIVO' || !u.statusUsuario) ? 'ATIVO' : 'INATIVO'}</span>
                         </td>
                         <td style={{ padding: '14px 16px', fontSize: '13px', color: u.nivelAcesso === 'ADMIN' ? '#ff9800' : (isDark ? '#666' : '#aaa') }}>
-                          {u.nivelAcesso === 'ADMIN' ? '⭐ Admin' : 'Usuário'}
+                          {u.nivelAcesso === 'ADMIN' ? 'Admin' : 'Usuário'}
                         </td>
                         <td style={{ padding: '14px 16px', position: 'relative' }}>
                           <button onClick={() => setMenuAberto(menuAberto === u.id ? null : u.id)} style={{
@@ -352,7 +353,7 @@ function Admin() {
                       )} style={{
                         padding: '8px 16px', borderRadius: '8px', border: 'none',
                         backgroundColor: '#4caf50', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
-                      }}>💰 Liberar Saldo</button>
+                      }}>Liberar Saldo</button>
                     </div>
                   )}
                   {p.statusPagamento === 'APROVADO' && p.codigoRastreio?.startsWith('MOCK') && (
@@ -374,7 +375,7 @@ function Admin() {
                       )} style={{
                         padding: '8px 16px', borderRadius: '8px', border: 'none',
                         backgroundColor: '#ff9800', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
-                      }}>🚚 Simular Entrega</button>
+                      }}>Simular Entrega</button>
                     </div>
                   )}
                 </div>
@@ -417,8 +418,8 @@ function Admin() {
         {aba === 'produtos' && (
           <>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '28px' }}>
-              {card(produtosPendentes.length, 'Pendentes', '#ff9800', '⏳')}
-              {card(produtosAprovados.length, 'Aprovados', '#4caf50', '✅')}
+              {card(produtosPendentes.length, 'Pendentes', '#ff9800')}
+              {card(produtosAprovados.length, 'Aprovados', '#4caf50')}
             </div>
 
             {produtosPendentes.length > 0 && (
@@ -427,7 +428,7 @@ function Admin() {
                 border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '20px', overflow: 'hidden'
               }}>
                 <div style={{ padding: '20px 24px', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
-                  <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: 0 }}>⏳ Aguardando Aprovação</h2>
+                  <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: 0 }}>Aguardando Aprovação</h2>
                 </div>
                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {produtosPendentes.map(p => (
@@ -442,8 +443,7 @@ function Admin() {
                         backgroundColor: isDark ? '#2a2a2a' : '#f0e6e8',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden'
                       }}>
-                        {p.foto ? <img src={`data:image/jpeg;base64,${p.foto}`} alt={p.nome} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          : <span style={{ fontSize: '24px', opacity: 0.3 }}>📦</span>}
+                        {p.foto ? <img src={`data:image/jpeg;base64,${p.foto}`} alt={p.nome} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
                       </div>
                       <div style={{ flex: 1 }}>
                         <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 6px' }}>{p.nome}</h3>
@@ -470,7 +470,7 @@ function Admin() {
               border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, overflow: 'hidden'
             }}>
               <div style={{ padding: '20px 24px', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
-                <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: 0 }}>✅ Produtos Aprovados ({produtosAprovados.length})</h2>
+                <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: 0 }}>Produtos Aprovados ({produtosAprovados.length})</h2>
               </div>
               <div style={{ padding: '20px' }}>
                 {produtosAprovados.length === 0 ? (
@@ -525,7 +525,7 @@ function Admin() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                     <div>
                       <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 4px' }}>{m.emissor}</h3>
-                      <p style={{ fontSize: '13px', color: isDark ? '#888' : '#666', margin: 0 }}>📧 {m.email}{m.telefone && ` · 📱 ${m.telefone}`}</p>
+                      <p style={{ fontSize: '13px', color: isDark ? '#888' : '#666', margin: 0 }}>{m.email}{m.telefone && ` · ${m.telefone}`}</p>
                     </div>
                     <span style={{ fontSize: '12px', color: isDark ? '#555' : '#bbb' }}>{new Date(m.dataMensagem).toLocaleString('pt-BR')}</span>
                   </div>
@@ -534,12 +534,12 @@ function Admin() {
                     <button onClick={() => window.open(`mailto:${m.email}?subject=Re: Sua mensagem`)} style={{
                       padding: '8px 14px', borderRadius: '8px', border: 'none',
                       backgroundColor: '#c0606a', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
-                    }}>📧 Responder</button>
+                    }}>Responder</button>
                     {m.telefone && (
                       <button onClick={() => window.open(`https://wa.me/${m.telefone.replace(/\D/g, '')}?text=Olá ${m.emissor}!`)} style={{
                         padding: '8px 14px', borderRadius: '8px', border: 'none',
                         backgroundColor: '#25D366', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
-                      }}>💬 WhatsApp</button>
+                      }}>WhatsApp</button>
                     )}
                   </div>
                 </div>

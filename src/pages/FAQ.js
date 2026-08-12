@@ -12,7 +12,7 @@ function FAQ() {
     { id: 2, q: 'Como posso doar um produto?', r: 'As doações são feitas pelo nosso aplicativo. Baixe o app, faça o cadastro e cadastre os produtos que deseja doar.' },
     { id: 3, q: 'Como entro em contato com quem está doando?', r: 'Ao encontrar um produto de interesse, clique em "Ver Detalhes" e depois em "Entrar em Contato via WhatsApp". Vocês combinam os detalhes diretamente.' },
     { id: 4, q: 'Preciso pagar alguma taxa?', r: 'Não! Nosso serviço é 100% gratuito. Não cobramos taxas para cadastro, doação ou busca de produtos.' },
-    { id: 5, q: 'Que tipos de produtos posso doar?', r: 'Roupas, brinquedos, móveis (berços, carrinhos), acessórios, produtos de alimentação e outros itens para bebês. Todos devem estar em bom estado de conservação.' },
+    { id: 5, q: 'Que tipos de produtos posso doar?', r: 'Roupas, brinquedos, móveis (berços, carrinhos), acessórios e outros itens para bebês. Todos devem estar em bom estado de conservação.' },
     { id: 6, q: 'Como sei se minha doação foi aprovada?', r: 'Após cadastrar um produto, ele passa por análise do administrador. Produtos aprovados ficam visíveis na página principal.' },
     { id: 7, q: 'Posso doar produtos usados?', r: 'Sim! Aceitamos produtos novos, semi-novos e usados, desde que estejam em bom estado. Seja honesto sobre o estado do produto na descrição.' },
     { id: 8, q: 'Como garantir a segurança nas trocas?', r: 'Recomendamos sempre encontros em locais públicos e seguros. Nossa plataforma facilita o contato, mas a responsabilidade pela transação é dos usuários envolvidos.' },

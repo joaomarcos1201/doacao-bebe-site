@@ -69,7 +69,7 @@ function AdminSidebar({
             fontWeight: 900,
           }}
         >
-          ⭐
+          A
         </div>
         <div style={{ lineHeight: 1.1 }}>
           <div style={{ fontSize: 13, fontWeight: 900, color: isDark ? '#e8d0d4' : '#c0606a' }}>

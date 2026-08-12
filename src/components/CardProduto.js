@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { MapPin, Camera, Heart } from 'lucide-react';
 import { useFavoritos } from '../context/FavoritosContext';
 import { useTheme } from '../context/ThemeContext';
+import { useNotification } from '../hooks/useNotification';
+import Notification from './Notification';
 
 const tempoRelativo = (data) => {
   if (!data) return null;
@@ -20,6 +22,7 @@ function CardProduto({ produto }) {
   const { isDark } = useTheme();
   const { isFavoritado, toggleFavorito } = useFavoritos();
   const [animando, setAnimando] = useState(false);
+  const { notifications, showSuccess, removeNotification } = useNotification();
 
   const favoritado = isFavoritado(produto.id);
   const logado = !!localStorage.getItem('token');
@@ -31,10 +34,11 @@ function CardProduto({ produto }) {
     setAnimando(true);
     await toggleFavorito(produto.id);
     setTimeout(() => setAnimando(false), 350);
-    if (!eraFavoritado) navigate('/favoritos');
+    showSuccess(eraFavoritado ? 'Produto removido dos favoritos.' : 'Produto adicionado aos favoritos.');
   };
 
   return (
+    <>
     <div
       onClick={() => navigate(`/produto/${produto.id}`)}
       style={{
@@ -130,6 +134,10 @@ function CardProduto({ produto }) {
         )}
       </div>
     </div>
+    {notifications.map(n => (
+      <Notification key={n.id} message={n.message} type={n.type} duration={n.duration} onClose={() => removeNotification(n.id)} />
+    ))}
+    </>  
   );
 }
 

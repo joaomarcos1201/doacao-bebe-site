@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  ShoppingCart, BedDouble, Milk, Droplets, Shirt,
+  ShoppingCart, BedDouble, Droplets, Shirt,
   Puzzle, Heart, Bath, Armchair, CheckCircle2, AlertTriangle,
 } from 'lucide-react';
 import { CATEGORIAS_MAP } from '../../services/iaService';
@@ -8,13 +8,11 @@ import { CATEGORIAS_MAP } from '../../services/iaService';
 const CATEGORIA_ICONS = {
   passeio: ShoppingCart,
   quarto: BedDouble,
-  alimentacao: Milk,
   higiene: Droplets,
   roupas: Shirt,
   brinquedos: Puzzle,
   maternidade: Heart,
   banho: Bath,
-  alimentacaobebe: Armchair,
 };
 
 export default function CategoriaAutomatica({ categoria, subcategoria, sugestoes, confianca, onChange, isDark }) {

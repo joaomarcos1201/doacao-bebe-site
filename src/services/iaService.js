@@ -15,11 +15,6 @@ export const CATEGORIAS_MAP = {
     icon: null,
     subcategorias: ['Berços', 'Mini Berços', 'Cercados', 'Trocadores', 'Móbiles'],
   },
-  alimentacao: {
-    label: 'Alimentação',
-    icon: null,
-    subcategorias: ['Mamadeiras', 'Chupetas', 'Esterilizadores', 'Aquecedores', 'Pratos e Talheres', 'Copos de Treinamento'],
-  },
   higiene: {
     label: 'Higiene e Cuidados',
     icon: null,
@@ -44,11 +39,6 @@ export const CATEGORIAS_MAP = {
     label: 'Banho',
     icon: null,
     subcategorias: ['Banheiras', 'Cadeiras de Banho', 'Toalhas com Capuz', 'Kits de Banho'],
-  },
-  alimentacaobebe: {
-    label: 'Cadeiras e Andadores',
-    icon: null,
-    subcategorias: ['Cadeiras de Alimentação', 'Cadeirinhas de Descanso', 'Andadores'],
   },
 };
 
@@ -78,14 +68,14 @@ const RECONHECIMENTO_SIMULADO = [
   { keywords: ['berco', 'berço'], categoria: 'quarto', subcategoria: 'Berços', produto: 'Berço', faixaEtaria: '0 a 2 anos', confianca: 0.91 },
   { keywords: ['mini berco', 'mini berço', 'berco portatil'], categoria: 'quarto', subcategoria: 'Mini Berços', produto: 'Mini Berço', faixaEtaria: '0 a 6 meses', confianca: 0.89 },
   { keywords: ['cercado', 'chiqueirinho'], categoria: 'quarto', subcategoria: 'Cercados', produto: 'Cercado', faixaEtaria: '6 meses a 2 anos', confianca: 0.87 },
-  { keywords: ['mamadeira'], categoria: 'alimentacao', subcategoria: 'Mamadeiras', produto: 'Mamadeira', faixaEtaria: '0 a 18 meses', confianca: 0.93 },
-  { keywords: ['chupeta'], categoria: 'alimentacao', subcategoria: 'Chupetas', produto: 'Chupeta', faixaEtaria: '0 a 24 meses', confianca: 0.95 },
-  { keywords: ['esterilizador'], categoria: 'alimentacao', subcategoria: 'Esterilizadores', produto: 'Esterilizador', faixaEtaria: '0 a 24 meses', confianca: 0.90 },
+  { keywords: ['mamadeira'], categoria: 'maternidade', subcategoria: 'Kits Maternidade', produto: 'Mamadeira', faixaEtaria: '0 a 18 meses', confianca: 0.93 },
+  { keywords: ['chupeta'], categoria: 'maternidade', subcategoria: 'Kits Maternidade', produto: 'Chupeta', faixaEtaria: '0 a 24 meses', confianca: 0.95 },
+  { keywords: ['esterilizador'], categoria: 'maternidade', subcategoria: 'Kits Maternidade', produto: 'Esterilizador', faixaEtaria: '0 a 24 meses', confianca: 0.90 },
   { keywords: ['almofada'], categoria: 'maternidade', subcategoria: 'Almofadas de Amamentação', produto: 'Almofada de Amamentação', faixaEtaria: '0 a 12 meses', confianca: 0.88 },
   { keywords: ['bomba', 'tira leite'], categoria: 'maternidade', subcategoria: 'Bombas Tira-Leite', produto: 'Bomba Tira-Leite', faixaEtaria: 'Maternidade', confianca: 0.86 },
   { keywords: ['bolsa maternidade', 'mochila maternidade'], categoria: 'maternidade', subcategoria: 'Bolsas Maternidade', produto: 'Bolsa Maternidade', faixaEtaria: 'Maternidade', confianca: 0.89 },
   { keywords: ['banheira'], categoria: 'banho', subcategoria: 'Banheiras', produto: 'Banheira de Bebê', faixaEtaria: '0 a 2 anos', confianca: 0.91 },
-  { keywords: ['cadeira alimentacao', 'cadeira refeicao'], categoria: 'alimentacaobebe', subcategoria: 'Cadeiras de Alimentação', produto: 'Cadeira de Alimentação', faixaEtaria: '6 meses a 3 anos', confianca: 0.90 },
+  { keywords: ['cadeira alimentacao', 'cadeira refeicao'], categoria: 'banho', subcategoria: 'Cadeiras de Banho', produto: 'Cadeira de Alimentação', faixaEtaria: '6 meses a 3 anos', confianca: 0.90 },
   { keywords: ['body', 'bodinho'], categoria: 'roupas', subcategoria: 'Bodies', produto: 'Body Infantil', faixaEtaria: '0 a 12 meses', confianca: 0.87 },
   { keywords: ['macacao', 'macacão'], categoria: 'roupas', subcategoria: 'Macacões', produto: 'Macacão Infantil', faixaEtaria: '0 a 24 meses', confianca: 0.86 },
   { keywords: ['vestido'], categoria: 'roupas', subcategoria: 'Vestidos', produto: 'Vestido Infantil', faixaEtaria: '0 a 3 anos', confianca: 0.88 },

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Shirt, BedDouble, UtensilsCrossed, MoreHorizontal, ShoppingBag, Puzzle, Heart, ChevronRight, ChevronLeft, Baby, Droplets, Footprints, Armchair, Milk } from 'lucide-react';
+import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Shirt, BedDouble, MoreHorizontal, ShoppingBag, Puzzle, Heart, ChevronRight, ChevronLeft, Baby, Droplets, Footprints, Armchair, Milk, Camera, Package, Tag, Wallet, User } from 'lucide-react';
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 import CardProduto from '../components/CardProduto';
@@ -10,7 +10,7 @@ const SECOES_CATEGORIAS = [
   { id: 'roupas-bebe',    label: 'Roupas para Bebê',         icone: Baby,          valores: ['roupas', 'roupa', 'roupas bebe', 'roupa bebe'] },
   { id: 'carrinhos',      label: 'Carrinhos e Acessórios',   icone: ShoppingBag,   valores: ['carrinho', 'carrinhos', 'acessorios carrinho'] },
   { id: 'moveis',         label: 'Berços e Móveis',          icone: Armchair,      valores: ['moveis', 'berco', 'bercos', 'cama', 'quarto'] },
-  { id: 'amamentacao',    label: 'Itens para Amamentação',   icone: Milk,          valores: ['amamentacao', 'alimentacao', 'mamadeira'] },
+  { id: 'amamentacao',    label: 'Itens para Amamentação',   icone: Milk,          valores: ['amamentacao', 'mamadeira'] },
   { id: 'higiene',        label: 'Higiene e Cuidados',        icone: Droplets,      valores: ['higiene', 'cuidados', 'banho'] },
   { id: 'calcados',       label: 'Calçados',                  icone: Footprints,    valores: ['calcados', 'sapatos', 'tenis', 'sandalia'] },
   { id: 'bolsas',         label: 'Bolsas e Acessórios',       icone: ShoppingBag,   valores: ['bolsas', 'bolsa', 'acessorios'] },
@@ -70,7 +70,6 @@ function Home({ user, setUser }) {
     { value: 'brinquedos', label: 'Brinquedos' },
     { value: 'moveis', label: 'Móveis' },
     { value: 'acessorios', label: 'Acessórios' },
-    { value: 'alimentacao', label: 'Alimentação' },
     { value: 'outros', label: 'Outros' },
   ];
 
@@ -79,7 +78,6 @@ function Home({ user, setUser }) {
     brinquedos: 'Brinquedos',
     moveis: 'Móveis',
     acessorios: 'Acessórios',
-    alimentacao: 'Alimentação',
     outros: 'Outros',
   };
 
@@ -88,20 +86,19 @@ function Home({ user, setUser }) {
     brinquedos: <Puzzle size={13} strokeWidth={2} />,
     moveis: <BedDouble size={13} strokeWidth={2} />,
     acessorios: <ShoppingBag size={13} strokeWidth={2} />,
-    alimentacao: <UtensilsCrossed size={13} strokeWidth={2} />,
     outros: <MoreHorizontal size={13} strokeWidth={2} />,
   };
 
   const menuItems = [
-    { label: 'Meu Perfil', path: '/perfil', authRequired: true },
-    { label: '📸 Anunciar Produto', path: '/cadastrar-produto', authRequired: true },
-    { label: '📦 Meus Pedidos', path: '/meus-pedidos', authRequired: true },
-    { label: '🏷️ Minhas Vendas', path: '/minhas-vendas', authRequired: true },
-    { label: '💼 Minha Carteira', path: '/carteira', authRequired: true },
-    { label: '♡ Meus Favoritos', path: '/favoritos', authRequired: true },
-    { label: 'Sobre Nós', path: '/sobre-nos' },
-    { label: 'Fale Conosco', path: '/fale-conosco' },
-    { label: 'FAQ', path: '/faq' },
+    { label: 'Meu Perfil', path: '/perfil', icon: <User size={15} strokeWidth={1.8} />, authRequired: true },
+    { label: 'Anunciar Produto', path: '/cadastrar-produto', icon: <Camera size={15} strokeWidth={1.8} />, authRequired: true },
+    { label: 'Meus Pedidos', path: '/meus-pedidos', icon: <Package size={15} strokeWidth={1.8} />, authRequired: true },
+    { label: 'Minhas Vendas', path: '/minhas-vendas', icon: <Tag size={15} strokeWidth={1.8} />, authRequired: true },
+    { label: 'Minha Carteira', path: '/carteira', icon: <Wallet size={15} strokeWidth={1.8} />, authRequired: true },
+    { label: 'Meus Favoritos', path: '/favoritos', icon: <Heart size={15} strokeWidth={1.8} />, authRequired: true },
+    { label: 'Sobre Nós', path: '/sobre-nos', icon: null },
+    { label: 'Fale Conosco', path: '/fale-conosco', icon: null },
+    { label: 'FAQ', path: '/faq', icon: null },
   ];
 
   return (
@@ -347,6 +344,7 @@ function Home({ user, setUser }) {
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = isDark ? '#1e1e1e' : '#fdf0f2'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
+                  {item.icon && <span style={{ color: isDark ? '#888' : '#c0606a', display: 'flex' }}>{item.icon}</span>}
                   <span style={{ fontSize: '15px', fontWeight: '500' }}>{item.label}</span>
                 </div>
               ))}
@@ -462,7 +460,6 @@ function Home({ user, setUser }) {
               { value: 'brinquedos', label: 'Brinquedos', icon: <Puzzle size={15} strokeWidth={2} /> },
               { value: 'moveis', label: 'Móveis', icon: <BedDouble size={15} strokeWidth={2} /> },
               { value: 'acessorios', label: 'Acessórios', icon: <ShoppingBag size={15} strokeWidth={2} /> },
-              { value: 'alimentacao', label: 'Alimentação', icon: <UtensilsCrossed size={15} strokeWidth={2} /> },
               { value: 'outros', label: 'Outros', icon: <MoreHorizontal size={15} strokeWidth={2} /> },
             ].map(cat => {
               const ativo = categoriaFiltro === cat.value;
@@ -492,73 +489,6 @@ function Home({ user, setUser }) {
         </div>
       </div>
 
-      {/* COMO FUNCIONA */}
-      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '56px 32px 0' }}>
-        <h2 style={{ fontSize: '26px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#1a1a2e', margin: '0 0 6px', letterSpacing: '-0.5px' }}>Como funciona</h2>
-        <p style={{ fontSize: '14px', color: isDark ? '#666' : '#9CA3AF', margin: '0 0 32px' }}>Três passos simples para transformar vidas</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginBottom: '56px' }}>
-          {[
-            {
-              num: '1', title: 'Anuncie seus itens', desc: 'Cadastre roupas e acessórios que estão em bom estado para vender.',
-              svg: (
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                  <rect width="80" height="80" rx="20" fill="#fde8f0"/>
-                  <rect x="20" y="30" width="40" height="28" rx="5" fill="#f5b8ce" stroke="#e88aa2" strokeWidth="1.5"/>
-                  <rect x="20" y="26" width="40" height="8" rx="4" fill="#e88aa2"/>
-                  <line x1="40" y1="26" x2="40" y2="58" stroke="#d4708a" strokeWidth="1.5"/>
-                  <path d="M33 20 Q40 15 47 20" stroke="#e88aa2" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-                </svg>
-              )
-            },
-            {
-              num: '2', title: 'Encontre peças', desc: 'Busque por tamanho, estilo e categoria para achar o que precisa.',
-              svg: (
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                  <rect width="80" height="80" rx="20" fill="#fde8f0"/>
-                  <circle cx="40" cy="28" r="10" fill="#f5b8ce" stroke="#e88aa2" strokeWidth="1.5"/>
-                  <path d="M22 58 Q22 44 40 44 Q58 44 58 58" fill="#f5b8ce" stroke="#e88aa2" strokeWidth="1.5"/>
-                  <circle cx="27" cy="35" r="6" fill="#fde8f0" stroke="#e88aa2" strokeWidth="1.2"/>
-                  <circle cx="53" cy="35" r="6" fill="#fde8f0" stroke="#e88aa2" strokeWidth="1.2"/>
-                </svg>
-              )
-            },
-            {
-              num: '3', title: 'Combine a compra', desc: 'Combine a sua compra pelo nosso chat.',
-              svg: (
-                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                  <rect width="80" height="80" rx="20" fill="#fde8f0"/>
-                  <path d="M40 55 L19 36 Q14 28 22 23 Q30 18 37 26 L40 29 L43 26 Q50 18 58 23 Q66 28 61 36 Z" fill="#f5b8ce" stroke="#e88aa2" strokeWidth="1.5" strokeLinejoin="round"/>
-                  <circle cx="40" cy="44" r="5" fill="#e88aa2" opacity="0.5"/>
-                </svg>
-              )
-            },
-          ].map(step => (
-            <div key={step.num} style={{
-              backgroundColor: isDark ? '#161616' : '#fff',
-              borderRadius: '22px',
-              padding: '28px 24px',
-              border: `1px solid ${isDark ? '#222' : 'rgba(248,215,227,0.7)'}`,
-              boxShadow: isDark ? '0 2px 16px rgba(0,0,0,0.3)' : '0 4px 24px rgba(232,138,162,0.09)',
-              display: 'flex', alignItems: 'center', gap: '20px',
-              position: 'relative'
-            }}>
-              <div style={{
-                position: 'absolute', top: '18px', left: '18px',
-                width: '28px', height: '28px', borderRadius: '50%',
-                backgroundColor: '#E88AA2', color: 'white',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '12px', fontWeight: '800', flexShrink: 0,
-                boxShadow: '0 2px 8px rgba(232,138,162,0.4)'
-              }}>{step.num}</div>
-              <div style={{ flexShrink: 0, marginTop: '8px' }}>{step.svg}</div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#f0e0e2' : '#1a1a2e', marginBottom: '8px' }}>{step.title}</div>
-                <div style={{ fontSize: '13.5px', color: isDark ? '#777' : '#9CA3AF', lineHeight: '1.65' }}>{step.desc}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
       {/* SEÇÕES POR CATEGORIA */}
       <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '40px 24px 60px' }}>
 

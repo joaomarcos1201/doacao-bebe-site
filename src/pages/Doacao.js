@@ -111,7 +111,6 @@ function Doacao() {
                   <option value="brinquedos">🧸 Brinquedos</option>
                   <option value="moveis">🪑 Móveis</option>
                   <option value="acessorios">🎒 Acessórios</option>
-                  <option value="alimentacao">🍼 Alimentação</option>
                   <option value="outros">📦 Outros</option>
                 </select>
               </div>
