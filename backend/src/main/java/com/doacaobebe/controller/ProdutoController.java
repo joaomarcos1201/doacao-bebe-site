@@ -130,7 +130,22 @@ public class ProdutoController {
     @PutMapping("/{id}/status")
     public ResponseEntity<String> alterarStatus(
             @PathVariable Integer id,
-            @RequestParam String status) {
+            @RequestParam String status,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Autenticação necessária.");
+        }
+        try {
+            String token = authHeader.substring(7);
+            String email = jwtService.extractEmail(token);
+            Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
+            if (usuario == null || !Boolean.TRUE.equals(usuario.getIsAdmin())) {
+                return ResponseEntity.status(403).body("Acesso negado (ADMIN necessário).");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Token inválido.");
+        }
 
         Produto produto = produtoRepository.findById(id).orElse(null);
 

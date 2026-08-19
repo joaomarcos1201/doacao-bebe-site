@@ -4,6 +4,9 @@ import com.doacaobebe.entity.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.time.LocalDateTime;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
@@ -21,6 +24,10 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
     // helper para o listar /todos com ordenação
     List<Produto> findAllByStatusVisibilidadeNotOrderByDataAnuncioDesc(String statusVisibilidade);
+
+    @Query("SELECT p.dataAnuncio, p.statusAnuncio, p.statusVisibilidade, p.categoria, v.id " +
+           "FROM Produto p LEFT JOIN p.vendedor v WHERE (:inicio IS NULL OR p.dataAnuncio >= :inicio)")
+    List<Object[]> buscarDadosDashboard(@Param("inicio") LocalDateTime inicio);
 
 }
 

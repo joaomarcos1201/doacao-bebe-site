@@ -7,6 +7,8 @@ import { useConfirm } from '../hooks/useConfirm';
 import { useProdutos } from '../context/ProdutosContext';
 import Notification from '../components/Notification';
 import ConfirmDialog from '../components/ConfirmDialog';
+import GaleriaImagem from '../components/GaleriaImagem';
+import AdminDashboard from '../components/admin/AdminDashboard';
 import { API_URL, api } from '../config/api';
 
 function Admin() {
@@ -15,15 +17,16 @@ function Admin() {
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ total: 0, ativos: 0, inativos: 0, admins: 0 });
-  const [aba, setAba] = useState('usuarios');
+  const [aba, setAba] = useState('dashboard');
   const [mensagens, setMensagens] = useState([]);
   const [menuAberto, setMenuAberto] = useState(null);
-  const { produtos, aprovarProduto, rejeitarProduto, removerProduto } = useProdutos();
+  const { produtos, removerProduto, carregarProdutos } = useProdutos();
   const { notifications, showSuccess, showError, removeNotification } = useNotification();
   const { confirmState, showConfirm, handleConfirm, handleCancel } = useConfirm();
 
   const [pedidos, setPedidos] = useState([]);
   const [saques, setSaques] = useState([]);
+  const [produtoModal, setProdutoModal] = useState(null);
 
   // ====== UI TOKENS (mantém lógica/estado inalterados) ======
   // const bgPage = isDark ? '#0f0f0f' : '#f9f5f6';
@@ -163,6 +166,36 @@ function Admin() {
     } catch { showError('Erro de conexão.'); }
   }, 'Confirmar', 'Cancelar');
 
+  const aprovarPeloModal = (p) => showConfirm(
+    'Aprovar Produto',
+    `Aprovar "${p.nome}"? O produto ficará disponível para compra.`,
+    async () => {
+      try {
+        await api.alterarStatusProduto(p.id, 'DISPONIVEL');
+        showSuccess('Produto aprovado!');
+        setProdutoModal(null);
+        carregarProdutos();
+      } catch (err) { showError(err.message || 'Erro ao aprovar produto.'); }
+    }, 'Aprovar', 'Cancelar'
+  );
+
+  const reprovarPeloModal = (p) => showConfirm(
+    'Reprovar Produto',
+    `Reprovar "${p.nome}"? O anúncio será recusado.`,
+    async () => {
+      try {
+        await api.alterarStatusProduto(p.id, 'REJEITADO');
+        showSuccess('Produto reprovado.');
+        setProdutoModal(null);
+        carregarProdutos();
+      } catch (err) { showError(err.message || 'Erro ao reprovar produto.'); }
+    }, 'Reprovar', 'Cancelar'
+  );
+
+  const formatBRL = (v) => v ? Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) : 'Não informado';
+  const formatData = (d) => d ? new Date(d).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Não informado';
+  const ni = (v) => (v && String(v).trim()) ? v : 'Não informado';
+
   const card = (value, label, color) => (
     <div style={{
       backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
@@ -217,12 +250,15 @@ function Admin() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '32px 24px' }}>
         {/* Abas */}
         <div style={{ display: 'flex', gap: '8px', marginBottom: '28px', flexWrap: 'wrap' }}>
+          {tabBtn('dashboard', 'Dashboard')}
           {tabBtn('usuarios', `Usuários (${stats.total})`)}
           {tabBtn('produtos', `Produtos (${produtosPendentes.length} pendentes)`)}
           {tabBtn('pedidos', `Pedidos (${pedidos.length})`)}
           {tabBtn('saques', `Saques (${saques.filter(s => s.status === 'PENDENTE').length} pendentes)`)}
           {tabBtn('mensagens', `Mensagens (${mensagens.length})`)}
         </div>
+
+        {aba === 'dashboard' && <AdminDashboard isDark={isDark} />}
 
         {/* ABA USUÁRIOS */}
         {aba === 'usuarios' && (
@@ -432,11 +468,17 @@ function Admin() {
                 </div>
                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {produtosPendentes.map(p => (
-                    <div key={p.id} style={{
+                    <div
+                      key={p.id}
+                      onClick={() => {
+                        if (p.statusAnuncio === 'EM_ANALISE') setProdutoModal(p);
+                      }}
+                      style={{
                       padding: '20px', borderRadius: '12px',
                       border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
                       backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2',
-                      display: 'flex', gap: '16px', alignItems: 'flex-start'
+                      display: 'flex', gap: '16px', alignItems: 'flex-start',
+                      cursor: p.statusAnuncio === 'EM_ANALISE' ? 'pointer' : 'default'
                     }}>
                       <div style={{
                         width: '80px', height: '80px', borderRadius: '10px', flexShrink: 0,
@@ -449,11 +491,11 @@ function Admin() {
                         <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 6px' }}>{p.nome}</h3>
                         <p style={{ fontSize: '13px', color: isDark ? '#888' : '#666', margin: '0 0 12px', lineHeight: '1.5' }}>{p.descricao}</p>
                         <div style={{ display: 'flex', gap: '8px' }}>
-                          <button onClick={() => { aprovarProduto(p.id); showSuccess('Produto aprovado!'); }} style={{
+                          <button onClick={(event) => { event.stopPropagation(); aprovarPeloModal(p); }} style={{
                             padding: '8px 16px', borderRadius: '8px', border: 'none',
                             backgroundColor: '#4caf50', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
                           }}>✓ Aprovar</button>
-                          <button onClick={() => showConfirm('Rejeitar Produto', 'Tem certeza?', () => { rejeitarProduto(p.id).then(() => showSuccess('Produto rejeitado.')); }, 'Rejeitar', 'Cancelar')} style={{
+                          <button onClick={(event) => { event.stopPropagation(); reprovarPeloModal(p); }} style={{
                             padding: '8px 16px', borderRadius: '8px', border: 'none',
                             backgroundColor: '#ef4444', color: 'white', fontSize: '13px', fontWeight: '600', cursor: 'pointer'
                           }}>✗ Rejeitar</button>
@@ -554,6 +596,89 @@ function Admin() {
       ))}
       <ConfirmDialog isOpen={confirmState.isOpen} title={confirmState.title} message={confirmState.message}
         onConfirm={handleConfirm} onCancel={handleCancel} confirmText={confirmState.confirmText} cancelText={confirmState.cancelText} />
+
+      {/* MODAL DE DETALHES DO PRODUTO */}
+      {produtoModal && (() => {
+        const p = produtoModal;
+        const fotos = [
+          p.foto ? `data:image/jpeg;base64,${p.foto}` : null,
+          p.foto2 ? `data:image/jpeg;base64,${p.foto2}` : null,
+          p.foto3 ? `data:image/jpeg;base64,${p.foto3}` : null,
+          p.foto4 ? `data:image/jpeg;base64,${p.foto4}` : null,
+        ].filter(Boolean);
+
+        const secTitle = (label) => (
+          <div style={{ fontSize: '11px', fontWeight: '700', color: '#c0606a', textTransform: 'uppercase', letterSpacing: '0.8px', margin: '20px 0 10px', paddingBottom: '6px', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>{label}</div>
+        );
+        const row = (label, value) => (
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: `1px solid ${isDark ? '#1e1e1e' : '#fdf0f2'}` }}>
+            <span style={{ fontSize: '13px', color: isDark ? '#888' : '#999' }}>{label}</span>
+            <span style={{ fontSize: '13px', color: isDark ? '#e0e0e0' : '#333', fontWeight: '600', textAlign: 'right', maxWidth: '60%', wordBreak: 'break-word' }}>{value}</span>
+          </div>
+        );
+
+        return (
+          <div onClick={() => setProdutoModal(null)} style={{ position: 'fixed', inset: 0, zIndex: 2000, backgroundColor: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '24px 16px', overflowY: 'auto' }}>
+            <div onClick={e => e.stopPropagation()} style={{ backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, width: '100%', maxWidth: '600px', padding: '24px', position: 'relative' }}>
+
+              {/* Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <div>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#ff9800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>⏳ Em Análise</span>
+                  <h2 style={{ fontSize: '17px', fontWeight: '800', color: isDark ? '#e0e0e0' : '#333', margin: '4px 0 0' }}>#{p.id} — {p.nome}</h2>
+                </div>
+                <button onClick={() => setProdutoModal(null)} style={{ width: '32px', height: '32px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`, backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px', color: isDark ? '#aaa' : '#888', flexShrink: 0 }}>✕</button>
+              </div>
+
+              {/* FOTOS */}
+              {secTitle('Fotos do Produto')}
+              <GaleriaImagem fotos={fotos} isDark={isDark} border={isDark ? '#2a2a2a' : '#f0e6e8'} />
+              {fotos.length === 0 && <p style={{ fontSize: '13px', color: isDark ? '#666' : '#aaa', textAlign: 'center', padding: '12px 0' }}>Nenhuma foto enviada.</p>}
+
+              {/* PRODUTO */}
+              {secTitle('Produto')}
+              {row('ID', p.id)}
+              {row('Nome', ni(p.nome))}
+              {row('Descrição', ni(p.descricao))}
+              {row('Preço', p.preco ? formatBRL(p.preco) : 'Não informado')}
+              {row('Categoria', ni(p.categoria))}
+              {row('Marca', ni(p.marca))}
+              {row('Conservação', ni(p.conservacao))}
+              {row('Estado', ni(p.estado))}
+
+              {/* ANÚNClO */}
+              {secTitle('Informações do Anúncio')}
+              {row('CEP de Origem', ni(p.cepOrigem))}
+              {row('Data do Anúncio', formatData(p.dataAnuncio))}
+              {row('Status do Anúncio', ni(p.statusAnuncio))}
+              {row('Visibilidade', ni(p.statusVisibilidade))}
+
+              {/* ANUNCIANTE */}
+              {secTitle('Anunciante')}
+              {row('Nome do vendedor', ni(p.vendedor?.nome))}
+              {row('E-mail do vendedor', ni(p.vendedor?.email))}
+              {row('CPF do vendedor', ni(p.vendedor?.cpf))}
+              {secTitle('Campos antigos do anúncio')}
+              {row('Anunciante', ni(p.doador))}
+              {row('Contato', ni(p.contato))}
+              {row('CPF do anúncio', ni(p.cpf))}
+
+              {/* DECISÃO */}
+              {secTitle('Decisão Administrativa')}
+              <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                <button
+                  onClick={() => reprovarPeloModal(p)}
+                  style={{ flex: 1, padding: '13px', borderRadius: '10px', border: '1px solid #ef4444', backgroundColor: 'transparent', color: '#ef4444', fontSize: '14px', fontWeight: '700', cursor: 'pointer' }}
+                >✗ Reprovar Produto</button>
+                <button
+                  onClick={() => aprovarPeloModal(p)}
+                  style={{ flex: 1, padding: '13px', borderRadius: '10px', border: 'none', backgroundColor: '#4caf50', color: 'white', fontSize: '14px', fontWeight: '700', cursor: 'pointer' }}
+                >✓ Aprovar Produto</button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

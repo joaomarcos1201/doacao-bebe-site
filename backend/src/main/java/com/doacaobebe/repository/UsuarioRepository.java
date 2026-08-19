@@ -8,11 +8,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import java.util.List;
+import java.time.LocalDateTime;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByEmail(String email);
     boolean existsByEmail(String email);
+
+    @Query("SELECT u.dataCadastro, u.statusUsuario, u.nivelAcesso FROM Usuario u " +
+           "WHERE (:inicio IS NULL OR u.dataCadastro >= :inicio)")
+    List<Object[]> buscarDadosDashboard(@Param("inicio") LocalDateTime inicio);
     
     @Modifying
     @Transactional

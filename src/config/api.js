@@ -188,6 +188,11 @@ export const api = {
       method: 'PUT', headers: authHeaders()
     }).then(r => r.text()),
 
+  buscarDashboardAdmin: (periodo = '7d') =>
+    fetchWithTimeout(`${API_URL}/api/admin/dashboard?periodo=${encodeURIComponent(periodo)}`, {
+      method: 'GET', headers: authHeaders()
+    }).then(r => r.json()),
+
   favoritosIds: () =>
     fetchWithTimeout(`${API_URL}/api/favoritos/ids`, { headers: authHeaders() }).then(r => r.json()),
 
