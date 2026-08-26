@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import Notification from '../components/Notification';
-import { API_URL } from '../config/api';
+import { API_URL, api } from '../config/api';
 
-function Perfil({ user, setUser }) {
+function Perfil({ user, setUser, temAnuncios: temAnunciosProp }) {
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
   const [nome, setNome] = useState(user?.nome || '');
@@ -14,6 +14,7 @@ function Perfil({ user, setUser }) {
   const [novaSenha, setNovaSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const { notifications, showError, removeNotification } = useNotification();
+  const temAnuncios = Boolean(temAnunciosProp);
 
   const validatePassword = (p) => ({
     isValid: /[A-Z]/.test(p) && /[!@#$%^&*(),.?":{}|<>]/.test(p) && /\d/.test(p),
@@ -73,7 +74,6 @@ function Perfil({ user, setUser }) {
       </nav>
 
       <div style={{ maxWidth: '600px', margin: '0 auto', padding: '40px 24px' }}>
-        {/* Avatar */}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div style={{
             width: '80px', height: '80px', borderRadius: '50%', backgroundColor: '#c0606a',
@@ -84,7 +84,6 @@ function Perfil({ user, setUser }) {
           <p style={{ fontSize: '14px', color: isDark ? '#666' : '#999', margin: 0 }}>{user?.email}</p>
         </div>
 
-        {/* Atalhos rápidos */}
         <div style={{
           backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '16px'
@@ -94,8 +93,10 @@ function Perfil({ user, setUser }) {
             {[
               { label: '📸 Anunciar Produto', path: '/cadastrar-produto' },
               { label: '📦 Meus Pedidos', path: '/meus-pedidos' },
-              { label: '🏷️ Minhas Vendas', path: '/minhas-vendas' },
-              { label: '💼 Minha Carteira', path: '/carteira' },
+              ...(temAnuncios ? [
+                { label: '🏷️ Minhas Vendas', path: '/minhas-vendas' },
+                { label: '💼 Minha Carteira', path: '/carteira' },
+              ] : []),
             ].map(({ label, path }) => (
               <button key={path} onClick={() => navigate(path)} style={{
                 width: '100%', padding: '12px 16px', borderRadius: '10px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`,
@@ -106,7 +107,6 @@ function Perfil({ user, setUser }) {
           </div>
         </div>
 
-        {/* Dados pessoais */}
         <div style={{
           backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '20px', padding: '28px',
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '16px'
@@ -165,7 +165,6 @@ function Perfil({ user, setUser }) {
           </form>
         </div>
 
-        {/* Dicas */}
         <div style={{
           backgroundColor: isDark ? '#141414' : '#fff', borderRadius: '16px', padding: '24px',
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`

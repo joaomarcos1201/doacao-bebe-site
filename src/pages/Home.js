@@ -4,6 +4,7 @@ import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Sh
 import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 import CardProduto from '../components/CardProduto';
+import { api } from '../config/api';
 
 const SECOES_CATEGORIAS = [
   { id: 'roupas-gestante', label: 'Roupas para Gestantes',    icone: Shirt,         valores: ['roupas gestante', 'roupa gestante', 'roupas para gestante'] },
@@ -18,7 +19,7 @@ const SECOES_CATEGORIAS = [
   { id: 'outros',         label: 'Outros Produtos',           icone: MoreHorizontal,valores: ['outros'] },
 ];
 
-function Home({ user, setUser }) {
+function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
   const navigate = useNavigate();
   const { produtos } = useProdutos();
   const { theme, isDark, toggleTheme } = useTheme();
@@ -45,6 +46,8 @@ function Home({ user, setUser }) {
     }, 2800);
     return () => clearInterval(interval);
   }, []);
+
+  const temAnuncios = Boolean(temAnunciosProp);
 
   const handleLogout = () => {
     setUser(null);
@@ -93,8 +96,10 @@ function Home({ user, setUser }) {
     { label: 'Meu Perfil', path: '/perfil', icon: <User size={15} strokeWidth={1.8} />, authRequired: true },
     { label: 'Anunciar Produto', path: '/cadastrar-produto', icon: <Camera size={15} strokeWidth={1.8} />, authRequired: true },
     { label: 'Meus Pedidos', path: '/meus-pedidos', icon: <Package size={15} strokeWidth={1.8} />, authRequired: true },
-    { label: 'Minhas Vendas', path: '/minhas-vendas', icon: <Tag size={15} strokeWidth={1.8} />, authRequired: true },
-    { label: 'Minha Carteira', path: '/carteira', icon: <Wallet size={15} strokeWidth={1.8} />, authRequired: true },
+    ...(temAnuncios ? [
+      { label: 'Minhas Vendas', path: '/minhas-vendas', icon: <Tag size={15} strokeWidth={1.8} />, authRequired: true },
+      { label: 'Minha Carteira', path: '/carteira', icon: <Wallet size={15} strokeWidth={1.8} />, authRequired: true },
+    ] : []),
     { label: 'Meus Favoritos', path: '/favoritos', icon: <Heart size={15} strokeWidth={1.8} />, authRequired: true },
     { label: 'Sobre Nós', path: '/sobre-nos', icon: null },
     { label: 'Fale Conosco', path: '/fale-conosco', icon: null },

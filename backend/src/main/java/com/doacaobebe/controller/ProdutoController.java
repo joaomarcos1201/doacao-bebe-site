@@ -113,6 +113,27 @@ public class ProdutoController {
         );
     }
 
+    @GetMapping("/meus")
+    public ResponseEntity<?> meusAnuncios(@RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            String email = jwtService.extractEmail(token);
+
+            Usuario usuario = usuarioRepository.findByEmail(email)
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+
+            long totalAnuncios = produtoRepository.countByVendedorId(usuario.getId());
+            boolean jaAnunciou = totalAnuncios > 0;
+
+            return ResponseEntity.ok(java.util.Map.of(
+                    "totalAnuncios", totalAnuncios,
+                    "jaAnunciou", jaAnunciou
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erro ao consultar anúncios do usuário: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         return produtoRepository.findById(id)

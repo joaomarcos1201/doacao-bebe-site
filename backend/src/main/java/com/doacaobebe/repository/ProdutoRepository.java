@@ -13,6 +13,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
     List<Produto> findByStatusAnuncio(String statusAnuncio);
     List<Produto> findByStatusAnuncioOrderByDataAnuncioDesc(String statusAnuncio);
     List<Produto> findByStatusAnuncioInAndStatusVisibilidadeNotOrderByDataAnuncioDesc(List<String> statusAnuncio, String statusVisibilidade);
+    long countByVendedorId(Integer vendedorId);
 
     // statusAnuncio = parâmetro, statusVisibilidade != parâmetro, ordena por dataAnuncio desc
     List<Produto> findByStatusAnuncioAndStatusVisibilidadeNotOrderByDataAnuncioDesc(String statusAnuncio, String statusVisibilidade);

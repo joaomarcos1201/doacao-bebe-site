@@ -31,7 +31,7 @@ const ETAPA_META = [
   { Icon: ClipboardCheck, titulo: 'Revisão do anúncio', sub: 'Confira tudo antes de publicar' },
 ];
 
-export default function CadastrarProduto() {
+export default function CadastrarProduto({ onProdutoCadastrado }) {
   const { isDark } = useTheme();
   const navigate = useNavigate();
 
@@ -98,8 +98,14 @@ export default function CadastrarProduto() {
         body: fd,
       });
 
-      if (r.ok) setSucesso(true);
-      else { const msg = await r.text(); setErro(msg || 'Erro ao cadastrar produto.'); }
+      if (r.ok) {
+        try {
+          await onProdutoCadastrado?.();
+        } catch {
+          // mantém o fluxo de sucesso mesmo se a atualização do menu falhar
+        }
+        setSucesso(true);
+      } else { const msg = await r.text(); setErro(msg || 'Erro ao cadastrar produto.'); }
     } catch { setErro('Erro de conexão. Tente novamente.'); }
     finally { setLoading(false); }
   };

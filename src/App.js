@@ -33,6 +33,7 @@ import './styles/global.css';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [temAnuncios, setTemAnuncios] = useState(false);
 
   // Carregar usuário do backend ao iniciar
   useEffect(() => {
@@ -66,6 +67,24 @@ function App() {
     loadUser();
   }, []);
 
+  useEffect(() => {
+    const carregarResumoAnuncios = async () => {
+      if (!user || !localStorage.getItem('token')) {
+        setTemAnuncios(false);
+        return;
+      }
+
+      try {
+        const resumo = await api.meusAnunciosResumo();
+        setTemAnuncios(Boolean(resumo?.jaAnunciou || Number(resumo?.totalAnuncios || 0) > 0));
+      } catch {
+        setTemAnuncios(false);
+      }
+    };
+
+    carregarResumoAnuncios();
+  }, [user]);
+
 
 
   if (loading) {
@@ -95,17 +114,17 @@ function App() {
               <Routes>
                 <Route path="/login" element={<Login setUser={setUser} />} />
                 <Route path="/cadastro" element={<Cadastro />} />
-                <Route path="/home" element={<Home user={user} setUser={setUser} />} />
+                <Route path="/home" element={<Home user={user} setUser={setUser} temAnuncios={temAnuncios} />} />
                 <Route path="/admin" element={user && (user.isAdmin || user.email === 'admin@alemdopositivo.com') ? <Admin /> : <Navigate to="/login" />} />
 
 
                 <Route path="/produto/:id" element={<DetalhesProduto />} />
-                <Route path="/perfil" element={user ? <Perfil user={user} setUser={setUser} /> : <Navigate to="/login" />} />
+                <Route path="/perfil" element={user ? <Perfil user={user} setUser={setUser} temAnuncios={temAnuncios} /> : <Navigate to="/login" />} />
 
                 <Route path="/checkout" element={user ? <Checkout /> : <Navigate to="/login" />} />
                 <Route path="/meus-pedidos" element={user ? <MeusPedidos /> : <Navigate to="/login" />} />
                 <Route path="/minhas-vendas" element={user ? <MinhasVendas /> : <Navigate to="/login" />} />
-                <Route path="/cadastrar-produto" element={user ? <CadastrarProduto /> : <Navigate to="/login" />} />
+                <Route path="/cadastrar-produto" element={user ? <CadastrarProduto onProdutoCadastrado={() => { api.meusAnunciosResumo().then(resumo => setTemAnuncios(Boolean(resumo?.jaAnunciou || Number(resumo?.totalAnuncios || 0) > 0))).catch(() => setTemAnuncios(false)); }} /> : <Navigate to="/login" />} />
                 <Route path="/carteira" element={user ? <Carteira /> : <Navigate to="/login" />} />
                 <Route path="/favoritos" element={user ? <Favoritos /> : <Navigate to="/login" />} />
 
