@@ -48,6 +48,10 @@ public class PedidoService {
         Usuario comprador = usuarioRepository.findById(compradorId)
                 .orElseThrow(() -> new IllegalArgumentException("Comprador não encontrado."));
 
+        if (comprador.getId().equals(produto.getVendedor().getId())) {
+            throw new IllegalStateException("Você não pode comprar seu próprio produto.");
+        }
+
         BigDecimal valorFrete = freteService.calcularFrete(produto, request.getCepDestino());
         BigDecimal valorTotal = produto.getPreco().add(valorFrete);
 
