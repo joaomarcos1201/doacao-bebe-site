@@ -50,13 +50,18 @@ function Carteira() {
   };
 
   const simularPix = () => {
-    setPix({
-      tipoChave: 'CPF',
-      chavePix: '123.456.789-09',
+    setPix(prev => ({
+      ...prev,
+      chavePix: {
+        CPF: '123.456.789-09',
+        Email: 'usuario.demo@example.com',
+        Telefone: '(11) 99999-9999',
+        'Chave aleatória': 'a1b2c3d4-e5f6-4789-abcd-1234567890ab',
+      }[prev.tipoChave],
       nomeTitular: 'Usuário Demonstração',
       cpfTitular: '123.456.789-09',
-      valor: pix.valor || valorSaque || '',
-    });
+      valor: prev.valor || valorSaque || '',
+    }));
   };
 
   const confirmarSaque = async () => {
