@@ -437,12 +437,6 @@ function Admin() {
                   </div>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                     <span style={{ fontSize: '12px', fontWeight: '700', color: s.status === 'APROVADO' ? '#4caf50' : s.status === 'REJEITADO' ? '#ef4444' : '#ff9800' }}>{s.status}</span>
-                    {s.status === 'PENDENTE' && (
-                      <>
-                        <button onClick={async () => { await api.resolverSaque(s.id, true); api.todosSaques().then(setSaques); showSuccess('Saque aprovado!'); }} style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', backgroundColor: '#4caf50', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>Aprovar</button>
-                        <button onClick={async () => { await api.resolverSaque(s.id, false); api.todosSaques().then(setSaques); showSuccess('Saque rejeitado.'); }} style={{ padding: '6px 12px', borderRadius: '6px', border: 'none', backgroundColor: '#ef4444', color: 'white', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>Rejeitar</button>
-                      </>
-                    )}
                   </div>
                 </div>
               ))}

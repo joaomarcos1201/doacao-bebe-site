@@ -15,6 +15,14 @@ function Carteira() {
   const [loadingSaque, setLoadingSaque] = useState(false);
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState('');
+  const [modalAberto, setModalAberto] = useState(false);
+  const [pix, setPix] = useState({
+    tipoChave: 'CPF',
+    chavePix: '',
+    nomeTitular: '',
+    cpfTitular: '',
+    valor: '',
+  });
 
   const bg = isDark ? '#0f0f0f' : '#f9f5f6';
   const card = isDark ? '#141414' : '#fff';
@@ -31,18 +39,43 @@ function Carteira() {
       .finally(() => setLoading(false));
   }, []);
 
-  const solicitarSaque = async () => {
-    const valor = parseFloat(valorSaque);
+  const abrirModalSaque = () => {
+    setErro('');
+    setSucesso('');
+    setPix(prev => ({
+      ...prev,
+      valor: valorSaque || prev.valor || '',
+    }));
+    setModalAberto(true);
+  };
+
+  const simularPix = () => {
+    setPix({
+      tipoChave: 'CPF',
+      chavePix: '123.456.789-09',
+      nomeTitular: 'Usuário Demonstração',
+      cpfTitular: '123.456.789-09',
+      valor: pix.valor || valorSaque || '',
+    });
+  };
+
+  const confirmarSaque = async () => {
+    const valor = parseFloat(pix.valor);
     if (!valor || valor <= 0) { setErro('Informe um valor válido.'); return; }
     if (valor > carteira?.saldoLiberado) { setErro('Saldo liberado insuficiente.'); return; }
     setLoadingSaque(true); setErro(''); setSucesso('');
     try {
       await api.solicitarSaque(valor);
-      setSucesso('Saque solicitado com sucesso!');
+      setSucesso('Saldo retirado com sucesso');
       setValorSaque('');
+      setModalAberto(false);
+      setPix({ tipoChave: 'CPF', chavePix: '', nomeTitular: '', cpfTitular: '', valor: '' });
       const [c, s] = await Promise.all([api.carteira(), api.meusSaques()]);
-      setCarteira(c); setSaques(s);
-    } catch { setErro('Erro ao solicitar saque.'); }
+      const h = await api.historicoCarteira();
+      setCarteira(c); setSaques(s); setHistorico(Array.isArray(h) ? h : []);
+    } catch (e) {
+      setErro(e?.message || 'Erro ao solicitar saque.');
+    }
     finally { setLoadingSaque(false); }
   };
 
@@ -90,7 +123,7 @@ function Carteira() {
 
             {/* Solicitar saque */}
             <div style={{ backgroundColor: card, borderRadius: '16px', border: `1px solid ${border}`, padding: '20px', marginBottom: '24px' }}>
-              <h3 style={{ fontSize: '15px', fontWeight: '700', color: text, margin: '0 0 14px' }}>💸 Solicitar Saque</h3>
+              <h3 style={{ fontSize: '15px', fontWeight: '700', color: text, margin: '0 0 14px' }}>💸 Sacar</h3>
               <p style={{ fontSize: '13px', color: sub, margin: '0 0 12px' }}>Disponível: <strong style={{ color: '#4caf50' }}>{formatBRL(carteira?.saldoLiberado)}</strong></p>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <input
@@ -100,10 +133,10 @@ function Carteira() {
                   placeholder="R$ 0,00"
                   style={{ flex: 1, padding: '12px 14px', borderRadius: '10px', fontSize: '14px', border: `1px solid ${border}`, backgroundColor: isDark ? '#1a1a1a' : '#f9f5f6', color: text, outline: 'none' }}
                 />
-                <button onClick={solicitarSaque} disabled={loadingSaque} style={{
+                <button onClick={abrirModalSaque} disabled={loadingSaque} style={{
                   padding: '12px 20px', borderRadius: '10px', border: 'none',
                   backgroundColor: '#4caf50', color: 'white', fontSize: '14px', fontWeight: '700', cursor: 'pointer', whiteSpace: 'nowrap'
-                }}>{loadingSaque ? '...' : 'Solicitar'}</button>
+                }}>{loadingSaque ? '...' : 'Sacar'}</button>
               </div>
               {erro && <p style={{ color: '#ef4444', fontSize: '13px', marginTop: '8px' }}>{erro}</p>}
               {sucesso && <p style={{ color: '#4caf50', fontSize: '13px', marginTop: '8px' }}>{sucesso}</p>}
@@ -162,6 +195,55 @@ function Carteira() {
           </>
         )}
       </div>
+
+      {modalAberto && (
+        <div style={{
+          position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.55)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', zIndex: 1000
+        }}>
+          <div style={{
+            width: '100%', maxWidth: '520px', backgroundColor: card, borderRadius: '18px',
+            border: `1px solid ${border}`, padding: '22px'
+          }}>
+            <h3 style={{ margin: '0 0 6px', color: text, fontSize: '18px' }}>Saque via PIX simulado</h3>
+            <p style={{ margin: '0 0 18px', color: sub, fontSize: '13px' }}>Os dados abaixo são apenas para demonstração.</p>
+
+            <div style={{ display: 'grid', gap: '12px' }}>
+              <label style={{ color: text, fontSize: '13px', fontWeight: 600 }}>
+                Tipo da chave PIX
+                <select value={pix.tipoChave} onChange={e => setPix(prev => ({ ...prev, tipoChave: e.target.value }))} style={{ width: '100%', marginTop: '6px', padding: '11px 12px', borderRadius: '10px', border: `1px solid ${border}`, backgroundColor: isDark ? '#1a1a1a' : '#f9f5f6', color: text }}>
+                  <option>CPF</option>
+                  <option>Email</option>
+                  <option>Telefone</option>
+                  <option>Chave aleatória</option>
+                </select>
+              </label>
+              <label style={{ color: text, fontSize: '13px', fontWeight: 600 }}>
+                Chave PIX
+                <input value={pix.chavePix} onChange={e => setPix(prev => ({ ...prev, chavePix: e.target.value }))} style={{ width: '100%', marginTop: '6px', padding: '11px 12px', borderRadius: '10px', border: `1px solid ${border}`, backgroundColor: isDark ? '#1a1a1a' : '#f9f5f6', color: text }} />
+              </label>
+              <label style={{ color: text, fontSize: '13px', fontWeight: 600 }}>
+                Nome do titular
+                <input value={pix.nomeTitular} onChange={e => setPix(prev => ({ ...prev, nomeTitular: e.target.value }))} style={{ width: '100%', marginTop: '6px', padding: '11px 12px', borderRadius: '10px', border: `1px solid ${border}`, backgroundColor: isDark ? '#1a1a1a' : '#f9f5f6', color: text }} />
+              </label>
+              <label style={{ color: text, fontSize: '13px', fontWeight: 600 }}>
+                CPF do titular
+                <input value={pix.cpfTitular} onChange={e => setPix(prev => ({ ...prev, cpfTitular: e.target.value }))} style={{ width: '100%', marginTop: '6px', padding: '11px 12px', borderRadius: '10px', border: `1px solid ${border}`, backgroundColor: isDark ? '#1a1a1a' : '#f9f5f6', color: text }} />
+              </label>
+              <label style={{ color: text, fontSize: '13px', fontWeight: 600 }}>
+                Valor do saque
+                <input type="number" min="0" step="0.01" value={pix.valor} onChange={e => setPix(prev => ({ ...prev, valor: e.target.value }))} style={{ width: '100%', marginTop: '6px', padding: '11px 12px', borderRadius: '10px', border: `1px solid ${border}`, backgroundColor: isDark ? '#1a1a1a' : '#f9f5f6', color: text }} />
+              </label>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', marginTop: '18px', flexWrap: 'wrap' }}>
+              <button onClick={simularPix} type="button" style={{ padding: '11px 14px', borderRadius: '10px', border: `1px solid ${border}`, backgroundColor: 'transparent', color: text, cursor: 'pointer', fontWeight: 700 }}>🧪 Simular dados PIX</button>
+              <button onClick={() => setModalAberto(false)} type="button" style={{ padding: '11px 14px', borderRadius: '10px', border: `1px solid ${border}`, backgroundColor: 'transparent', color: sub, cursor: 'pointer', fontWeight: 700 }}>Cancelar</button>
+              <button onClick={confirmarSaque} disabled={loadingSaque} type="button" style={{ padding: '11px 14px', borderRadius: '10px', border: 'none', backgroundColor: '#4caf50', color: 'white', cursor: loadingSaque ? 'not-allowed' : 'pointer', fontWeight: 700, opacity: loadingSaque ? 0.75 : 1 }}>{loadingSaque ? 'Processando...' : 'Confirmar Saque'}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

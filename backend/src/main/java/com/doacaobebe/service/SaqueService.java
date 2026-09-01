@@ -29,6 +29,10 @@ public class SaqueService {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
+        if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Informe um valor de saque maior que zero.");
+        }
+
         var carteira = carteiraService.obterCarteira(usuario);
         if (carteira.getSaldoLiberado().compareTo(valor) < 0) {
             throw new IllegalArgumentException("Saldo insuficiente para saque.");
@@ -37,6 +41,11 @@ public class SaqueService {
         Saque saque = new Saque();
         saque.setUsuario(usuario);
         saque.setValor(valor);
+
+        carteiraService.descontarSaque(usuario, valor);
+
+        saque.setStatus("APROVADO");
+        saque.setDataResolucao(LocalDateTime.now());
         return saqueRepository.save(saque);
     }
 
