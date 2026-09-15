@@ -35,22 +35,30 @@ function SobreNos() {
             Além do Positivo
           </h1>
           <p style={{ fontSize: '16px', color: isDark ? '#777' : '#999', margin: 0 }}>
-            Conectando famílias através da solidariedade
+            Conectando pessoas para comprar e vender
           </p>
         </div>
 
         {[
           {
-            title: 'Nossa História',
-            content: 'O Além do Positivo nasceu da necessidade de conectar famílias que precisam de apoio durante a gravidez e primeiros anos de vida do bebê com pessoas dispostas a ajudar através de doações. Fundado em 2024, nosso projeto surgiu da observação de que muitas famílias enfrentam dificuldades para adquirir itens essenciais para bebês, enquanto outras possuem produtos em bom estado que não utilizam mais.'
+            title: 'Sobre o Além do Positivo',
+            content: 'O Além do Positivo é um marketplace que conecta pessoas interessadas em comprar e vender produtos. Aqui, vendedores cadastram seus anúncios e compradores encontram produtos, consultam seus detalhes e realizam compras pela plataforma.'
           },
           {
             title: 'Nosso Objetivo',
-            content: 'Criar uma ponte solidária entre quem pode doar e quem precisa receber, promovendo solidariedade comunitária, sustentabilidade e apoio à maternidade. Acreditamos que pequenos gestos podem transformar vidas.'
+            content: 'Facilitar a conexão entre compradores e vendedores com uma experiência simples e organizada. Reunimos a descoberta de produtos, a compra e o acompanhamento de pedidos e vendas em um só lugar, com informações para cada etapa.'
           },
           {
-            title: 'Nossa Visão',
-            content: 'Queremos ser a plataforma de referência para doações de itens infantis, criando uma comunidade onde a generosidade e a gratidão caminham juntas, construindo um futuro melhor para nossas crianças.'
+            title: 'Recursos para Comprar',
+            content: 'Explore os produtos disponíveis, veja fotos, descrições e preços na página de cada produto e salve seus interesses nos favoritos. No checkout, informe o CEP, consulte os valores e as opções de frete, escolha a entrega e prossiga para o pagamento PIX. Em Meus Pedidos, consulte suas compras e acompanhe os status de pagamento e envio registrados na plataforma.'
+          },
+          {
+            title: 'Recursos para Vender',
+            content: 'Cadastre produtos com fotos, descrição e preço e envie o anúncio para análise administrativa. Em Minhas Vendas, consulte as vendas realizadas e seus status de pagamento e entrega. A carteira do vendedor reúne os saldos retido e liberado, o histórico de movimentações e as solicitações de saque.'
+          },
+          {
+            title: 'Uma Plataforma em Desenvolvimento',
+            content: 'Este marketplace faz parte de um Trabalho de Conclusão de Curso (TCC). Os fluxos de PIX, frete e entrega incluem simulações para demonstrar o funcionamento da plataforma. Os valores, prazos e status apresentados nesse ambiente não devem ser interpretados como confirmação de serviços reais de pagamento ou transporte.'
           }
         ].map(({ title, content }) => (
           <div key={title} style={{
@@ -67,11 +75,14 @@ function SobreNos() {
           border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, marginBottom: '32px'
         }}>
           <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#c0606a', margin: '0 0 20px' }}>Como Funciona</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(180px, 100%), 1fr))', gap: '16px' }}>
             {[
-              { n: '1', title: 'Doar', desc: 'Cadastre produtos que não usa mais' },
-              { n: '2', title: 'Buscar', desc: 'Encontre produtos que precisa' },
-              { n: '3', title: 'Conectar', desc: 'Fale com o doador via WhatsApp' },
+              { n: '1', title: 'Anuncie', desc: 'Cadastre fotos, descrição e preço do produto.' },
+              { n: '2', title: 'Aguarde a análise', desc: 'A administração revisa o anúncio antes de disponibilizá-lo para compra.' },
+              { n: '3', title: 'Encontre produtos', desc: 'Explore os anúncios, consulte os detalhes e salve seus favoritos.' },
+              { n: '4', title: 'Faça a compra', desc: 'No checkout, consulte e escolha o frete antes de gerar o PIX no fluxo do projeto.' },
+              { n: '5', title: 'Acompanhe o pedido', desc: 'Em Meus Pedidos, veja os status de pagamento e as etapas de entrega registradas.' },
+              { n: '6', title: 'Consulte suas vendas', desc: 'Veja os status em Minhas Vendas e os saldos e movimentações na carteira.' },
             ].map(({ n, title, desc }) => (
               <div key={n} style={{
                 padding: '20px', borderRadius: '12px', textAlign: 'center',
