@@ -1,10 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Shirt, BedDouble, MoreHorizontal, ShoppingBag, Puzzle, Heart, ChevronRight, ChevronLeft, Baby, Droplets, Footprints, Armchair, Milk, Camera, Package, Tag, Wallet, User } from 'lucide-react';
-import { useProdutos } from '../context/ProdutosContext';
 import { useTheme } from '../context/ThemeContext';
 import CardProduto from '../components/CardProduto';
-import { api } from '../config/api';
+import { api, API_URL } from '../config/api';
 
 const SECOES_CATEGORIAS = [
   { id: 'roupas-gestante', label: 'Roupas para Gestantes',    icone: Shirt,         valores: ['roupas gestante', 'roupa gestante', 'roupas para gestante'] },
@@ -21,7 +20,32 @@ const SECOES_CATEGORIAS = [
 
 function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
   const navigate = useNavigate();
-  const { produtos } = useProdutos();
+  const [produtos, setProdutos] = useState([]);
+  React.useEffect(() => {
+    let active = true;
+    let request = 0;
+    const carregar = async () => {
+      const current = ++request;
+      try {
+        const response = await fetch(`${API_URL}/api/products`, { cache: 'no-store' });
+        if (!response.ok) throw new Error('Falha ao carregar produtos');
+        const data = await response.json();
+        if (active && current === request) setProdutos(data);
+      } catch (error) {
+        if (active && current === request) setProdutos([]);
+        console.error(error);
+      }
+    };
+    const aoRetornar = () => { if (!document.hidden) carregar(); };
+    carregar();
+    window.addEventListener('focus', aoRetornar);
+    document.addEventListener('visibilitychange', aoRetornar);
+    return () => {
+      active = false;
+      window.removeEventListener('focus', aoRetornar);
+      document.removeEventListener('visibilitychange', aoRetornar);
+    };
+  }, []);
   const { theme, isDark, toggleTheme } = useTheme();
   const [pesquisa, setPesquisa] = useState('');
   const [categoriaFiltro, setCategoriaFiltro] = useState('');

@@ -149,6 +149,7 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}/status")
+    @org.springframework.transaction.annotation.Transactional
     public ResponseEntity<String> alterarStatus(
             @PathVariable Integer id,
             @RequestParam String status,
@@ -168,12 +169,15 @@ public class ProdutoController {
             return ResponseEntity.status(401).body("Token inválido.");
         }
 
-        Produto produto = produtoRepository.findById(id).orElse(null);
+        Produto produto = produtoRepository.buscarParaCompra(id).orElse(null);
 
         if (produto == null) {
             return ResponseEntity.notFound().build();
         }
 
+        if ("VENDIDO".equals(produto.getStatusAnuncio())) {
+            return ResponseEntity.badRequest().body("Produto vendido não pode ser republicado ou reclassificado.");
+        }
         produto.setStatusAnuncio(normalizarStatus(status));
         produtoRepository.save(produto);
 

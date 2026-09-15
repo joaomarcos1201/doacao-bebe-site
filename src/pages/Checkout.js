@@ -56,7 +56,7 @@ function Checkout() {
       const data = await api.checkout(produto.id, cep.replace(/\D/g, ''));
       if (data.pedidoId) { setCheckout(data); setEtapa('pix'); }
       else setErro(data.message || 'Erro ao processar compra.');
-    } catch { setErro('Erro ao processar compra. Tente novamente.'); }
+    } catch (e) { setErro(e.message || 'Erro ao processar compra. Tente novamente.'); }
     finally { setLoading(false); }
   };
 

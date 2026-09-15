@@ -10,6 +10,9 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Produto p WHERE p.id = :id")
+    java.util.Optional<Produto> buscarParaCompra(@Param("id") Integer id);
     List<Produto> findByStatusAnuncio(String statusAnuncio);
     List<Produto> findByStatusAnuncioOrderByDataAnuncioDesc(String statusAnuncio);
     List<Produto> findByStatusAnuncioInAndStatusVisibilidadeNotOrderByDataAnuncioDesc(List<String> statusAnuncio, String statusVisibilidade);

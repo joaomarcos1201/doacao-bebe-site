@@ -46,11 +46,15 @@ function DetalhesProduto() {
   const sub = isDark ? '#666' : '#9CA3AF';
 
   useEffect(() => {
-    fetch(`${API_URL}/api/products/${id}`)
+    let active = true;
+    const carregar = () => fetch(`${API_URL}/api/products/${id}`, { cache: 'no-store' })
       .then(r => r.ok ? r.json() : null)
-      .then(setProduto)
+      .then(data => { if (active) setProduto(data); })
       .catch(() => {})
-      .finally(() => setLoading(false));
+      .finally(() => { if (active) setLoading(false); });
+    carregar();
+    window.addEventListener('focus', carregar);
+    return () => { active = false; window.removeEventListener('focus', carregar); };
   }, [id]);
 
   const calcularFrete = useCallback(async () => {
@@ -79,7 +83,8 @@ function DetalhesProduto() {
     produto?.foto3 ? `data:image/jpeg;base64,${produto.foto3}` : null,
     produto?.foto4 ? `data:image/jpeg;base64,${produto.foto4}` : null,
   ].filter(Boolean);
-  const disponivel = produto && ['ATIVO', 'DISPONIVEL', 'APROVADO'].includes((produto.statusAnuncio || '').toUpperCase());
+  const disponivel = produto && produto.statusVisibilidade !== 'REMOVIDO'
+    && ['ATIVO', 'DISPONIVEL', 'APROVADO'].includes((produto.statusAnuncio || '').toUpperCase());
 
   const Nav = () => (
     <nav style={{

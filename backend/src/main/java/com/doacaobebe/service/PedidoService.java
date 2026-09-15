@@ -14,6 +14,8 @@ import java.util.List;
 
 @Service
 public class PedidoService {
+    @jakarta.persistence.PersistenceContext
+    private jakarta.persistence.EntityManager entityManager;
 
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -38,11 +40,12 @@ public class PedidoService {
 
     @Transactional
     public CheckoutResponse iniciarCheckout(CheckoutRequest request, Integer compradorId) {
-        Produto produto = produtoRepository.findById(request.getProdutoId())
+        Produto produto = produtoRepository.buscarParaCompra(request.getProdutoId())
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado."));
+        entityManager.refresh(produto, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
 
         if (!isDisponivelParaCompra(produto)) {
-            throw new IllegalStateException("Produto não está disponível para compra.");
+            throw new IllegalStateException("Este produto não está mais disponível para compra.");
         }
 
         Usuario comprador = usuarioRepository.findById(compradorId)
@@ -97,15 +100,28 @@ public class PedidoService {
         Pagamento pagamento = pagamentoRepository.findByMercadoPagoId(mercadoPagoId)
                 .orElseThrow(() -> new IllegalArgumentException("Pagamento não encontrado: " + mercadoPagoId));
 
+        // Serializa notificações repetidas, inclusive objetos já carregados pelo controller.
+        entityManager.refresh(pagamento, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
+        if ("APROVADO".equals(pagamento.getStatus())) return;
+
+        Pedido pedido = pagamento.getPedido();
+        entityManager.refresh(pedido, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
+        if (!"PENDENTE".equals(pagamento.getStatus()) || !"PENDENTE".equals(pedido.getStatusPagamento())) {
+            throw new IllegalStateException("Pagamento ou pedido não está pendente.");
+        }
+        Produto produto = produtoRepository.buscarParaCompra(pedido.getProduto().getId()).orElseThrow();
+        entityManager.refresh(produto, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
+        if (!isDisponivelParaCompra(produto)) {
+            throw new IllegalStateException("Este produto não está mais disponível para compra.");
+        }
+
         pagamento.setStatus("APROVADO");
         pagamentoRepository.save(pagamento);
 
-        Pedido pedido = pagamento.getPedido();
         pedido.setStatusPagamento("APROVADO");
 
-        // Reserva produto
-        Produto produto = pedido.getProduto();
-        produto.setStatusAnuncio("RESERVADO");
+        // A venda acontece na aprovação; o histórico permanece associado ao pedido.
+        produto.setStatusAnuncio("VENDIDO");
         produtoRepository.save(produto);
 
         // Retém saldo na carteira do vendedor
@@ -120,6 +136,7 @@ public class PedidoService {
     @Transactional
     public void processarPagamentoRejeitadoOuCancelado(String mercadoPagoId, String status) {
         pagamentoRepository.findByMercadoPagoId(mercadoPagoId).ifPresent(pagamento -> {
+            entityManager.refresh(pagamento, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
             pagamento.setStatus(status.toUpperCase());
             pagamentoRepository.save(pagamento);
 
@@ -177,6 +194,7 @@ public class PedidoService {
     @Transactional
     public Pedido cancelarPedido(Long id, Integer compradorId) {
         Pedido pedido = buscarPorId(id);
+        entityManager.refresh(pedido, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
 
         if (!pedido.getComprador().getId().equals(compradorId)) {
             throw new SecurityException("Pedido não pertence ao usuário autenticado.");
@@ -199,7 +217,9 @@ public class PedidoService {
         }
 
         Produto produto = pedido.getProduto();
-        if (produto != null && "RESERVADO".equalsIgnoreCase(produto.getStatusAnuncio())) {
+        if (produto != null) entityManager.refresh(produto, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
+        if (produto != null && "RESERVADO".equalsIgnoreCase(produto.getStatusAnuncio())
+                && "APROVADO".equalsIgnoreCase(statusPagamento)) {
             produto.setStatusAnuncio("DISPONIVEL");
             produtoRepository.save(produto);
         }
@@ -209,7 +229,8 @@ public class PedidoService {
 
     private boolean isDisponivelParaCompra(Produto produto) {
         String status = produto.getStatusAnuncio();
-        return "DISPONIVEL".equals(status) || "ATIVO".equals(status) || "APROVADO".equals(status);
+        return !"REMOVIDO".equalsIgnoreCase(produto.getStatusVisibilidade())
+                && ("DISPONIVEL".equals(status) || "ATIVO".equals(status) || "APROVADO".equals(status));
     }
 
     private boolean pedidoVisivelParaComprador(Pedido pedido) {

@@ -101,7 +101,7 @@ function Admin() {
   const produtosPendentes = produtos.filter(p => p.statusAnuncio === 'EM_ANALISE' || p.statusAnuncio === 'INATIVO');
 
 
-  const produtosAprovados = produtos.filter(p => ['ATIVO', 'DISPONIVEL', 'APROVADO'].includes(p.statusAnuncio));
+  const produtosAprovados = produtos.filter(p => ['ATIVO', 'DISPONIVEL', 'APROVADO', 'RESERVADO', 'VENDIDO'].includes(p.statusAnuncio));
 
   useEffect(() => {
     carregarUsuarios();
@@ -506,7 +506,7 @@ function Admin() {
               border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, overflow: 'hidden'
             }}>
               <div style={{ padding: '20px 24px', borderBottom: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
-                <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: 0 }}>Produtos Aprovados ({produtosAprovados.length})</h2>
+                <h2 style={{ fontSize: '16px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: 0 }}>Produtos aprovados e vendas ({produtosAprovados.length})</h2>
               </div>
               <div style={{ padding: '20px' }}>
                 {produtosAprovados.length === 0 ? (
@@ -523,6 +523,8 @@ function Admin() {
                         <div>
                           <span style={{ fontSize: '14px', fontWeight: '600', color: isDark ? '#e0e0e0' : '#333' }}>{p.nome}</span>
                           <span style={{ fontSize: '12px', color: isDark ? '#666' : '#aaa', marginLeft: '8px' }}>{p.categoria}</span>
+                          <span style={{ marginLeft: '8px', fontSize: '12px' }}>{p.statusAnuncio}</span>
+                          <button onClick={() => setProdutoModal(p)} style={{ marginLeft: '8px' }}>Ver detalhes</button>
                         </div>
                         <button onClick={() => showConfirm('Remover Produto', 'Tem certeza?', async () => {
                           await removerProduto(p.id);
@@ -618,7 +620,7 @@ function Admin() {
               {/* Header */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                 <div>
-                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#ff9800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>⏳ Em Análise</span>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: '#ff9800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>{p.statusAnuncio}</span>
                   <h2 style={{ fontSize: '17px', fontWeight: '800', color: isDark ? '#e0e0e0' : '#333', margin: '4px 0 0' }}>#{p.id} — {p.nome}</h2>
                 </div>
                 <button onClick={() => setProdutoModal(null)} style={{ width: '32px', height: '32px', borderRadius: '50%', border: `1px solid ${isDark ? '#333' : '#e8d0d4'}`, backgroundColor: 'transparent', cursor: 'pointer', fontSize: '16px', color: isDark ? '#aaa' : '#888', flexShrink: 0 }}>✕</button>
@@ -658,6 +660,7 @@ function Admin() {
               {row('CPF do anúncio', ni(p.cpf))}
 
               {/* DECISÃO */}
+              {p.statusAnuncio === 'EM_ANALISE' && <>
               {secTitle('Decisão Administrativa')}
               <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
                 <button
@@ -669,6 +672,7 @@ function Admin() {
                   style={{ flex: 1, padding: '13px', borderRadius: '10px', border: 'none', backgroundColor: '#4caf50', color: 'white', fontSize: '14px', fontWeight: '700', cursor: 'pointer' }}
                 >✓ Aprovar Produto</button>
               </div>
+              </>}
             </div>
           </div>
         );
