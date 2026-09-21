@@ -20,7 +20,7 @@ export const ProdutosProvider = ({ children }) => {
 
   const carregarProdutos = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products/todos`);
+      const response = await fetch(`${API_URL}/api/products/todos`, { cache: 'no-store' });
       if (response.ok) {
         const data = await response.json();
         setProdutos(data);
@@ -68,16 +68,15 @@ export const ProdutosProvider = ({ children }) => {
   };
 
   const removerProduto = async (produtoId) => {
-    try {
-      const response = await fetch(`${API_URL}/api/products/${produtoId}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        carregarProdutos();
-      }
-    } catch (error) {
-      console.error('Erro ao remover produto:', error);
+    const response = await fetch(`${API_URL}/api/products/${produtoId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    });
+    if (!response.ok) {
+      throw new Error(await response.text() || `Erro HTTP ${response.status}`);
     }
+    setProdutos(atuais => atuais.filter(produto => produto.id !== produtoId));
+    await carregarProdutos();
   };
 
   return (

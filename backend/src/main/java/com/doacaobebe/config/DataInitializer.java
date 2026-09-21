@@ -34,24 +34,18 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         try {
-            Integer countProduto = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM Anuncio WHERE nome = 'Roupas de Bebe'", Integer.class);
-            if (countProduto == null || countProduto == 0) {
-                jdbcTemplate.update(
-                    "INSERT INTO Anuncio (nome, descricao, categoria, estado, contato, cpf, doador, statusAnuncio, dataAnuncio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, GETDATE())",
-                    "Roupas de Bebe",
-                    "Conjunto de roupas para bebê de 0 a 3 meses. Inclui bodies, macacões e meias. Peças em ótimo estado, lavadas e passadas.",
-                    "roupas",
-                    "seminovo",
-                    "(11) 99999-0000",
-                    "000.000.000-00",
-                    "Gustavo",
-                    "ATIVO"
-                );
-                System.out.println("✅ Produto 'Roupas de Bebe' inserido com sucesso!");
-            }
+            jdbcTemplate.update(
+                "UPDATE Anuncio SET statusVisibilidade = 'REMOVIDO' " +
+                "WHERE nome = ? AND descricao = ? AND categoria = ? AND estado = ? " +
+                "AND contato = ? AND cpf = ? AND doador = ? AND vendedor_id IS NULL " +
+                "AND preco IS NULL AND statusAnuncio = 'ATIVO' " +
+                "AND (statusVisibilidade IS NULL OR statusVisibilidade <> 'REMOVIDO')",
+                "Roupas de Bebe",
+                "Conjunto de roupas para bebê de 0 a 3 meses. Inclui bodies, macacões e meias. Peças em ótimo estado, lavadas e passadas.",
+                "roupas", "seminovo", "(11) 99999-0000", "000.000.000-00", "Gustavo"
+            );
         } catch (Exception e) {
-            System.err.println("Erro ao inserir produto de roupas: " + e.getMessage());
+            System.err.println("Erro ao ocultar produto de exemplo: " + e.getMessage());
         }
 
     }

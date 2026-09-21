@@ -5,7 +5,6 @@ import com.doacaobebe.entity.Produto;
 import com.doacaobebe.entity.Usuario;
 import com.doacaobebe.repository.ProdutoRepository;
 import com.doacaobebe.repository.UsuarioRepository;
-import com.doacaobebe.repository.PedidoRepository;
 import com.doacaobebe.service.JwtService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,6 @@ public class ProdutoController {
 
     @Autowired
     private JwtService jwtService;
-
-    @Autowired
-    private PedidoRepository pedidoRepository;
 
     @PostMapping
     public ResponseEntity<?> cadastrarProduto(
@@ -214,30 +210,28 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> remover(@PathVariable Integer id) {
+    public ResponseEntity<String> remover(@PathVariable Integer id,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).build();
+        }
+        try {
+            String email = jwtService.extractEmail(authHeader.substring(7));
+            Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
+            if (usuario == null || !Boolean.TRUE.equals(usuario.getIsAdmin())) {
+                return ResponseEntity.status(403).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(401).build();
+        }
 
-        boolean existe = produtoRepository.existsById(id);
-
-        if (!existe) {
+        Produto produto = produtoRepository.findById(id).orElse(null);
+        if (produto == null) {
             return ResponseEntity.status(404).body("Produto não encontrado. ID=" + id);
         }
 
-        if (pedidoRepository.existsByProduto_Id(id)) {
-
-            Produto produto = produtoRepository.findById(id).orElse(null);
-
-            if (produto == null) {
-                return ResponseEntity.status(404).body("Produto não encontrado. ID=" + id);
-            }
-
-            produto.setStatusVisibilidade("REMOVIDO");
-            produtoRepository.save(produto);
-
-            return ResponseEntity.ok("Produto ocultado por possuir histórico de pedidos");
-        }
-
-        produtoRepository.deleteById(id);
-
+        produto.setStatusVisibilidade("REMOVIDO");
+        produtoRepository.save(produto);
         return ResponseEntity.ok("Produto removido com sucesso");
     }
 }

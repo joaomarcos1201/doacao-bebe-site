@@ -527,8 +527,12 @@ function Admin() {
                           <button onClick={() => setProdutoModal(p)} style={{ marginLeft: '8px' }}>Ver detalhes</button>
                         </div>
                         <button onClick={() => showConfirm('Remover Produto', 'Tem certeza?', async () => {
-                          await removerProduto(p.id);
-                          showSuccess('Produto removido!');
+                          try {
+                            await removerProduto(p.id);
+                            showSuccess('Produto removido!');
+                          } catch (error) {
+                            showError(error.message || 'Erro ao remover produto.');
+                          }
                         }, 'Remover', 'Cancelar')} style={{
                           padding: '6px 12px', borderRadius: '6px', border: '1px solid #ef4444',
                           backgroundColor: 'transparent', color: '#ef4444', fontSize: '12px', fontWeight: '600', cursor: 'pointer'
