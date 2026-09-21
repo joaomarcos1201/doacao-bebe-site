@@ -195,6 +195,24 @@ public class ProdutoController {
         return statusNormalizado;
     }
 
+    @PutMapping("/{id}/nome")
+    public ResponseEntity<String> alterarNome(
+            @PathVariable Integer id,
+            @RequestParam String nome,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) return ResponseEntity.status(401).body("Autenticação necessária.");
+        try {
+            String email = jwtService.extractEmail(authHeader.substring(7));
+            Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
+            if (usuario == null || !Boolean.TRUE.equals(usuario.getIsAdmin())) return ResponseEntity.status(403).body("Acesso negado.");
+        } catch (Exception e) { return ResponseEntity.status(401).body("Token inválido."); }
+        Produto produto = produtoRepository.findById(id).orElse(null);
+        if (produto == null) return ResponseEntity.notFound().build();
+        produto.setNome(nome);
+        produtoRepository.save(produto);
+        return ResponseEntity.ok("Nome atualizado.");
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> remover(@PathVariable Integer id) {
 
