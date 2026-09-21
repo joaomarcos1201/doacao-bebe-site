@@ -1,0 +1,11 @@
+Figura 4 – Inventário de funcionalidades confirmado no código
+
+Frontend: rotas para login, cadastro, perfil, catálogo, detalhes de produto,
+checkout, pedidos, vendas, cadastro de produto, carteira, favoritos e painel
+administrativo em src/App.js.
+
+Backend: controladores para autenticação, produtos, checkout, pedidos,
+favoritos, carteira, saques, frete, mensagens, administração e simulação em
+backend/src/main/java/com/doacaobebe/controller/.
+
+Aplicativo mobile: não foi localizado no diretório do projeto analisado.

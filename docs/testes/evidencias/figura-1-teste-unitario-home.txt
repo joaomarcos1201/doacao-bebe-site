@@ -1,0 +1,14 @@
+Figura 1 – Teste unitário da tela inicial
+
+Comando executado:
+npm test -- --watchAll=false --runInBand --verbose
+
+Resultado observado:
+PASS src/pages/Home.test.js
+Home consulta disponíveis e remove produto após atualizar ao receber foco
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+
+Observação: o console apresentou aviso de depreciação de ReactDOMTestUtils.act,
+sem falha da suíte.

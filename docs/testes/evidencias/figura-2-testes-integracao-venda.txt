@@ -1,0 +1,16 @@
+Figura 2 – Testes de integração de venda
+
+Comando executado:
+mvn test
+
+Relatório Surefire gerado:
+backend/target/surefire-reports/com.doacaobebe.service.VendaIntegrationTest.txt
+
+Resultado observado:
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+
+Cobertura observada no teste existente:
+- fluxo de checkout, pagamento simulado, entrega, carteira e histórico;
+- concorrência de duas aprovações de pagamento;
+- cancelamento/estorno sem republicar venda;
+- pagamento rejeitado e impedimento de checkout de produto removido.

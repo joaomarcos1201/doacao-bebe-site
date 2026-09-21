@@ -206,6 +206,23 @@ public class UsuarioService {
         System.out.println("DEBUG: Senha atualizada com sucesso");
     }
 
+    @Transactional
+    public Usuario atualizarMeuNome(String emailAutenticado, String nome) {
+        String nomeLimpo = nome == null ? "" : nome.strip();
+        if (nomeLimpo.isBlank() || nomeLimpo.length() > 100) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.BAD_REQUEST, "Informe um nome de 1 a 100 caracteres.");
+        }
+        Usuario usuario = usuarioRepository.findByEmail(emailAutenticado)
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.UNAUTHORIZED, "Usuário não encontrado."));
+        if (!"ATIVO".equalsIgnoreCase(usuario.getStatusUsuario() == null ? "" : usuario.getStatusUsuario().trim())) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.FORBIDDEN, "Conta inativa.");
+        }
+        usuario.setNome(nomeLimpo);
+        return usuarioRepository.save(usuario);
+    }
     public Usuario atualizarDados(Integer id, Usuario usuarioAtualizado) {
         Usuario usuario = usuarioRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));

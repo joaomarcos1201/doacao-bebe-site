@@ -1,0 +1,17 @@
+Figura 3 – Inspeção de segurança da configuração de rotas
+
+Arquivo analisado:
+backend/src/main/java/com/doacaobebe/config/SecurityConfig.java
+
+Trecho identificado na cadeia de autorização:
+authorizeHttpRequests(auth -> auth
+    .anyRequest().permitAll()
+)
+
+Resultado observado:
+Todas as requisições são liberadas pela configuração global. Portanto, a
+autorização não exige autenticação nem papel administrativo nas rotas da API.
+
+Foram também identificadas rotas administrativas e de depuração em
+AuthController, como /api/auth/criar-admin, /api/auth/test-db e
+/api/auth/force-inactive/{email}.

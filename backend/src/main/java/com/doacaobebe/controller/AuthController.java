@@ -119,6 +119,30 @@ public class AuthController {
         }
     }
 
+    @PutMapping("/me")
+    public ResponseEntity<?> atualizarMeuNome(
+            @RequestHeader(value = "Authorization", required = false) String authorization,
+            @RequestBody Map<String, String> request) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Autenticação obrigatória.");
+        }
+        final String email;
+        try {
+            email = jwtService.extractEmail(authorization.substring(7));
+            if (email == null || email.isBlank()) {
+                return ResponseEntity.status(401).body("Sessão inválida ou expirada.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Sessão inválida ou expirada.");
+        }
+        try {
+            com.doacaobebe.entity.Usuario usuario = usuarioService.atualizarMeuNome(email, request.get("nome"));
+            return ResponseEntity.ok(Map.of("id", usuario.getId(), "nome", usuario.getNome(),
+                    "email", usuario.getEmail(), "isAdmin", usuario.getIsAdmin()));
+        } catch (org.springframework.web.server.ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        }
+    }
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
         System.out.println("*** CONTROLLER /me - CHAMADO ***");
