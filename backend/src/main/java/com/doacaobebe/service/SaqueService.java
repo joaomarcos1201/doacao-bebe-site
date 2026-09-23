@@ -54,6 +54,10 @@ public class SaqueService {
         Saque saque = saqueRepository.findById(saqueId)
                 .orElseThrow(() -> new IllegalArgumentException("Saque não encontrado."));
 
+        if (saque.getUsuario() == null) {
+            throw new IllegalStateException("Saque histórico de conta excluída não pode ser reprocessado.");
+        }
+
         saque.setStatus(aprovado ? "APROVADO" : "REJEITADO");
         saque.setDataResolucao(LocalDateTime.now());
 

@@ -24,13 +24,14 @@ import static org.mockito.Mockito.when;
     "spring.jpa.hibernate.ddl-auto=create-drop", "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
     "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect"
 })
-@Import({PedidoService.class, FreteService.class, CarteiraService.class, UsuarioService.class,
+@Import({PedidoService.class, FreteService.class, CarteiraService.class, UsuarioService.class, SaqueService.class,
     PagamentoProviderMock.class, FreteProviderMock.class, ProdutoController.class,
     SimulacaoController.class, AdminOrderController.class})
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class VendaIntegrationTest {
     @Autowired PedidoService service;
     @Autowired UsuarioService usuarioService;
+    @Autowired SaqueService saqueService;
     @MockBean org.springframework.security.crypto.password.PasswordEncoder encoder;
     @Autowired ProdutoRepository produtos;
     @Autowired UsuarioRepository usuarios;
@@ -132,21 +133,33 @@ class VendaIntegrationTest {
         assertThatThrownBy(this::checkout).isInstanceOf(IllegalStateException.class);
     }
 
-    @Test void desativarVendedorBloqueiaNovoCheckoutPreservandoPedidoEPagamentoPendentes() {
+    @Test void exclusaoNaoDescartaPedidoEPagamentoPendentes() {
         CheckoutResponse compra = checkout();
-        usuarioService.remover(vendedor.getId(), "Bearer test");
-        assertThatThrownBy(this::checkout).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> usuarioService.remover(vendedor.getId(), "Bearer test"))
+            .isInstanceOf(org.springframework.web.server.ResponseStatusException.class).hasMessageContaining("409");
+        assertThat(usuarios.existsById(vendedor.getId())).isTrue();
         assertThat(service.buscarPorId(compra.getPedidoId()).getStatusPagamento()).isEqualTo("PENDENTE");
         assertThat(pagamentos.findByMercadoPagoId(compra.getPagamentoId()).orElseThrow().getStatus()).isEqualTo("PENDENTE");
     }
 
-    @Test void desativarVendedorNaoImpedeEntregaELiberacaoAdministrativaDeVendaPaga() {
+    @Test void exclusaoAposEntregaLiberacaoESaquePreservaHistoricoDaVenda() {
         CheckoutResponse compra = checkout();
         service.processarPagamentoAprovado(compra.getPagamentoId());
-        usuarioService.remover(vendedor.getId(), "Bearer test");
+        assertThatThrownBy(() -> usuarioService.remover(vendedor.getId(), "Bearer test"))
+            .isInstanceOf(org.springframework.web.server.ResponseStatusException.class).hasMessageContaining("409");
         assertThat(simulacao.simularEntrega(compra.getPedidoId(), "Bearer test").getStatusCode().value()).isEqualTo(200);
         assertThat(admin.releasePayment(compra.getPedidoId(), "Bearer test").getStatusCode().value()).isEqualTo(200);
         assertThat(carteiras.findByUsuarioId(vendedor.getId()).orElseThrow().getSaldoLiberado()).isEqualByComparingTo("90");
         assertThat(pagamentos.findByMercadoPagoId(compra.getPagamentoId()).orElseThrow().getStatus()).isEqualTo("APROVADO");
+        Saque saque = saqueService.solicitarSaque(vendedor.getId(), new BigDecimal("90.00"));
+        usuarioService.remover(vendedor.getId(), "Bearer test");
+        assertThat(usuarios.existsById(vendedor.getId())).isFalse();
+        assertThat(service.buscarPorId(compra.getPedidoId()).getStatusPagamento()).isEqualTo("LIBERADO");
+        assertThat(pagamentos.findByMercadoPagoId(compra.getPagamentoId()).orElseThrow().getStatus()).isEqualTo("APROVADO");
+        assertThatThrownBy(() -> saqueService.resolverSaque(saque.getId(), true))
+            .isInstanceOf(IllegalStateException.class).hasMessageContaining("histórico");
+        assertThat(admin.releasePayment(compra.getPedidoId(), "Bearer test").getStatusCode().value()).isEqualTo(409);
+        service.atualizarRastreamento(service.buscarPorId(compra.getPedidoId()).getCodigoRastreio(), "ENTREGUE");
+        assertThat(service.buscarPorId(compra.getPedidoId()).getStatusPagamento()).isEqualTo("LIBERADO");
     }
 }

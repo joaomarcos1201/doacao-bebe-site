@@ -48,12 +48,19 @@ public class UsuarioController {
             @RequestHeader(value = "Authorization", required = false) String authorization) {
         try {
             usuarioService.remover(id, authorization);
-            return ResponseEntity.ok(Map.of("message", "Conta desativada. Pedidos, pagamentos e saldo foram preservados."));
+            return ResponseEntity.ok(Map.of("message", "Usuário excluído com sucesso."));
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(e.getStatusCode()).body(Map.of("message", e.getReason()));
+        } catch (org.springframework.dao.DataIntegrityViolationException | org.hibernate.exception.ConstraintViolationException e) {
+            log.error("Dependência de banco impediu a exclusão do usuário {}", id, e);
+            return ResponseEntity.status(409).body(Map.of("message",
+                    "A exclusão foi desfeita porque o banco possui uma dependência não resolvida. Verifique a migration de exclusão e o log do servidor."));
+        } catch (org.springframework.dao.ConcurrencyFailureException | jakarta.persistence.PessimisticLockException | jakarta.persistence.LockTimeoutException e) {
+            log.warn("Operação concorrente impediu a exclusão do usuário {}", id, e);
+            return ResponseEntity.status(409).body(Map.of("message", "A conta está sendo usada em outra operação. Tente excluir novamente após sua conclusão."));
         } catch (Exception e) {
-            log.error("Falha ao desativar usuário {}", id, e);
-            return ResponseEntity.internalServerError().body(Map.of("message", "Não foi possível desativar a conta. Tente novamente."));
+            log.error("Falha ao excluir usuário {}", id, e);
+            return ResponseEntity.internalServerError().body(Map.of("message", "Não foi possível excluir o usuário. Tente novamente."));
         }
     }
 

@@ -4,6 +4,14 @@ import com.doacaobebe.dto.AuthResponse;
 import com.doacaobebe.dto.CadastroRequest;
 import com.doacaobebe.dto.LoginRequest;
 import com.doacaobebe.entity.Usuario;
+import com.doacaobebe.entity.Carteira;
+import com.doacaobebe.entity.Pedido;
+import com.doacaobebe.entity.Pagamento;
+import com.doacaobebe.entity.Saque;
+import com.doacaobebe.entity.MovimentacaoFinanceira;
+import jakarta.persistence.LockModeType;
+import java.util.Set;
+import java.util.Locale;
 import com.doacaobebe.repository.UsuarioRepository;
 import com.doacaobebe.repository.ProdutoRepository;
 import org.springframework.http.HttpStatus;
@@ -190,8 +198,97 @@ public class UsuarioService {
 
     @Transactional
     public void remover(Integer id, String authorization) {
-        Usuario usuario = buscarParaDesativacao(id, exigirAdministrador(authorization));
-        desativar(usuario);
+        Usuario administrador = exigirAdministrador(authorization);
+        Usuario usuario = usuarioRepository.buscarParaExclusao(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
+        if (usuario.getId().equals(administrador.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não pode excluir a própria conta.");
+        }
+        if (Boolean.TRUE.equals(usuario.getIsAdmin())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Não é permitido excluir outro administrador.");
+        }
+
+        validarPendenciasFinanceiras(id);
+
+        // Favoritos da conta e dos anúncios que serão retirados não são histórico financeiro.
+        executarExclusao("DELETE FROM Favorito f WHERE f.usuario.id = :id OR f.produto.id IN " +
+                "(SELECT p.id FROM Produto p WHERE p.vendedor.id = :id)", id);
+        executarExclusao("DELETE FROM Carteira c WHERE c.usuario.id = :id", id);
+
+        // NULL substitui somente o vínculo pessoal, nunca o registro histórico.
+        executarExclusao("UPDATE Saque s SET s.usuario = NULL WHERE s.usuario.id = :id", id);
+        executarExclusao("UPDATE MovimentacaoFinanceira m SET m.usuario = NULL WHERE m.usuario.id = :id", id);
+        executarExclusao("UPDATE Pedido p SET p.comprador = NULL WHERE p.comprador.id = :id", id);
+        executarExclusao("UPDATE Pedido p SET p.vendedor = NULL WHERE p.vendedor.id = :id", id);
+
+        // Anúncios usados por qualquer pedido continuam existindo como parte do histórico.
+        executarExclusao("DELETE FROM Produto p WHERE p.vendedor.id = :id AND NOT EXISTS " +
+                "(SELECT pedido.id FROM Pedido pedido WHERE pedido.produto.id = p.id)", id);
+        executarExclusao("UPDATE Produto p SET p.vendedor = NULL, p.statusVisibilidade = 'REMOVIDO', " +
+                "p.doador = NULL, p.contato = NULL, p.cpf = NULL WHERE p.vendedor.id = :id", id);
+
+        // Bulk JPQL não sincroniza entidades já carregadas no contexto.
+        entityManager.flush();
+        entityManager.clear();
+        usuario = usuarioRepository.findById(id).orElseThrow();
+        usuarioRepository.delete(usuario);
+        usuarioRepository.flush(); // A violação de FK deve ocorrer antes de responder sucesso.
+    }
+
+    private void executarExclusao(String jpql, Integer id) {
+        entityManager.createQuery(jpql).setParameter("id", id).executeUpdate();
+    }
+
+    private <T> List<T> dependenciasBloqueadas(String jpql, Class<T> tipo, Integer id) {
+        return entityManager.createQuery(jpql, tipo).setParameter("id", id)
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE).getResultList();
+    }
+
+    private String normalizarStatus(String status) {
+        return status == null ? "" : status.trim().toUpperCase(Locale.ROOT);
+    }
+
+    private void validarPendenciasFinanceiras(Integer id) {
+        for (Carteira carteira : dependenciasBloqueadas("FROM Carteira c WHERE c.usuario.id = :id", Carteira.class, id)) {
+            if (carteira.getSaldoRetido() == null || carteira.getSaldoLiberado() == null ||
+                    carteira.getSaldoRetido().signum() != 0 || carteira.getSaldoLiberado().signum() != 0) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "A conta possui saldo na carteira. Regularize os valores antes de excluir o usuário.");
+            }
+        }
+        for (Saque saque : dependenciasBloqueadas("FROM Saque s WHERE s.usuario.id = :id", Saque.class, id)) {
+            if (!Set.of("APROVADO", "REJEITADO").contains(normalizarStatus(saque.getStatus()))) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "A conta possui saque pendente. Resolva o saque antes de excluir o usuário.");
+            }
+        }
+        for (MovimentacaoFinanceira mov : dependenciasBloqueadas(
+                "FROM MovimentacaoFinanceira m WHERE m.usuario.id = :id", MovimentacaoFinanceira.class, id)) {
+            if ("RETIDO".equals(normalizarStatus(mov.getStatus()))) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "A conta possui movimentação financeira retida. Regularize a operação antes da exclusão.");
+            }
+        }
+        for (Pedido pedido : dependenciasBloqueadas(
+                "FROM Pedido p WHERE p.comprador.id = :id OR p.vendedor.id = :id OR p.produto.vendedor.id = :id", Pedido.class, id)) {
+            String status = normalizarStatus(pedido.getStatusPagamento());
+            String envio = normalizarStatus(pedido.getStatusEnvio());
+            if (!Set.of("LIBERADO", "REJEITADO", "CANCELADO", "ESTORNADO", "REJECTED", "CANCELLED", "CANCELED", "REFUNDED").contains(status) ||
+                    (!envio.isEmpty() && !Set.of("ENTREGUE", "CANCELADO", "DEVOLVIDO").contains(envio))) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "A conta participa do pedido #" + pedido.getId() + " ainda não encerrado. Conclua ou regularize a operação antes da exclusão.");
+            }
+            List<Pagamento> pagamentos = entityManager.createQuery("FROM Pagamento p WHERE p.pedido.id = :pedido", Pagamento.class)
+                    .setParameter("pedido", pedido.getId()).setLockMode(LockModeType.PESSIMISTIC_WRITE).getResultList();
+            for (Pagamento pagamento : pagamentos) {
+                String situacao = normalizarStatus(pagamento.getStatus());
+                boolean liquidado = "LIBERADO".equals(status) && "APROVADO".equals(situacao);
+                if (!liquidado && !Set.of("REJEITADO", "CANCELADO", "ESTORNADO", "REJECTED", "CANCELLED", "CANCELED", "REFUNDED").contains(situacao)) {
+                    throw new ResponseStatusException(HttpStatus.CONFLICT,
+                            "O pedido #" + pedido.getId() + " possui pagamento sem conciliação. Regularize o pagamento antes da exclusão.");
+                }
+            }
+        }
     }
 
     private void desativar(Usuario usuario) {

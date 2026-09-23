@@ -15,7 +15,7 @@ public class Saque {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     @Column(precision = 10, scale = 2, nullable = false)

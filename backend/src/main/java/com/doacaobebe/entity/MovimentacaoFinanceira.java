@@ -15,7 +15,7 @@ public class MovimentacaoFinanceira {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

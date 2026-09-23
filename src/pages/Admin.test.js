@@ -30,13 +30,13 @@ beforeEach(() => {
   originalFetch = global.fetch;
   localStorage.setItem('token', 'admin-token');
   usuario = { id: 48, nome: 'Pessoa Teste', email: 'teste@example.test', nivelAcesso: 'USER', statusUsuario: 'ATIVO' };
-  resposta = { ok: true, text: async () => JSON.stringify({ message: 'Conta desativada. Histórico preservado.' }) };
+  resposta = { ok: true, text: async () => JSON.stringify({ message: 'Usuário excluído com sucesso.' }) };
   global.fetch = jest.fn(async (url, options) => {
     if (options?.method === 'DELETE') {
-      if (resposta.ok) usuario = { ...usuario, statusUsuario: 'INATIVO' };
+      if (resposta.ok) usuario = null;
       return resposta;
     }
-    return { ok: true, json: async () => url.endsWith('/api/usuarios') ? [{ ...usuario }] : [] };
+    return { ok: true, json: async () => url.endsWith('/api/usuarios') && usuario ? [{ ...usuario }] : [] };
   });
   container = document.createElement('div');
   document.body.appendChild(container);
@@ -57,17 +57,18 @@ const abrirUsuarios = async () => {
   await click('⋯');
 };
 
-test('desativa com token, mostra mensagem e atualiza status/listagem e produtos', async () => {
+test('exclui com token, mostra mensagem e remove usuario da listagem', async () => {
   await abrirUsuarios();
-  await click('Desativar conta');
+  await click('Excluir usuário');
   expect(global.fetch).toHaveBeenCalledWith('http://test/api/usuarios/48', {
     method: 'DELETE', headers: { Authorization: 'Bearer admin-token' },
   });
-  expect(mockConfirm.mock.calls[0][1]).toContain('saldo serão preservados');
-  expect(mockSuccess).toHaveBeenCalledWith('Conta desativada. Histórico preservado.');
+  expect(mockConfirm.mock.calls[0][1]).toContain('excluída definitivamente');
+  expect(mockSuccess).toHaveBeenCalledWith('Usuário excluído com sucesso.');
   expect(mockError).not.toHaveBeenCalled();
   expect(global.fetch.mock.calls.filter(([url]) => url === 'http://test/api/usuarios')).toHaveLength(2);
-  expect(container.querySelector('tbody').textContent).toContain('INATIVO');
+  expect(container.querySelector('tbody').textContent).not.toContain('Pessoa Teste');
+  expect(container.textContent).toContain('Usuários (0)');
   expect(mockCarregarProdutos).toHaveBeenCalledTimes(1);
 });
 
@@ -75,11 +76,12 @@ test.each([
   ['JSON', JSON.stringify({ message: 'Usuário não encontrado.' }), 'Usuário não encontrado.'],
   ['texto', 'Operação não permitida.', 'Operação não permitida.'],
   ['filtro', JSON.stringify({ error: 'Conta inativa.' }), 'Conta inativa.'],
-  ['vazio', '', 'Erro ao desativar conta.'],
+  ['conflito', JSON.stringify({ message: 'A conta possui saldo na carteira.' }), 'A conta possui saldo na carteira.'],
+  ['vazio', '', 'Erro ao excluir usuário.'],
 ])('erro %s mostra mensagem da API sem sucesso ou atualização indevida', async (_, corpo, mensagem) => {
   resposta = { ok: false, text: async () => corpo };
   await abrirUsuarios();
-  await click('Desativar conta');
+  await click('Excluir usuário');
   expect(mockError).toHaveBeenCalledWith(mensagem);
   expect(mockSuccess).not.toHaveBeenCalled();
   expect(mockCarregarProdutos).not.toHaveBeenCalled();
@@ -87,9 +89,17 @@ test.each([
   expect(global.fetch.mock.calls.filter(([url]) => url === 'http://test/api/usuarios')).toHaveLength(1);
 });
 
-test('não oferece desativar ou pausar administrador', async () => {
+test('não oferece excluir ou pausar administrador', async () => {
   usuario.nivelAcesso = 'ADMIN';
   await abrirUsuarios();
-  expect(container.textContent).not.toContain('Desativar conta');
+  expect(container.textContent).not.toContain('Excluir usuário');
   expect(container.textContent).not.toContain('Pausar');
+});
+
+test('conta inativa também pode ser excluída definitivamente', async () => {
+  usuario.statusUsuario = 'INATIVO';
+  await abrirUsuarios();
+  await click('Excluir usuário');
+  expect(mockSuccess).toHaveBeenCalledWith('Usuário excluído com sucesso.');
+  expect(container.querySelector('tbody').textContent).not.toContain('Pessoa Teste');
 });

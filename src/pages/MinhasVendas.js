@@ -70,7 +70,7 @@ function MinhasVendas() {
                   <div>
                     <p style={{ fontSize: '12px', color: sub, margin: '0 0 4px' }}>Pedido #{venda.id}</p>
                     <p style={{ fontSize: '15px', fontWeight: '700', color: text, margin: '0 0 4px' }}>{venda.produto?.nome}</p>
-                    <p style={{ fontSize: '12px', color: sub, margin: 0 }}>Comprador: {venda.comprador?.nome}</p>
+                    <p style={{ fontSize: '12px', color: sub, margin: 0 }}>Comprador: {venda.comprador?.nome || 'Conta excluída'}</p>
                   </div>
                   <span style={{ fontSize: '12px', fontWeight: '700', color: statusColor(venda.statusPagamento), padding: '4px 10px', borderRadius: '20px', border: `1px solid ${statusColor(venda.statusPagamento)}`, backgroundColor: `${statusColor(venda.statusPagamento)}15` }}>
                     {venda.statusPagamento}

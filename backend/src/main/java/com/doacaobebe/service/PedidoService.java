@@ -163,6 +163,9 @@ public class PedidoService {
 
     @Transactional
     public void finalizarPedido(Pedido pedido) {
+        // Reentregas de webhook não reabrem o financeiro de um histórico já encerrado.
+        if (pedido.getComprador() == null || pedido.getVendedor() == null ||
+                "LIBERADO".equalsIgnoreCase(pedido.getStatusPagamento())) return;
         pedido.setStatusPagamento("FINALIZADO");
         pedido.getProduto().setStatusAnuncio("VENDIDO");
         produtoRepository.save(pedido.getProduto());
@@ -196,7 +199,7 @@ public class PedidoService {
         Pedido pedido = buscarPorId(id);
         entityManager.refresh(pedido, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
 
-        if (!pedido.getComprador().getId().equals(compradorId)) {
+        if (pedido.getComprador() == null || !pedido.getComprador().getId().equals(compradorId)) {
             throw new SecurityException("Pedido não pertence ao usuário autenticado.");
         }
 
@@ -229,7 +232,7 @@ public class PedidoService {
 
     private boolean isDisponivelParaCompra(Produto produto) {
         String status = produto.getStatusAnuncio();
-        return !"REMOVIDO".equalsIgnoreCase(produto.getStatusVisibilidade())
+        return produto.getVendedor() != null && !"REMOVIDO".equalsIgnoreCase(produto.getStatusVisibilidade())
                 && ("DISPONIVEL".equals(status) || "ATIVO".equals(status) || "APROVADO".equals(status));
     }
 

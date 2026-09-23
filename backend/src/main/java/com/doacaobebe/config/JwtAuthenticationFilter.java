@@ -42,7 +42,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 String email = jwtService.extractEmail(token);
                 Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
-                
+                if (usuarioOpt.isEmpty()) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"message\":\"A conta desta sessão não existe mais. Faça login novamente.\"}");
+                    return;
+                }
+
                 if (usuarioOpt.isPresent()) {
                     Usuario usuario = usuarioOpt.get();
                     

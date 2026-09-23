@@ -53,6 +53,10 @@ public class AdminOrderController {
                 return ResponseEntity.notFound().build();
             }
 
+            if (pedido.getVendedor() == null) {
+                return ResponseEntity.status(409).body("Pedido histórico de vendedor excluído não pode receber nova liberação de saldo.");
+            }
+
             // REGRA CORRETA DO FLUXO
             // só libera se estiver FINALIZADO
             if (!"FINALIZADO".equalsIgnoreCase(pedido.getStatusPagamento())) {

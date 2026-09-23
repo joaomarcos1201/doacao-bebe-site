@@ -15,12 +15,13 @@ public class Pedido {
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comprador_id", nullable = false)
+    // NULL identifica uma conta excluída; o pedido e seu financeiro permanecem.
+    @JoinColumn(name = "comprador_id")
     private Usuario comprador;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendedor_id", nullable = false)
+    @JoinColumn(name = "vendedor_id")
     private Usuario vendedor;
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

@@ -13,6 +13,10 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT u FROM Usuario u WHERE u.id = :id")
+    Optional<Usuario> buscarParaExclusao(@Param("id") Integer id);
+
     Optional<Usuario> findByEmail(String email);
     boolean existsByEmail(String email);
 

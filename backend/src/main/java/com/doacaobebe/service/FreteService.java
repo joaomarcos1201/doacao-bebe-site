@@ -32,6 +32,9 @@ public class FreteService {
 
     @Transactional
     public void gerarEtiquetaParaPedido(Pedido pedido) {
+        if (pedido.getVendedor() == null || pedido.getComprador() == null) {
+            throw new IllegalStateException("Pedido histórico de conta excluída não pode gerar uma nova etiqueta.");
+        }
         String codigoRastreio = freteProvider.gerarEtiqueta(
                 pedido.getId(),
                 pedido.getProduto().getCepOrigem(),

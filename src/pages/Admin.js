@@ -157,16 +157,19 @@ function Admin() {
     } catch { showError('Erro de conexão.'); }
   };
 
-  const removerUsuario = (id) => showConfirm('Desativar conta', 'O acesso será bloqueado e os anúncios disponíveis serão retirados. Pedidos, pagamentos e saldo serão preservados.', async () => {
+  const removerUsuario = (id) => showConfirm('Excluir usuário', 'A conta será excluída definitivamente. Anúncios sem pedidos e favoritos serão removidos; o histórico financeiro será preservado sem vínculo com a conta. Saldos e operações pendentes precisam ser regularizados antes.', async () => {
     try {
       const r = await fetch(`${API_URL}/api/usuarios/${id}`, { method: 'DELETE', headers: headersAdmin() });
-      const mensagem = await mensagemResposta(r, r.ok ? 'Conta desativada.' : 'Erro ao desativar conta.');
+      const mensagem = await mensagemResposta(r, r.ok ? 'Usuário excluído com sucesso.' : 'Erro ao excluir usuário.');
       if (!r.ok) { showError(mensagem); return; }
+      setUsuarios(atuais => atuais.filter(u => u.id !== id));
       showSuccess(mensagem);
       await carregarUsuarios();
       await carregarProdutos();
+      setPedidos(await api.todosPedidos());
+      setSaques(await api.todosSaques());
     } catch { showError('Erro de conexão.'); }
-  }, 'Desativar', 'Cancelar');
+  }, 'Excluir', 'Cancelar');
 
   const toggleAdmin = (id, isAdmin) => showConfirm('Alterar Privilégios', `Deseja ${isAdmin ? 'remover' : 'conceder'} privilégios de admin?`, async () => {
     try {
@@ -339,7 +342,7 @@ function Admin() {
                               {[
                                 ...(u.nivelAcesso !== 'ADMIN' ? [{ label: (u.statusUsuario === 'ATIVO' || !u.statusUsuario) ? 'Pausar' : 'Ativar', action: () => { toggleStatus(u.id); setMenuAberto(null); }, color: isDark ? '#e0e0e0' : '#333' }] : []),
                                 { label: u.nivelAcesso === 'ADMIN' ? 'Remover Admin' : 'Promover Admin', action: () => { toggleAdmin(u.id, u.nivelAcesso === 'ADMIN'); setMenuAberto(null); }, color: isDark ? '#e0e0e0' : '#333' },
-                                ...(u.nivelAcesso !== 'ADMIN' && u.statusUsuario === 'ATIVO' ? [{ label: 'Desativar conta', action: () => { removerUsuario(u.id); setMenuAberto(null); }, color: '#ef4444' }] : []),
+                                ...(u.nivelAcesso !== 'ADMIN' ? [{ label: 'Excluir usuário', action: () => { removerUsuario(u.id); setMenuAberto(null); }, color: '#ef4444' }] : []),
                               ].map(({ label, action, color }) => (
                                 <button key={label} onClick={action} style={{
                                   width: '100%', padding: '12px 16px', border: 'none', background: 'none',
@@ -377,8 +380,8 @@ function Admin() {
                     <span style={{ fontSize: '12px', fontWeight: '700', color: p.statusPagamento === 'FINALIZADO' ? '#4caf50' : p.statusPagamento === 'APROVADO' ? '#2196f3' : p.statusPagamento === 'LIBERADO' ? '#9c27b0' : '#ff9800' }}>{p.statusPagamento}</span>
                   </div>
                   <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: isDark ? '#888' : '#666', flexWrap: 'wrap' }}>
-                    <span>Comprador: {p.comprador?.nome}</span>
-                    <span>Vendedor: {p.vendedor?.nome}</span>
+                    <span>Comprador: {p.comprador?.nome || 'Conta excluída'}</span>
+                    <span>Vendedor: {p.vendedor?.nome || 'Conta excluída'}</span>
                     <span>Total: R$ {Number(p.valorTotal || 0).toFixed(2)}</span>
                     {p.statusEnvio && <span>Envio: {p.statusEnvio}</span>}
                     {p.codigoRastreio && <span>Rastreio: {p.codigoRastreio}</span>}
@@ -445,7 +448,7 @@ function Admin() {
               ) : saques.map(s => (
                 <div key={s.id} style={{ padding: '16px', borderRadius: '12px', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}`, backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <p style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 4px' }}>R$ {Number(s.valor).toFixed(2)} — {s.usuario?.nome}</p>
+                    <p style={{ fontSize: '14px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 4px' }}>R$ {Number(s.valor).toFixed(2)} — {s.usuario?.nome || 'Conta excluída'}</p>
                     <p style={{ fontSize: '12px', color: isDark ? '#888' : '#666', margin: 0 }}>{new Date(s.dataSolicitacao).toLocaleDateString('pt-BR')}</p>
                   </div>
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
