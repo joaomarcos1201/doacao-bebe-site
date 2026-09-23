@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     Usuario usuario = usuarioOpt.get();
                     
                     // Verificar se o usuário está inativo
-                    if ("INATIVO".equals(usuario.getStatusUsuario())) {
+                    if (!"ATIVO".equalsIgnoreCase(usuario.getStatusUsuario() == null ? "" : usuario.getStatusUsuario().trim())) {
                         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                         response.setContentType("application/json");
                         response.getWriter().write("{\"error\":\"Conta inativa. Entre em contato com o administrador.\"}");

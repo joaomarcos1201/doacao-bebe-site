@@ -10,6 +10,12 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
+    // Retira anúncios negociáveis sem reclassificar vendas ou reservas históricas.
+    @org.springframework.data.jpa.repository.Modifying(flushAutomatically = true, clearAutomatically = true)
+    @Query("UPDATE Produto p SET p.statusVisibilidade = 'REMOVIDO' " +
+           "WHERE p.vendedor.id = :usuarioId AND p.statusAnuncio NOT IN ('VENDIDO', 'RESERVADO')")
+    int ocultarAnunciosDoUsuario(@Param("usuarioId") Integer usuarioId);
+
     @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p FROM Produto p WHERE p.id = :id")
     java.util.Optional<Produto> buscarParaCompra(@Param("id") Integer id);

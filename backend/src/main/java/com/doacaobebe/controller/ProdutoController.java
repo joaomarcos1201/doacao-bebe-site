@@ -174,6 +174,10 @@ public class ProdutoController {
         if ("VENDIDO".equals(produto.getStatusAnuncio())) {
             return ResponseEntity.badRequest().body("Produto vendido não pode ser republicado ou reclassificado.");
         }
+        if (produto.getVendedor() != null && !"ATIVO".equalsIgnoreCase(
+                produto.getVendedor().getStatusUsuario() == null ? "" : produto.getVendedor().getStatusUsuario().trim())) {
+            return ResponseEntity.status(409).body("Anúncios de contas inativas não podem ser aprovados ou reclassificados.");
+        }
         produto.setStatusAnuncio(normalizarStatus(status));
         produtoRepository.save(produto);
 

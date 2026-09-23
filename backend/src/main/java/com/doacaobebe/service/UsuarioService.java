@@ -5,6 +5,9 @@ import com.doacaobebe.dto.CadastroRequest;
 import com.doacaobebe.dto.LoginRequest;
 import com.doacaobebe.entity.Usuario;
 import com.doacaobebe.repository.UsuarioRepository;
+import com.doacaobebe.repository.ProdutoRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ProdutoRepository produtoRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -77,7 +83,7 @@ public class UsuarioService {
             String statusLimpo = statusAtualizado != null ? statusAtualizado.trim().toUpperCase() : "";
             System.out.println("Status limpo: [" + statusLimpo + "]");
             
-            if ("INATIVO".equals(statusLimpo)) {
+            if (!"ATIVO".equals(statusLimpo)) {
                 System.out.println("*** BLOQUEANDO LOGIN - USUARIO INATIVO ***");
                 throw new RuntimeException("Conta inativa. Entre em contato com o administrador.");
             }
@@ -134,63 +140,64 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    @Transactional
-    public Usuario alterarStatus(Integer id) {
-        System.out.println("DEBUG - Alterando status do usuário ID: " + id);
-        
-        // Buscar status atual diretamente do banco
-        String statusAtual = jdbcTemplate.queryForObject(
-            "SELECT statusUsuario FROM Usuario WHERE id = ?", 
-            String.class, 
-            id
-        );
-        System.out.println("DEBUG - Status atual no banco: [" + statusAtual + "]");
-        
-        // Limpar espaços e normalizar
-        String statusLimpo = statusAtual != null ? statusAtual.trim().toUpperCase() : "ATIVO";
-        System.out.println("DEBUG - Status limpo: [" + statusLimpo + "]");
-        
-        // Alternar entre ATIVO e INATIVO
-        String novoStatus = "ATIVO".equals(statusLimpo) ? "INATIVO" : "ATIVO";
-        System.out.println("DEBUG - Novo status: [" + novoStatus + "]");
-        
-        // Atualizar diretamente no banco usando JDBC
-        int rowsAffected = jdbcTemplate.update(
-            "UPDATE Usuario SET statusUsuario = ? WHERE id = ?", 
-            novoStatus, id
-        );
-        System.out.println("DEBUG - Linhas afetadas: " + rowsAffected);
-        
-        // Verificar se mudou
-        String statusFinal = jdbcTemplate.queryForObject(
-            "SELECT statusUsuario FROM Usuario WHERE id = ?", 
-            String.class, 
-            id
-        );
-        System.out.println("DEBUG - Status final no banco: [" + statusFinal + "]");
-        
-        // Limpar completamente o cache do JPA
-        entityManager.clear();
-        
-        // Buscar usuário com status atualizado
+    public Usuario exigirAdministrador(String authorization) {
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Autenticação obrigatória.");
+        }
+        final String email;
+        try {
+            email = jwtService.extractEmail(authorization.substring(7));
+            if (email == null || email.isBlank()) throw new IllegalArgumentException();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sessão inválida ou expirada.");
+        }
+        Usuario administrador = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sessão inválida."));
+        if (!Boolean.TRUE.equals(administrador.getIsAdmin()) || !contaAtiva(administrador)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Apenas administradores ativos podem realizar esta operação.");
+        }
+        return administrador;
+    }
+
+    private boolean contaAtiva(Usuario usuario) {
+        return "ATIVO".equalsIgnoreCase(usuario.getStatusUsuario() == null ? "" : usuario.getStatusUsuario().trim());
+    }
+
+    private Usuario buscarParaDesativacao(Integer id, Usuario administrador) {
         Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        
-        System.out.println("DEBUG - Status final na entidade: [" + usuario.getStatusUsuario() + "]");
-        
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
+        if (usuario.getId().equals(administrador.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Você não pode desativar a própria conta.");
+        }
+        if (Boolean.TRUE.equals(usuario.getIsAdmin())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Não é permitido desativar outro administrador.");
+        }
         return usuario;
     }
 
-    public void remover(Integer id) {
-        try {
-            if (!usuarioRepository.existsById(id)) {
-                throw new RuntimeException("Usuário não encontrado");
-            }
-            usuarioRepository.deleteUsuarioById(id);
-        } catch (Exception e) {
-            System.err.println("Erro ao remover usuário: " + e.getMessage());
-            throw new RuntimeException("Erro ao remover usuário: " + e.getMessage());
+    @Transactional
+    public Usuario alterarStatus(Integer id, String authorization) {
+        Usuario usuario = buscarParaDesativacao(id, exigirAdministrador(authorization));
+        if (contaAtiva(usuario)) {
+            desativar(usuario);
+        } else {
+            usuario.setStatusUsuario("ATIVO");
+            usuarioRepository.save(usuario);
+            // Reativar a conta não republica automaticamente os anúncios retirados.
         }
+        return usuario;
+    }
+
+    @Transactional
+    public void remover(Integer id, String authorization) {
+        Usuario usuario = buscarParaDesativacao(id, exigirAdministrador(authorization));
+        desativar(usuario);
+    }
+
+    private void desativar(Usuario usuario) {
+        usuario.setStatusUsuario("INATIVO");
+        usuarioRepository.saveAndFlush(usuario);
+        produtoRepository.ocultarAnunciosDoUsuario(usuario.getId());
     }
 
     public void redefinirSenha(String email, String novaSenha) {
@@ -296,7 +303,7 @@ public class UsuarioService {
         String statusLimpo = statusAtualizado != null ? statusAtualizado.trim().toUpperCase() : "";
         System.out.println("DEBUG - Status limpo: [" + statusLimpo + "]");
         
-        if ("INATIVO".equals(statusLimpo)) {
+        if (!"ATIVO".equals(statusLimpo)) {
             System.out.println("*** BLOQUEANDO ACESSO - USUARIO INATIVO ***");
             throw new RuntimeException("Conta inativa. Entre em contato com o administrador.");
         }

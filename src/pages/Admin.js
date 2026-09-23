@@ -28,6 +28,16 @@ function Admin() {
   const [saques, setSaques] = useState([]);
   const [produtoModal, setProdutoModal] = useState(null);
 
+  const headersAdmin = () => ({ Authorization: `Bearer ${localStorage.getItem('token')}` });
+  const mensagemResposta = async (resposta, fallback) => {
+    const texto = await resposta.text();
+    if (!texto) return fallback;
+    try {
+      const dados = JSON.parse(texto);
+      return dados.message || dados.error || (typeof dados === 'string' ? dados : fallback);
+    } catch { return texto; }
+  };
+
   // ====== UI TOKENS (mantém lógica/estado inalterados) ======
   // const bgPage = isDark ? '#0f0f0f' : '#f9f5f6';
 
@@ -141,28 +151,31 @@ function Admin() {
 
   const toggleStatus = async (id) => {
     try {
-      const r = await fetch(`${API_URL}/api/usuarios/${id}/status`, { method: 'PUT' });
+      const r = await fetch(`${API_URL}/api/usuarios/${id}/status`, { method: 'PUT', headers: headersAdmin() });
       if (r.ok) { showSuccess('Status alterado!'); carregarUsuarios(); }
-      else showError('Erro ao alterar status.');
+      else showError(await mensagemResposta(r, 'Erro ao alterar status.'));
     } catch { showError('Erro de conexão.'); }
   };
 
-  const removerUsuario = (id) => showConfirm('Remover Usuário', 'Esta ação não pode ser desfeita.', async () => {
+  const removerUsuario = (id) => showConfirm('Desativar conta', 'O acesso será bloqueado e os anúncios disponíveis serão retirados. Pedidos, pagamentos e saldo serão preservados.', async () => {
     try {
-      const r = await fetch(`${API_URL}/api/usuarios/${id}`, { method: 'DELETE' });
-      if (r.ok) { showSuccess('Usuário removido!'); carregarUsuarios(); }
-      else showError('Erro ao remover usuário.');
+      const r = await fetch(`${API_URL}/api/usuarios/${id}`, { method: 'DELETE', headers: headersAdmin() });
+      const mensagem = await mensagemResposta(r, r.ok ? 'Conta desativada.' : 'Erro ao desativar conta.');
+      if (!r.ok) { showError(mensagem); return; }
+      showSuccess(mensagem);
+      await carregarUsuarios();
+      await carregarProdutos();
     } catch { showError('Erro de conexão.'); }
-  }, 'Remover', 'Cancelar');
+  }, 'Desativar', 'Cancelar');
 
   const toggleAdmin = (id, isAdmin) => showConfirm('Alterar Privilégios', `Deseja ${isAdmin ? 'remover' : 'conceder'} privilégios de admin?`, async () => {
     try {
       const r = await fetch(`${API_URL}/api/usuarios/${id}/admin`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        method: 'PUT', headers: { ...headersAdmin(), 'Content-Type': 'application/json' },
         body: JSON.stringify({ isAdmin: !isAdmin }),
       });
       if (r.ok) { showSuccess('Privilégios alterados!'); carregarUsuarios(); }
-      else showError('Erro ao alterar privilégios.');
+      else showError(await mensagemResposta(r, 'Erro ao alterar privilégios.'));
     } catch { showError('Erro de conexão.'); }
   }, 'Confirmar', 'Cancelar');
 
@@ -324,9 +337,9 @@ function Admin() {
                               zIndex: 1000, minWidth: '160px', overflow: 'hidden'
                             }}>
                               {[
-                                { label: (u.statusUsuario === 'ATIVO' || !u.statusUsuario) ? 'Pausar' : 'Ativar', action: () => { toggleStatus(u.id); setMenuAberto(null); }, color: isDark ? '#e0e0e0' : '#333' },
+                                ...(u.nivelAcesso !== 'ADMIN' ? [{ label: (u.statusUsuario === 'ATIVO' || !u.statusUsuario) ? 'Pausar' : 'Ativar', action: () => { toggleStatus(u.id); setMenuAberto(null); }, color: isDark ? '#e0e0e0' : '#333' }] : []),
                                 { label: u.nivelAcesso === 'ADMIN' ? 'Remover Admin' : 'Promover Admin', action: () => { toggleAdmin(u.id, u.nivelAcesso === 'ADMIN'); setMenuAberto(null); }, color: isDark ? '#e0e0e0' : '#333' },
-                                { label: 'Excluir', action: () => { removerUsuario(u.id); setMenuAberto(null); }, color: '#ef4444' },
+                                ...(u.nivelAcesso !== 'ADMIN' && u.statusUsuario === 'ATIVO' ? [{ label: 'Desativar conta', action: () => { removerUsuario(u.id); setMenuAberto(null); }, color: '#ef4444' }] : []),
                               ].map(({ label, action, color }) => (
                                 <button key={label} onClick={action} style={{
                                   width: '100%', padding: '12px 16px', border: 'none', background: 'none',

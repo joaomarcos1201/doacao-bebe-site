@@ -24,12 +24,14 @@ import static org.mockito.Mockito.when;
     "spring.jpa.hibernate.ddl-auto=create-drop", "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
     "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect"
 })
-@Import({PedidoService.class, FreteService.class, CarteiraService.class,
+@Import({PedidoService.class, FreteService.class, CarteiraService.class, UsuarioService.class,
     PagamentoProviderMock.class, FreteProviderMock.class, ProdutoController.class,
     SimulacaoController.class, AdminOrderController.class})
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class VendaIntegrationTest {
     @Autowired PedidoService service;
+    @Autowired UsuarioService usuarioService;
+    @MockBean org.springframework.security.crypto.password.PasswordEncoder encoder;
     @Autowired ProdutoRepository produtos;
     @Autowired UsuarioRepository usuarios;
     @Autowired PagamentoRepository pagamentos;
@@ -128,5 +130,23 @@ class VendaIntegrationTest {
         assertThat(produtos.findById(produto.getId()).orElseThrow().getStatusAnuncio()).isEqualTo("DISPONIVEL");
         tx.executeWithoutResult(s -> { Produto p = produtos.findById(produto.getId()).orElseThrow(); p.setStatusVisibilidade("REMOVIDO"); });
         assertThatThrownBy(this::checkout).isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test void desativarVendedorBloqueiaNovoCheckoutPreservandoPedidoEPagamentoPendentes() {
+        CheckoutResponse compra = checkout();
+        usuarioService.remover(vendedor.getId(), "Bearer test");
+        assertThatThrownBy(this::checkout).isInstanceOf(IllegalStateException.class);
+        assertThat(service.buscarPorId(compra.getPedidoId()).getStatusPagamento()).isEqualTo("PENDENTE");
+        assertThat(pagamentos.findByMercadoPagoId(compra.getPagamentoId()).orElseThrow().getStatus()).isEqualTo("PENDENTE");
+    }
+
+    @Test void desativarVendedorNaoImpedeEntregaELiberacaoAdministrativaDeVendaPaga() {
+        CheckoutResponse compra = checkout();
+        service.processarPagamentoAprovado(compra.getPagamentoId());
+        usuarioService.remover(vendedor.getId(), "Bearer test");
+        assertThat(simulacao.simularEntrega(compra.getPedidoId(), "Bearer test").getStatusCode().value()).isEqualTo(200);
+        assertThat(admin.releasePayment(compra.getPedidoId(), "Bearer test").getStatusCode().value()).isEqualTo(200);
+        assertThat(carteiras.findByUsuarioId(vendedor.getId()).orElseThrow().getSaldoLiberado()).isEqualByComparingTo("90");
+        assertThat(pagamentos.findByMercadoPagoId(compra.getPagamentoId()).orElseThrow().getStatus()).isEqualTo("APROVADO");
     }
 }

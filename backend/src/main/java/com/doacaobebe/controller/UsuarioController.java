@@ -9,11 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/usuarios")
 @CrossOrigin(origins = "*")
 public class UsuarioController {
+    private static final Logger log = LoggerFactory.getLogger(UsuarioController.class);
 
     @Autowired
     private UsuarioService usuarioService;
@@ -25,22 +30,30 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<?> alterarStatus(@PathVariable Integer id) {
+    public ResponseEntity<?> alterarStatus(@PathVariable Integer id,
+            @RequestHeader(value = "Authorization", required = false) String authorization) {
         try {
-            Usuario usuario = usuarioService.alterarStatus(id);
+            Usuario usuario = usuarioService.alterarStatus(id, authorization);
             return ResponseEntity.ok(usuario);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of("message", e.getReason()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao alterar status: " + e.getMessage());
+            log.error("Falha ao alterar status do usuário {}", id, e);
+            return ResponseEntity.internalServerError().body(Map.of("message", "Não foi possível alterar o status. Tente novamente."));
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remover(@PathVariable Integer id) {
+    public ResponseEntity<?> remover(@PathVariable Integer id,
+            @RequestHeader(value = "Authorization", required = false) String authorization) {
         try {
-            usuarioService.remover(id);
-            return ResponseEntity.ok().build();
+            usuarioService.remover(id, authorization);
+            return ResponseEntity.ok(Map.of("message", "Conta desativada. Pedidos, pagamentos e saldo foram preservados."));
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of("message", e.getReason()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao remover usuário: " + e.getMessage());
+            log.error("Falha ao desativar usuário {}", id, e);
+            return ResponseEntity.internalServerError().body(Map.of("message", "Não foi possível desativar a conta. Tente novamente."));
         }
     }
 
@@ -71,10 +84,17 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}/admin")
-    public ResponseEntity<?> alterarPrivilegiosAdmin(@PathVariable Integer id, @RequestBody AdminRequest request) {
+    public ResponseEntity<?> alterarPrivilegiosAdmin(@PathVariable Integer id, @RequestBody AdminRequest request,
+            @RequestHeader(value = "Authorization", required = false) String authorization) {
         try {
+            Usuario administrador = usuarioService.exigirAdministrador(authorization);
+            if (administrador.getId().equals(id)) {
+                return ResponseEntity.status(403).body(Map.of("message", "Você não pode alterar os próprios privilégios."));
+            }
             Usuario usuario = usuarioService.alterarPrivilegiosAdmin(id, request.getIsAdmin());
             return ResponseEntity.ok(usuario);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of("message", e.getReason()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao alterar privilégios: " + e.getMessage());
         }
