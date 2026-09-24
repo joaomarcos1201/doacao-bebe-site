@@ -1,3 +1,4 @@
+import { anuncioImage } from '../utils/anuncioImage';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
@@ -495,7 +496,7 @@ function Admin() {
                         backgroundColor: isDark ? '#2a2a2a' : '#f0e6e8',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden'
                       }}>
-                        {p.foto ? <img src={`data:image/jpeg;base64,${p.foto}`} alt={p.nome} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
+                        {p.foto ? <img src={anuncioImage(p.foto)} alt={p.nome} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : null}
                       </div>
                       <div style={{ flex: 1 }}>
                         <h3 style={{ fontSize: '15px', fontWeight: '700', color: isDark ? '#e0e0e0' : '#333', margin: '0 0 6px' }}>{p.nome}</h3>
@@ -617,10 +618,10 @@ function Admin() {
       {produtoModal && (() => {
         const p = produtoModal;
         const fotos = [
-          p.foto ? `data:image/jpeg;base64,${p.foto}` : null,
-          p.foto2 ? `data:image/jpeg;base64,${p.foto2}` : null,
-          p.foto3 ? `data:image/jpeg;base64,${p.foto3}` : null,
-          p.foto4 ? `data:image/jpeg;base64,${p.foto4}` : null,
+          p.foto ? anuncioImage(p.foto) : null,
+          p.foto2 ? anuncioImage(p.foto2) : null,
+          p.foto3 ? anuncioImage(p.foto3) : null,
+          p.foto4 ? anuncioImage(p.foto4) : null,
         ].filter(Boolean);
 
         const secTitle = (label) => (

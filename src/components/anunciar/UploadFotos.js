@@ -1,19 +1,24 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Camera, Upload, X, Star, Plus } from 'lucide-react';
 
-const MAX_FOTOS = 8;
+const MAX_FOTOS = 4;
 
 export default function UploadFotos({ fotos, onChange, isDark }) {
   const inputRef = useRef();
   const [dragging, setDragging] = useState(false);
+  const [erro, setErro] = useState('');
 
   const border = isDark ? '#2a2a2a' : '#E5E7EB';
   const sub = isDark ? '#666' : '#9CA3AF';
   const bg = isDark ? '#141414' : '#F9FAFB';
 
   const adicionarArquivos = useCallback((files) => {
-    const novos = Array.from(files).filter(f => f.type.startsWith('image/'));
-    onChange([...fotos, ...novos].slice(0, MAX_FOTOS));
+    const novos = Array.from(files);
+    if (fotos.length + novos.length > MAX_FOTOS) { setErro('Selecione no máximo quatro fotos.'); return; }
+    if (novos.some(f => !['image/jpeg', 'image/png'].includes(f.type))) { setErro('Envie fotos JPEG ou PNG.'); return; }
+    if (novos.some(f => f.size === 0 || f.size > 10 * 1024 * 1024)) { setErro('Cada foto deve ter conteúdo e no máximo 10 MiB.'); return; }
+    setErro('');
+    onChange([...fotos, ...novos]);
   }, [fotos, onChange]);
 
   const onDrop = useCallback((e) => {
@@ -100,7 +105,8 @@ export default function UploadFotos({ fotos, onChange, isDark }) {
         )}
       </div>
 
-      <input ref={inputRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={e => adicionarArquivos(e.target.files)} />
+      <input ref={inputRef} type="file" accept="image/jpeg,image/png" multiple style={{ display: 'none' }} onChange={e => { adicionarArquivos(e.target.files); e.target.value = ''; }} />
+      {erro && <p role="alert" style={{ color: '#b42318' }}>{erro}</p>}
 
       {/* Miniaturas */}
       {fotos.length > 0 && (

@@ -1,3 +1,4 @@
+import { anuncioImage } from '../../utils/anuncioImage';
 import React, { useMemo, useState } from 'react';
 
 function ModalBackdrop({ open, onClose, isDark }) {
@@ -32,7 +33,7 @@ export default function ProductDetailsModal({
   const images = useMemo(() => {
     if (!produto) return [];
     // Backend atual expõe apenas foto (byte[]). Usamos como carrossel com 1 imagem.
-    if (produto.foto) return [`data:image/jpeg;base64,${produto.foto}`];
+    if (produto.foto) return [anuncioImage(produto.foto)];
     return [];
   }, [produto]);
 

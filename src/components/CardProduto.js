@@ -1,3 +1,4 @@
+import { anuncioImage } from '../utils/anuncioImage';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Camera, Heart } from 'lucide-react';
@@ -66,7 +67,7 @@ function CardProduto({ produto }) {
       <div style={{ height: '190px', overflow: 'hidden', backgroundColor: isDark ? '#1e1e1e' : '#fdf0f2', flexShrink: 0, position: 'relative' }}>
         {produto.foto ? (
           <img
-            src={`data:image/jpeg;base64,${produto.foto}`}
+            src={anuncioImage(produto.foto)}
             alt={produto.nome}
             style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s ease' }}
             onMouseEnter={e => e.target.style.transform = 'scale(1.04)'}

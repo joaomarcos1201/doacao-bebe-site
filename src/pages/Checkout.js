@@ -1,3 +1,4 @@
+import { anuncioImage } from '../utils/anuncioImage';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
@@ -110,7 +111,7 @@ function Checkout() {
         {produto && etapa !== 'pix' && (
           <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', padding: '16px', borderRadius: '12px', backgroundColor: isDark ? '#1a1a1a' : '#fdf0f2', border: `1px solid ${border}` }}>
             <div style={{ width: '56px', height: '56px', borderRadius: '8px', backgroundColor: isDark ? '#2a2a2a' : '#f0e6e8', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {produto.foto ? <img src={`data:image/jpeg;base64,${produto.foto}`} alt={produto.nome} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              {produto.foto ? <img src={anuncioImage(produto.foto)} alt={produto.nome} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 : <span style={{ fontSize: '24px', opacity: 0.3 }}>📦</span>}
             </div>
             <div>

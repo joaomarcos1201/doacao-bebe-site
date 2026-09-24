@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     "jwt.secret=chave-apenas-para-testes-de-exclusao-1234567890",
     "jwt.expiration=60000"
 })
-@Import({UsuarioService.class, JwtService.class, UsuarioController.class, AuthController.class,
+@Import({AnuncioImageOptimizer.class, UsuarioService.class, JwtService.class, UsuarioController.class, AuthController.class,
     ProdutoController.class, JwtAuthenticationFilter.class})
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 class UsuarioExclusaoIntegrationTest {

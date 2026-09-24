@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
     "spring.jpa.hibernate.ddl-auto=create-drop", "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
     "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect"
 })
-@Import({PedidoService.class, FreteService.class, CarteiraService.class, UsuarioService.class, SaqueService.class,
+@Import({AnuncioImageOptimizer.class, PedidoService.class, FreteService.class, CarteiraService.class, UsuarioService.class, SaqueService.class,
     PagamentoProviderMock.class, FreteProviderMock.class, ProdutoController.class,
     SimulacaoController.class, AdminOrderController.class})
 @Transactional(propagation = Propagation.NOT_SUPPORTED)

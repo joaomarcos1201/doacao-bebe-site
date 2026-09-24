@@ -1,6 +1,7 @@
 package com.doacaobebe.controller;
 
-import com.doacaobebe.dto.NovoProdutoRequest;
+import com.doacaobebe.service.AnuncioImageOptimizer;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.doacaobebe.entity.Produto;
 import com.doacaobebe.entity.Usuario;
 import com.doacaobebe.repository.ProdutoRepository;
@@ -29,6 +30,9 @@ public class ProdutoController {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private AnuncioImageOptimizer imageOptimizer;
+
     @PostMapping
     public ResponseEntity<?> cadastrarProduto(
             @RequestParam("nome") String nome,
@@ -46,9 +50,11 @@ public class ProdutoController {
             @RequestParam(value = "imagem_1", required = false) MultipartFile imagem1,
             @RequestParam(value = "imagem_2", required = false) MultipartFile imagem2,
             @RequestParam(value = "imagem_3", required = false) MultipartFile imagem3,
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestHeader("Authorization") String authHeader,
+            MultipartHttpServletRequest request) {
 
         try {
+            validarFotos(request);
             String token = authHeader.replace("Bearer ", "");
             String email = jwtService.extractEmail(token);
 
@@ -71,16 +77,16 @@ public class ProdutoController {
             produto.setStatusAnuncio("EM_ANALISE");
 
             if (imagem != null && !imagem.isEmpty()) {
-                produto.setFoto(imagem.getBytes());
+                produto.setFoto(imageOptimizer.optimize(imagem.getBytes()));
             }
             if (imagem1 != null && !imagem1.isEmpty()) {
-                produto.setFoto2(imagem1.getBytes());
+                produto.setFoto2(imageOptimizer.optimize(imagem1.getBytes()));
             }
             if (imagem2 != null && !imagem2.isEmpty()) {
-                produto.setFoto3(imagem2.getBytes());
+                produto.setFoto3(imageOptimizer.optimize(imagem2.getBytes()));
             }
             if (imagem3 != null && !imagem3.isEmpty()) {
-                produto.setFoto4(imagem3.getBytes());
+                produto.setFoto4(imageOptimizer.optimize(imagem3.getBytes()));
             }
 
             produtoRepository.save(produto);
@@ -90,6 +96,22 @@ public class ProdutoController {
             return ResponseEntity.badRequest()
                     .body("Erro ao cadastrar produto: " + e.getMessage());
         }
+    }
+
+    private void validarFotos(MultipartHttpServletRequest request) {
+        var allowed = java.util.Set.of("imagem", "imagem_1", "imagem_2", "imagem_3");
+        int count = 0;
+        for (var entry : request.getMultiFileMap().entrySet()) {
+            if (!allowed.contains(entry.getKey()) || entry.getValue().size() > 1)
+                throw new IllegalArgumentException("Envie ate quatro fotos, uma por campo imagem/imagem_1/imagem_2/imagem_3.");
+            for (var file : entry.getValue()) {
+                if (file.isEmpty()) throw new IllegalArgumentException("Arquivo de foto vazio.");
+                if (file.getSize() > AnuncioImageOptimizer.MAX_INPUT_BYTES)
+                    throw new IllegalArgumentException("Cada foto deve ter no maximo 10 MiB.");
+                count++;
+            }
+        }
+        if (count > 4) throw new IllegalArgumentException("Maximo de quatro fotos.");
     }
 
     @GetMapping

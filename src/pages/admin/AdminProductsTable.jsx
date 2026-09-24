@@ -1,3 +1,4 @@
+import { anuncioImage } from '../../utils/anuncioImage';
 import React from 'react';
 
 export default function AdminProductsTable({ isDark, produtos, onView, compact, backendOnline }) {
@@ -73,7 +74,7 @@ export default function AdminProductsTable({ isDark, produtos, onView, compact, 
                     <td style={{ padding: 12 }}>
                       <div style={{ width: 48, height: 48, borderRadius: 12, overflow: 'hidden', background: isDark ? '#2a2a2a' : '#f0e6e8', border: `1px solid ${isDark ? '#2a2a2a' : '#f0e6e8'}` }}>
                         {p.foto ? (
-                          <img src={`data:image/jpeg;base64,${p.foto}`} alt={p.nome} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <img src={anuncioImage(p.foto)} alt={p.nome} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
                           <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, opacity: 0.4 }}>📦</div>
                         )}

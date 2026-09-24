@@ -1,3 +1,4 @@
+import { anuncioImage } from '../utils/anuncioImage';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
@@ -78,10 +79,10 @@ function DetalhesProduto() {
   };
 
   const fotos = [
-    produto?.foto ? `data:image/jpeg;base64,${produto.foto}` : null,
-    produto?.foto2 ? `data:image/jpeg;base64,${produto.foto2}` : null,
-    produto?.foto3 ? `data:image/jpeg;base64,${produto.foto3}` : null,
-    produto?.foto4 ? `data:image/jpeg;base64,${produto.foto4}` : null,
+    produto?.foto ? anuncioImage(produto.foto) : null,
+    produto?.foto2 ? anuncioImage(produto.foto2) : null,
+    produto?.foto3 ? anuncioImage(produto.foto3) : null,
+    produto?.foto4 ? anuncioImage(produto.foto4) : null,
   ].filter(Boolean);
   const disponivel = produto && produto.statusVisibilidade !== 'REMOVIDO'
     && ['ATIVO', 'DISPONIVEL', 'APROVADO'].includes((produto.statusAnuncio || '').toUpperCase());
@@ -143,7 +144,7 @@ function DetalhesProduto() {
           <span style={{ fontSize: '13px', color: sub, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>{produto.nome}</span>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,420px)', gap: '24px', alignItems: 'start' }}>
+        <div className="det-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,420px)', gap: '24px', alignItems: 'start' }}>
 
           {/* ── Coluna esquerda ── */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
