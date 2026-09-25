@@ -107,7 +107,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
   ];
 
   return (
-    <div style={{
+    <div className="home-page" style={{
       minHeight: '100vh',
       background: isDark
         ? '#0f0f0f'
@@ -116,7 +116,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
     }}>
 
       {/* NAVBAR */}
-      <nav style={{
+      <nav className="home-navbar" style={{
         position: 'sticky', top: 0, zIndex: 1000,
         backgroundColor: isDark ? 'rgba(10,10,10,0.85)' : 'rgba(255,250,252,0.75)',
         backdropFilter: 'blur(20px)',
@@ -129,11 +129,11 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
       }}>
 
         {/* LOGO */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+        <div className="home-brand" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
           <img src="logo-alem-do-positivo.png" alt="Logo Além do Positivo" style={{
             width: '42px', height: '36px', objectFit: 'contain', display: 'block'
           }} onError={(e) => e.target.style.display = 'none'} />
-          <span style={{
+          <span className="home-brand-name" style={{
             fontSize: '16px', fontWeight: '700',
             color: isDark ? '#f0c0c8' : '#c0606a',
             letterSpacing: '-0.3px', whiteSpace: 'nowrap'
@@ -141,8 +141,8 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
         </div>
 
         {/* BARRA DE PESQUISA */}
-        <div style={{ position: 'relative', flex: 1, maxWidth: '480px', margin: '0 20px' }}>
-          <div style={{
+        <div className="home-search-wrap" style={{ position: 'relative', flex: 1, maxWidth: '480px', margin: '0 20px' }}>
+          <div className="home-search-box" style={{
             display: 'flex', alignItems: 'center',
             backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.9)',
             border: `1.5px solid ${searchFocused ? '#E88AA2' : (isDark ? 'rgba(255,255,255,0.1)' : 'rgba(232,138,162,0.25)')}`,
@@ -183,7 +183,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
 
             <div style={{ width: '1px', height: '20px', backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(232,138,162,0.2)', flexShrink: 0 }} />
 
-            <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px', gap: '4px', flexShrink: 0 }}>
+            <div className="home-location" style={{ display: 'flex', alignItems: 'center', padding: '0 10px', gap: '4px', flexShrink: 0 }}>
               <MapPin size={13} color={isDark ? '#666' : '#E88AA2'} strokeWidth={2} />
               <select
                 value={estadoFiltro}
@@ -249,7 +249,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
         </div>
 
         {/* AÇÕES DIREITA */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+        <div className="home-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
 
           {/* Botão tema */}
           <button onClick={toggleTheme} style={{
@@ -266,7 +266,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
           </button>
 
           {user && (
-            <span style={{
+            <span className="home-user-greeting" style={{
               fontSize: '12px', color: isDark ? '#aaa' : '#c0606a',
               padding: '5px 12px',
               backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(232,138,162,0.1)',
@@ -381,13 +381,13 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
         borderBottom: `1px solid ${isDark ? '#2a1518' : 'rgba(232,138,162,0.15)'}`,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         gap: '40px', overflow: 'hidden', position: 'relative'
-      }}>
+      }} className="home-hero">
         {/* Círculos decorativos */}
         <div style={{ position: 'absolute', top: '-60px', right: '320px', width: '200px', height: '200px', borderRadius: '50%', backgroundColor: 'rgba(232,138,162,0.1)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '-40px', right: '200px', width: '140px', height: '140px', borderRadius: '50%', backgroundColor: 'rgba(232,138,162,0.08)', pointerEvents: 'none' }} />
 
         {/* Lado esquerdo */}
-        <div style={{ flex: 1, maxWidth: '620px' }}>
+        <div className="home-hero-content" style={{ flex: 1, maxWidth: '620px' }}>
 
 
           <h1 style={{
@@ -419,7 +419,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
 
 
           {/* Mini features */}
-          <div style={{ display: 'flex', flexDirection: 'row', gap: '70px', marginTop: '120px' }}>
+          <div className="home-hero-features" style={{ display: 'flex', flexDirection: 'row', gap: '70px', marginTop: '120px' }}>
             {[
               { title: 'Preços acessíveis', sub: 'Peças com ótimo custo-benefício' },
               { title: 'Compra segura', sub: 'Anúncios verificados com cuidado' },
@@ -436,7 +436,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
         </div>
 
         {/* Lado direito — imagem decorativa */}
-        <div style={{
+        <div className="home-hero-media" style={{
           width: '420px', height: '480px', flexShrink: 0,
           borderRadius: '32px', overflow: 'hidden',
           boxShadow: '0 8px 40px rgba(232,138,162,0.2)'
@@ -455,7 +455,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
         backdropFilter: 'blur(12px)',
         borderBottom: `1px solid ${isDark ? '#2a2a2a' : 'rgba(232,138,162,0.12)'}`,
         padding: '20px 32px'
-      }}>
+      }} className="home-filters">
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
             {[
@@ -468,7 +468,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
             ].map(cat => {
               const ativo = categoriaFiltro === cat.value;
               return (
-                <button key={cat.value} onClick={() => setCategoriaFiltro(cat.value)} style={{
+                <button className="home-filter-button" key={cat.value} onClick={() => setCategoriaFiltro(cat.value)} style={{
                   padding: '9px 18px', borderRadius: '99px', fontSize: '13px',
                   fontWeight: ativo ? '700' : '500', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', gap: '7px',
@@ -514,7 +514,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
                 <p style={{ color: isDark ? '#666' : '#999', fontSize: '14px' }}>Tente ajustar os filtros ou a pesquisa</p>
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
+              <div className="home-results-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' }}>
                 {produtosFiltrados.map(p => <CardProduto key={p.id} produto={p} />)}
               </div>
             )}
@@ -535,7 +535,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
             return (
               <div key={secao.id} style={{ marginBottom: '48px' }}>
                 {/* Cabeçalho */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div className="home-section-heading" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div style={{
                       width: '34px', height: '34px', borderRadius: '9px',
@@ -554,7 +554,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
                       </p>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div className="home-section-actions" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     {produtosDaSecao.length > 3 && (
                       <>
                         <button onClick={() => scroll(-1)} style={{
@@ -630,7 +630,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
         <p style={{ color: isDark ? '#444' : '#bbb', fontSize: '13px', margin: '0 0 12px' }}>
           © 2024 Além do Positivo. Todos os direitos reservados.
         </p>
-        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
+        <div className="home-footer-links" style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
           <Link to="/termos-privacidade" style={{ color: '#c0606a', fontSize: '13px', textDecoration: 'none' }}>Termos de Privacidade</Link>
           <Link to="/manual-seguranca" style={{ color: '#c0606a', fontSize: '13px', textDecoration: 'none' }}>Manual de Segurança</Link>
         </div>

@@ -3,6 +3,20 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
+html, body, #root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+img, video, canvas {
+  max-width: 100%;
+}
+
+button, input, select, textarea {
+  max-width: 100%;
+}
+
 /* Tema escuro elegante */
 .dark-theme {
   background: linear-gradient(135deg, #0f1419 0%, #1e2328 50%, #2a2d33 100%);
@@ -67,3 +81,142 @@ option {
 
 /* Esconder scrollbar dos carrosseis */
 .carrossel-hide-scroll::-webkit-scrollbar { display: none; }
+
+@media (max-width: 700px) {
+  .home-navbar {
+    height: auto !important;
+    min-height: 64px;
+    padding: 10px 16px !important;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start !important;
+  }
+
+  .home-actions {
+    margin-left: auto;
+    gap: 4px !important;
+  }
+
+  .home-user-greeting {
+    display: none;
+  }
+
+  .home-search-wrap {
+    order: 3;
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .home-hero {
+    padding: 32px 20px 40px !important;
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 32px !important;
+  }
+
+  .home-hero-content {
+    max-width: none !important;
+  }
+
+  .home-hero-features {
+    margin-top: 44px !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+  }
+
+  .home-hero-media {
+    width: 76% !important;
+    max-width: 300px;
+    height: auto !important;
+    aspect-ratio: auto;
+    align-self: center;
+    margin: 0 auto 8px;
+  }
+
+  .home-hero-media img {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+    object-fit: contain !important;
+  }
+
+  .home-filters {
+    padding: 16px !important;
+  }
+
+  .home-results-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .home-section-heading {
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .home-section-heading > div:first-child {
+    min-width: 0;
+  }
+
+  .home-section-heading h2 {
+    overflow-wrap: anywhere;
+  }
+
+  .home-section-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .home-footer-links {
+    flex-wrap: wrap;
+  }
+
+  .notification-toast {
+    top: 12px !important;
+    right: 16px !important;
+    left: 16px;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  .confirm-dialog-actions {
+    flex-wrap: wrap;
+  }
+
+  .confirm-dialog-actions button {
+    flex: 1 1 120px;
+  }
+
+  [style*="grid-template-columns: 1fr 1fr"],
+  [style*="grid-template-columns: 1fr 100px"],
+  [style*="grid-template-columns: 1.2fr 1fr"],
+  [style*="grid-template-columns: 2fr 1fr"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  [style*="grid-template-columns: repeat(3, 1fr)"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .home-brand-name {
+    display: none;
+  }
+
+  .home-hero h1 {
+    font-size: 28px !important;
+    letter-spacing: -0.5px !important;
+  }
+
+  .home-hero-media {
+    width: 70% !important;
+    max-width: 250px;
+  }
+
+  .home-filter-button {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+}

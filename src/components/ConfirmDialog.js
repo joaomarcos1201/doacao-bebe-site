@@ -46,7 +46,7 @@ const ConfirmDialog = ({ isOpen, title, message, onConfirm, onCancel, confirmTex
           }}>{message}</p>
         </div>
         
-        <div style={{
+        <div className="confirm-dialog-actions" style={{
           display: 'flex',
           gap: '12px',
           justifyContent: 'center'

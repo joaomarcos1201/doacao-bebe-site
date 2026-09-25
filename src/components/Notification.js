@@ -36,6 +36,7 @@ const Notification = ({ message, type = 'info', duration = 4000, onClose }) => {
 
   return (
     <div
+      className="notification-toast"
       style={{
         position: 'fixed',
         top: '20px',
