@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader2, AlertTriangle } from 'lucide-react';
-import { formatarCep, validarFormatoCep, consultarCep } from '../../utils/cep';
+import { formatarCep, consultarCep } from '../../utils/cep';
 
 const CONSERVACOES = ['Novo', 'Seminovo', 'Bom Estado', 'Com Marcas de Uso'];
 const FAIXAS = ['0 a 3 meses', '0 a 6 meses', '0 a 12 meses', '0 a 18 meses', '0 a 24 meses', '0 a 3 anos', '3 a 6 anos', 'Maternidade', 'Todas as idades'];

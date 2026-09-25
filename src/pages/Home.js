@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Search, MapPin, ChevronDown, Moon, Sun, Menu, LogOut, X, LayoutGrid, Shirt, BedDouble, MoreHorizontal, ShoppingBag, Puzzle, Heart, ChevronRight, ChevronLeft, Baby, Droplets, Footprints, Armchair, Milk, Camera, Package, Tag, Wallet, User } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import CardProduto from '../components/CardProduto';
-import { api, API_URL } from '../config/api';
+import { API_URL } from '../config/api';
 
 const SECOES_CATEGORIAS = [
   { id: 'roupas-gestante', label: 'Roupas para Gestantes',    icone: Shirt,         valores: ['roupas gestante', 'roupa gestante', 'roupas para gestante'] },
@@ -46,7 +46,7 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
       document.removeEventListener('visibilitychange', aoRetornar);
     };
   }, []);
-  const { theme, isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   const [pesquisa, setPesquisa] = useState('');
   const [categoriaFiltro, setCategoriaFiltro] = useState('');
   const [menuAberto, setMenuAberto] = useState(false);
@@ -91,30 +91,6 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
     const isAprovado = statusDisponiveis.includes((produto.statusAnuncio || '').toUpperCase());
     return matchPesquisa && matchCategoria && isAprovado;
   });
-
-  const categorias = [
-    { value: 'roupas', label: 'Roupas' },
-    { value: 'brinquedos', label: 'Brinquedos' },
-    { value: 'moveis', label: 'Móveis' },
-    { value: 'acessorios', label: 'Acessórios' },
-    { value: 'outros', label: 'Outros' },
-  ];
-
-  const categoriaLabel = {
-    roupas: 'Roupas',
-    brinquedos: 'Brinquedos',
-    moveis: 'Móveis',
-    acessorios: 'Acessórios',
-    outros: 'Outros',
-  };
-
-  const categoriaIcone = {
-    roupas: <Shirt size={13} strokeWidth={2} />,
-    brinquedos: <Puzzle size={13} strokeWidth={2} />,
-    moveis: <BedDouble size={13} strokeWidth={2} />,
-    acessorios: <ShoppingBag size={13} strokeWidth={2} />,
-    outros: <MoreHorizontal size={13} strokeWidth={2} />,
-  };
 
   const menuItems = [
     { label: 'Meu Perfil', path: '/perfil', icon: <User size={15} strokeWidth={1.8} />, authRequired: true },

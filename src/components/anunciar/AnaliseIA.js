@@ -24,7 +24,6 @@ export default function AnaliseIA({ isDark }) {
 
   const bg = isDark ? '#1a1a1a' : '#fff';
   const border = isDark ? '#2a2a2a' : '#E5E7EB';
-  const sub = isDark ? '#666' : '#9CA3AF';
   const text = isDark ? '#e0e0e0' : '#374151';
   const skeletonBg = isDark ? '#2a2a2a' : '#F3F4F6';
   const skeletonShine = isDark ? '#333' : '#E5E7EB';

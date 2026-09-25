@@ -1,5 +1,5 @@
 import { anuncioImage } from '../utils/anuncioImage';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -41,12 +41,6 @@ function Admin() {
 
   // ====== UI TOKENS (mantém lógica/estado inalterados) ======
   // const bgPage = isDark ? '#0f0f0f' : '#f9f5f6';
-
-  const bgPanel = isDark ? '#141414' : '#ffffff';
-  const border = isDark ? '#2a2a2a' : '#f0e6e8';
-  const text = isDark ? '#e0e0e0' : '#333';
-  const subText = isDark ? '#888' : '#666';
-  const primary = '#c0606a';
 
   // const Card = ({ children, style }) => (
   //   <div
@@ -114,18 +108,6 @@ function Admin() {
 
   const produtosAprovados = produtos.filter(p => ['ATIVO', 'DISPONIVEL', 'APROVADO', 'RESERVADO', 'VENDIDO'].includes(p.statusAnuncio));
 
-  useEffect(() => {
-    carregarUsuarios();
-    carregarMensagens();
-    api.todosPedidos().then(setPedidos).catch(() => {});
-    api.todosSaques().then(setSaques).catch(() => {});
-  }, []);
-  useEffect(() => {
-    const handler = (e) => { if (menuAberto && !e.target.closest('td')) setMenuAberto(null); };
-    document.addEventListener('click', handler);
-    return () => document.removeEventListener('click', handler);
-  }, [menuAberto]);
-
   const carregarMensagens = async () => {
     try {
       const r = await fetch(`${API_URL}/api/contato`);
@@ -149,6 +131,20 @@ function Admin() {
     } catch { showError('Erro de conexão.'); }
     finally { setLoading(false); }
   };
+
+  const carregarUsuariosInicial = useRef(carregarUsuarios);
+
+  useEffect(() => {
+    carregarUsuariosInicial.current();
+    carregarMensagens();
+    api.todosPedidos().then(setPedidos).catch(() => {});
+    api.todosSaques().then(setSaques).catch(() => {});
+  }, []);
+  useEffect(() => {
+    const handler = (e) => { if (menuAberto && !e.target.closest('td')) setMenuAberto(null); };
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, [menuAberto]);
 
   const toggleStatus = async (id) => {
     try {

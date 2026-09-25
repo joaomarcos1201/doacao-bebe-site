@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   ShoppingCart, BedDouble, Droplets, Shirt,
-  Puzzle, Heart, Bath, Armchair, CheckCircle2, AlertTriangle,
+  Puzzle, Heart, Bath, CheckCircle2, AlertTriangle,
 } from 'lucide-react';
 import { CATEGORIAS_MAP } from '../../services/iaService';
 

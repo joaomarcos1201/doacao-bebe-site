@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useNotification } from '../hooks/useNotification';
 import Notification from '../components/Notification';
-import { API_URL, api } from '../config/api';
+import { API_URL } from '../config/api';
 
 function Perfil({ user, setUser, temAnuncios: temAnunciosProp }) {
   const navigate = useNavigate();

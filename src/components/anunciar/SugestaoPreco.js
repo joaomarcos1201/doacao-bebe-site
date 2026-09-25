@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bot, BadgeDollarSign, AlertTriangle, TrendingDown, TrendingUp } from 'lucide-react';
+import { Bot, BadgeDollarSign, TrendingDown, TrendingUp } from 'lucide-react';
 
 export default function SugestaoPreco({ preco, onChange, precoSugerido, isDark }) {
   const [focused, setFocused] = useState(false);

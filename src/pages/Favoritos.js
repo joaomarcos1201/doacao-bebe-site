@@ -9,7 +9,6 @@ import CardProduto from '../components/CardProduto';
 function Favoritos() {
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
-  const { carregar } = useFavoritos();
   const [produtos, setProdutos] = useState([]);
   const [loading, setLoading] = useState(true);
 

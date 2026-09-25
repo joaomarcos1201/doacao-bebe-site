@@ -12,7 +12,6 @@ import RecuperarSenha from './pages/RecuperarSenha';
 import SobreNos from './pages/SobreNos';
 import FaleConosco from './pages/FaleConosco';
 import FAQ from './pages/FAQ';
-import Chat from './pages/Chat';
 import TermosPrivacidade from './pages/TermosPrivacidade';
 import BaixarApp from './pages/BaixarApp';
 import ManualSeguranca from './pages/ManualSeguranca';
