@@ -130,9 +130,8 @@ function Home({ user, setUser, temAnuncios: temAnunciosProp }) {
 
         {/* LOGO */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-          <img src="logo.jpeg" alt="Logo" style={{
-            width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover',
-            border: '2px solid rgba(232,138,162,0.5)'
+          <img src="logo-alem-do-positivo.png" alt="Logo Além do Positivo" style={{
+            width: '42px', height: '36px', objectFit: 'contain', display: 'block'
           }} onError={(e) => e.target.style.display = 'none'} />
           <span style={{
             fontSize: '16px', fontWeight: '700',

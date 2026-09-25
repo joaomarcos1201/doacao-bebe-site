@@ -77,9 +77,8 @@ function Login({ setUser }) {
         boxShadow: '0 8px 40px rgba(0,0,0,0.08)'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <img src="logo.jpeg" alt="Logo" style={{
-            width: '64px', height: '64px', borderRadius: '50%', objectFit: 'cover',
-            border: '2px solid #e8a0a8', marginBottom: '16px'
+          <img src="logo-alem-do-positivo.png" alt="Logo Além do Positivo" style={{
+            width: '80px', height: '70px', objectFit: 'contain', display: 'block', margin: '0 auto 16px'
           }} onError={(e) => e.target.style.display = 'none'} />
           <h1 style={{ fontSize: '22px', fontWeight: '700', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 6px' }}>
             Além do Positivo

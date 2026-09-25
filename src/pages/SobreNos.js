@@ -27,9 +27,8 @@ function SobreNos() {
 
       <div style={{ maxWidth: '760px', margin: '0 auto', padding: '48px 24px' }}>
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <img src="logo.jpeg" alt="Logo" style={{
-            width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover',
-            border: '3px solid #e8a0a8', marginBottom: '20px'
+          <img src="logo-alem-do-positivo.png" alt="Logo Além do Positivo" style={{
+            width: '96px', height: '84px', objectFit: 'contain', display: 'block', margin: '0 auto 20px'
           }} onError={(e) => e.target.style.display = 'none'} />
           <h1 style={{ fontSize: '36px', fontWeight: '800', color: isDark ? '#f0e0e2' : '#2d1518', margin: '0 0 12px', letterSpacing: '-1px' }}>
             Além do Positivo

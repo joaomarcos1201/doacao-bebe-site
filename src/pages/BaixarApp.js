@@ -26,9 +26,8 @@ function BaixarApp() {
       </nav>
 
       <div style={{ maxWidth: '560px', margin: '0 auto', padding: '64px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <img src="logo.jpeg" alt="Logo" style={{
-          width: '80px', height: '80px', borderRadius: '50%', objectFit: 'cover',
-          border: '3px solid #e8a0a8', marginBottom: '24px'
+        <img src="logo-alem-do-positivo.png" alt="Logo Além do Positivo" style={{
+          width: '96px', height: '84px', objectFit: 'contain', display: 'block', marginBottom: '24px'
         }} onError={(e) => e.target.style.display = 'none'} />
 
         <div style={{
